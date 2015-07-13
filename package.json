@@ -1,24 +1,23 @@
 {
-  "name": "iobroker.vis-lcars",
-  "description": "lcars Widgets for ioBroker.vis",
-  "version": "0.1.2",
+  "name": "iobroker.vis-hqWidgets",
+  "description": "hqWidgets Widgets for ioBroker.vis",
+  "version": "0.1.0",
   "author": {
-    "name": "hobbyquaker",
-    "email": "hq@ccu.io"
+    "name": "bluefox",
+    "email": "dogafox@gmail.com"
   },
   "contributors": [
-    "bluefox <bluefox@ccu.io>",
-    "hobbyquaker <hq@ccu.io>"
+    "bluefox <dogafox@gmail.com>"
   ],
-  "homepage": "https://github.com/ioBroker/ioBroker.vis-lcars",
+  "homepage": "https://github.com/ioBroker/ioBroker.vis-hqWidgets",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ioBroker/ioBroker.vis-lcars"
+    "url": "https://github.com/ioBroker/ioBroker.vis-hqWidgets"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/ioBroker/ioBroker.vis-lcars/blob/master/LICENSE"
+      "url": "https://github.com/ioBroker/ioBroker.vis-hqWidgets/blob/master/LICENSE"
     }
   ],
   "keywords": [
@@ -28,7 +27,7 @@
     "web interface",
     "home automation",
     "SCADA",
-	"lcars GUI"
+	"hqWidgets GUI"
   ],
   "devDependencies": {
     "grunt": "~0.4.4",
@@ -42,9 +41,9 @@
     "grunt-exec": "~0.4.5"
   },
   "bugs": {
-    "url": "https://github.com/ioBroker/ioBroker.vis-lcars/issues"
+    "url": "https://github.com/ioBroker/ioBroker.vis-hqWidgets/issues"
   },
-  "main": "widgets/lcars.html",
+  "main": "widgets/hqWidgets.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

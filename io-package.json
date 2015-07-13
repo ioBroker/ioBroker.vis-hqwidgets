@@ -1,0 +1,34 @@
+{
+    "common": {
+        "name":                     "vis-hqWidgets",
+        "version": "0.1.0",
+        "title":                    "ioBroker Visualisation - hqWidgets style Widgets",
+        "desc": {
+            "en":                   "Star Trek Widgets for ioBroker.vis",
+            "de":                   "Star Trek Widgets für ioBroker.vis",
+            "ru":                   "Star Trek Widgets для ioBroker.vis"
+        },
+        "platform":                 "Javascript/Node.js",
+        "loglevel":                 "info",
+        "icon":                     "hqWidgets.png",
+        "enabled":                  true,
+        "mode":                     "once",
+        "extIcon":                  "https://raw.githubusercontent.com/ioBroker/ioBroker.vis-hqWidgets/master/admin/hqWidgets.png",
+        "keywords":                 ["hqWidgets", "star trek", "vis", "GUI", "graphical", "scada"],
+        "readme":                   "https://github.com/ioBroker/ioBroker.vis-hqWidgets/blob/master/README.md",
+        "authors": [
+            "hobbyquaker <hq@ccu.io>"
+        ],
+        "localLink":                "%web_protocol%://%ip%:%web_port%/vis/edit.html",
+        "license":                  "MIT",
+        "dependencies":             ["vis"],
+        "onlyWWW":                  true,
+        "singleton":                true,
+        "type":                     "vis",
+		"restartAdapters":          ["vis"]
+    },
+    "native": {
+    },
+    "instanceObjects": [
+    ]
+}

@@ -561,7 +561,10 @@ if (vis.editMode) {
         "thickness":        {"en": "Thickness",         "de": "Dicke",                  "ru": "Толщина"},
         "bgcolor":          {"en": "Background color",  "de": "Hintergrundfarbe",       "ru": "Цвет фона"},
         "linecap":          {"en": "Line cap",          "de": "Linienende",             "ru": "Округлое окончание"},
-        "anticlockwise":    {"en": "Anticlockwise",     "de": "Gegenuhrzeigersinn",     "ru": "Против часовой стрелки"}
+        "anticlockwise":    {"en": "Anticlockwise",     "de": "Gegenuhrzeigersinn",     "ru": "Против часовой стрелки"},
+        "oid-humidity":     {"en": "Humidity ID",       "de": "Luftfeuchtigkeit ID",    "ru": "ID Влажность"},
+        "set-oid":          {"en": "Set temperature ID", "de": "Soll ID",               "ru": "ID Заданная тепература"},
+        "drive-oid":        {"en": "Valve ID",          "de": "Ventil ID",              "ru": "ID Вентиля"}
     });
 }
 
@@ -766,9 +769,39 @@ vis.binds.hqWidgets = {
                 $main.animateDiv(data.changeEffect, {color: data.waveColor});
             }
         },
-        changedId: function (wid, view, newId, attr, isCss) {
-            // Try to extract whole information
+        changedId: function (widgetID, view, newId, attr, isCss) {
+            var obj = vis.objects[newId];
+            var changed = [];
+            // If it is real object and SETPOINT
+            if (obj && obj.common) {
+                var roles = [];
+                // If some attributes are not set
+                if (!vis.views[view].widgets[widgetID].data['oid-battery']) {
+                    roles.push('indicator.battery');
+                }
+                if (!vis.views[view].widgets[widgetID].data['oid-working']) {
+                    roles.push('indicator.working');
+                }
+                if (!vis.views[view].widgets[widgetID].data['oid-signal']) {
+                    roles.push('indicator.battery');
+                }
+                if (roles.length) {
+                    var result = vis.findByRoles(newId, roles);
+                    if (result) {
+                        for (var r in result) {
+                            switch (r) {
+                                case  'indicator.battery':
+                                    changed.push('lowbat_oid');
+                                    vis.views[view].widgets[widgetID].data['oid-battery'] = result[r];
+                                    vis.widgets[widgetID].data['oid-battery'] = result[r];
+                                    break
+                            }
+                        }
+                    }
+                }
+            }
 
+            return changed.length ? changed : null;
         },
         draw: function ($div) {
             var data = $div.data('data');

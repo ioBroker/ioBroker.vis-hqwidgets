@@ -595,7 +595,7 @@ $.extend(true, systemDictionary, {
 //     <div class="vis-hq-info-icon"  style='position: absolite; z-index: 2"></div>
 // </div>
 
-vis.binds.hqWidgets = {
+vis.binds.hqwidgets = {
     getTimeInterval: function (oldTime, hoursToShow) {
         var result = '';
 
@@ -639,13 +639,13 @@ vis.binds.hqWidgets = {
             if (data.hoursLastAction) {
                 // show time interval. It must be updated every minute
                 if (data.timeAsInterval) {
-                    time = vis.binds.hqWidgets.getTimeInterval(data.lc, data.hoursLastAction);
+                    time = vis.binds.hqwidgets.getTimeInterval(data.lc, data.hoursLastAction);
                     $div.find('.vis-hq-time').html(time);
                     if (!vis.editMode) {
                         timer = $div.data('lastTimer');
                         if (!timer) {
                             timer = setInterval(function () {
-                                var time = vis.binds.hqWidgets.getTimeInterval(data.lc, data.hoursLastAction);
+                                var time = vis.binds.hqwidgets.getTimeInterval(data.lc, data.hoursLastAction);
                                 $div.find('.vis-hq-time').html(time);
 
                                 if (time && $div.find('.vis-hq-time').text()){
@@ -737,7 +737,7 @@ vis.binds.hqWidgets = {
                     break;
             }
 
-            vis.binds.hqWidgets.button.showRightInfo($div, value);
+            vis.binds.hqwidgets.button.showRightInfo($div, value);
 
             if (!data.ack || (data['oid-working'] && data.working)) {
                 $div.find('.vis-hq-working').show();
@@ -902,7 +902,7 @@ vis.binds.hqWidgets = {
                             if (newVal === true  || newVal === 'true')  data.value = data.max;
                         }
 
-                        vis.binds.hqWidgets.button.changeState($div);
+                        vis.binds.hqwidgets.button.changeState($div);
 
                         if (data.wType == 'number') {
                             $main.scala('value', data.value);
@@ -913,48 +913,48 @@ vis.binds.hqWidgets = {
                 if (data['oid-working']) {
                     vis.states.bind(data['oid-working'] + '.val', function (e, newVal, oldVal) {
                         data.working = newVal;
-                        vis.binds.hqWidgets.button.changeState($div, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, true);
                     });
                 }
 
                 if (data['oid-battery']) {
                     vis.states.bind(data['oid-battery'] + '.val', function (e, newVal, oldVal) {
                         data.battery = newVal;
-                        vis.binds.hqWidgets.button.changeState($div, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, true);
                     });
                 }
 
                 if (data['oid-signal']) {
                     vis.states.bind(data['oid-signal'] + '.val', function (e, newVal, oldVal) {
                         data.signal = newVal;
-                        vis.binds.hqWidgets.button.changeState($div, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, true);
                     });
                 }
 
                 if (data['oid-humidity']) {
                     vis.states.bind(data['oid-humidity'] + '.val', function (e, newVal, oldVal) {
                         data.humidity = newVal;
-                        vis.binds.hqWidgets.button.changeState($div, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, true);
                     });
                 }
 
                 if (data['set-oid']) {
                     vis.states.bind(data['set-oid'] + '.val', function (e, newVal, oldVal) {
                         data.set = newVal;
-                        vis.binds.hqWidgets.button.changeState($div, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, true);
                     });
                 }
 
                 if (data['drive-oid']) {
                     vis.states.bind(data['drive-oid'] + '.val', function (e, newVal, oldVal) {
                         data.drive = newVal;
-                        vis.binds.hqWidgets.button.changeState($div, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, true);
                     });
                 }
             }
 
             // initiate state
-            vis.binds.hqWidgets.button.changeState($div, true);
+            vis.binds.hqwidgets.button.changeState($div, true);
 
             // If dimmer or number
             if (data.wType == 'number') {
@@ -967,7 +967,7 @@ vis.binds.hqWidgets = {
                         data.ack   = false;
                         console.log('Set value: ' + data.value);
                         data.tempValue = undefined;
-                        vis.binds.hqWidgets.button.changeState($div, false, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, false, true);
                         vis.setValue(data.oid, data.value);
                     },
                     changing: function (value) {
@@ -975,7 +975,7 @@ vis.binds.hqWidgets = {
                         if (data.digits !== null) data.tempValue = data.tempValue.toFixed(data.digits);
                         if (data.is_comma) data.tempValue = data.tempValue.toString().replace('.', ',');
                         data.tempValue = parseFloat(data.tempValue);
-                        vis.binds.hqWidgets.button.changeState($div, false, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, false, true);
                     },
                     click: function (val) {
                         val = data.value;
@@ -1006,7 +1006,7 @@ vis.binds.hqWidgets = {
                     $main.click(function () {
                         data.value = (data.state == 'normal') ? data.max : data.min;
                         data.ack   = false;
-                        vis.binds.hqWidgets.button.changeState($div, false, false, true);
+                        vis.binds.hqwidgets.button.changeState($div, false, false, true);
                         vis.setValue(data.oid, data.value);
                     });
                 }
@@ -1016,14 +1016,14 @@ vis.binds.hqWidgets = {
             var $div = $('#' + wid).addClass('hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
-                    vis.binds.hqWidgets.button.init(wid, view, data, style, wType);
+                    vis.binds.hqwidgets.button.init(wid, view, data, style, wType);
                 }, 100);
                 return;
             } else {
                 /*var timer = $('#' + wid).data('timer');
                 if (!timer) {
                     $('#' + wid).data('timer', function () {
-                        vis.binds.hqWidgets.button.init(wid, view, data, style, wType);
+                        vis.binds.hqwidgets.button.init(wid, view, data, style, wType);
                     });
                 } else {
                     $('#' + wid).data('timer', null);
@@ -1058,7 +1058,7 @@ vis.binds.hqWidgets = {
             if (data['set-oid'])      data.set      = vis.states.attr(data['set-oid']      + '.val');
             if (data['drive-oid'])    data.drive    = vis.states.attr(data['drive-oid']    + '.val');
 
-            vis.binds.hqWidgets.button.draw($div);
+            vis.binds.hqwidgets.button.draw($div);
         }
     },
     circle: {
@@ -1066,7 +1066,7 @@ vis.binds.hqWidgets = {
             var $div = $('#' + wid);
             if (!$div.length) {
                 setTimeout(function () {
-                    vis.binds.hqWidgets.circle.init(wid, view, data);
+                    vis.binds.hqwidgets.circle.init(wid, view, data);
                 }, 100);
                 return;
             }
@@ -1162,7 +1162,7 @@ vis.binds.hqWidgets = {
             var $div = $('#' + wid);
             if (!$div.length) {
                 setTimeout(function () {
-                    vis.binds.hqWidgets.checkbox.init(wid, view, data);
+                    vis.binds.hqwidgets.checkbox.init(wid, view, data);
                 }, 100);
                 return;
             }

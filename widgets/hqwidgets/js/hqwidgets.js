@@ -545,8 +545,6 @@ if (vis.editMode) {
         "changeEffect":     {"en": "Change effect",     "de": "Anderungseffekt",        "ru": "Эффект при изменении"},
         "waveColor":        {"en": "Wave color",        "de": "Wellenfarbe",            "ru": "Цвет волн"},
         "testActive":       {"en": "Test",              "de": "Test",                   "ru": "Тест"},
-        "oid-battery":      {"en": "Battery object ID", "de": "Battery ObjektID",       "ru": "ID батарейного индикатора"},
-        "oid-signal":       {"en": "Signal object ID",  "de": "Signal ObjektID",        "ru": "ID качества сигнала"},
         "group_value":      {"en": "Value",             "de": "Wert",                   "ru": "Значение"},
         "unit":             {"en": "Unit",              "de": "Einheit",                "ru": "Единицы"},
         "readOnly":         {"en": "Read only",         "de": "Nur lesend",             "ru": "Не изменять"},
@@ -562,9 +560,11 @@ if (vis.editMode) {
         "bgcolor":          {"en": "Background color",  "de": "Hintergrundfarbe",       "ru": "Цвет фона"},
         "linecap":          {"en": "Line cap",          "de": "Linienende",             "ru": "Округлое окончание"},
         "anticlockwise":    {"en": "Anticlockwise",     "de": "Gegenuhrzeigersinn",     "ru": "Против часовой стрелки"},
-        "oid-humidity":     {"en": "Humidity ID",       "de": "Luftfeuchtigkeit ID",    "ru": "ID Влажность"},
-        "set-oid":          {"en": "Set temperature ID", "de": "Soll ID",               "ru": "ID Заданная тепература"},
-        "drive-oid":        {"en": "Valve ID",          "de": "Ventil ID",              "ru": "ID Вентиля"}
+        "oid-battery":      {"en": "Battery object ID", "de": "Battery ObjektID",       "ru": "ID батарейного индикатора"},
+        "oid-signal":       {"en": "Signal object ID",  "de": "Signal ObjektID",        "ru": "ID качества сигнала"},
+        "oid-humidity":     {"en": "Humidity ID",       "de": "Luftfeuchtigkeit ID",    "ru": "ID влажности"},
+        "oid-drive":        {"en": "Valve ID",          "de": "Ventil ID",              "ru": "ID вентиля"},
+        "oid-temp":         {"en": "Actual temperature ID", "de": "Ist ID",             "ru": "ID актуальной температуры"}
     });
 }
 
@@ -675,7 +675,11 @@ vis.binds.hqwidgets = {
             // Set number value
             var text = null;
             if (data.wType == 'number') {
-                text = $div.find('.vis-hq-rightinfo-text').html(((value === undefined || value === null) ? data.min : value) + ((data.unit === undefined) ? '' : data.unit));
+                var html = ((value === undefined || value === null) ? data.min : value) + ((data.unit === undefined) ? '' : data.unit);
+                if (data.drive !== undefined) {
+                    html += '<br>' + data.drive + '%';
+                }
+                text = $div.find('.vis-hq-rightinfo-text').html(html);
             }
 
             // Hide right info if empty
@@ -686,9 +690,25 @@ vis.binds.hqwidgets = {
             }
 
         },
+        showCenterInfo: function ($div, isHide) {
+            var data = $div.data('data');
+            if (!data) return;
+
+            if (data.humidity !== undefined || data.actual !== undefined) {
+                if (isHide) {
+                    $div.find('.vis-hq-centerinfo').hide();
+                } else {
+                    if (!$div.find('.vis-hq-centerinfo').length) {
+                        var text = '<div class="vis-hq-centerinfo">';
+                        text += '<span class="vis-hq-centerinfo-top"></span><br><span class="vis-hq-centerinfo-bottom"></span></div>';
+                    }
+                }
+            }
+        },
         // Calculate state of button
         changeState: function ($div, isInit, isForce, isOwn) {
             var data = $div.data('data');
+            if (!data) return;
 
             var value = (data.tempValue !== undefined) ? data.tempValue : data.value;
 
@@ -755,11 +775,11 @@ vis.binds.hqwidgets = {
                 $div.find('.vis-hq-humidity').html(data.humidity);
             }
 
-            if (data['set-oid']) {
+            if (data['oid-actual']) {
                 $div.find('.vis-hq-set-temperature').html(data.set);
             }
 
-            if (data['drive-oid']) {
+            if (data['oid-drive']) {
                 $div.find('.vis-hq-drive').html(data.drive);
             }
 
@@ -776,25 +796,33 @@ vis.binds.hqwidgets = {
             if (obj && obj.common) {
                 var roles = [];
                 // If some attributes are not set
-                if (!vis.views[view].widgets[widgetID].data['oid-battery']) {
-                    roles.push('indicator.battery');
-                }
-                if (!vis.views[view].widgets[widgetID].data['oid-working']) {
-                    roles.push('indicator.working');
-                }
-                if (!vis.views[view].widgets[widgetID].data['oid-signal']) {
-                    roles.push('indicator.battery');
-                }
+                if (!vis.views[view].widgets[widgetID].data['oid-battery']) roles.push('indicator.battery');
+                if (!vis.views[view].widgets[widgetID].data['oid-working']) roles.push('indicator.working');
+                if (!vis.views[view].widgets[widgetID].data['oid-signal'])  roles.push('indicator.signal');
+
                 if (roles.length) {
                     var result = vis.findByRoles(newId, roles);
                     if (result) {
+                        var name;
                         for (var r in result) {
                             switch (r) {
                                 case  'indicator.battery':
-                                    changed.push('lowbat_oid');
-                                    vis.views[view].widgets[widgetID].data['oid-battery'] = result[r];
-                                    vis.widgets[widgetID].data['oid-battery'] = result[r];
+                                    name = 'oid-battery';
                                     break
+                                case  'indicator.working':
+                                    name = 'oid-working';
+                                    break
+                                case  'indicator.signal':
+                                    name = 'oid-signal';
+                                    break
+                                default:
+                                    name = '';
+                                    break;
+                            }
+                            if (name) {
+                                changed.push(name);
+                                vis.views[view].widgets[widgetID].data[name] = result[r];
+                                vis.widgets[widgetID].data[name] = result[r];
                             }
                         }
                     }
@@ -842,6 +870,7 @@ vis.binds.hqwidgets = {
                 text += '</tr></table></div></div></div>';
                 $div.append(text);
             }
+
             // Get the border radius from parent
             var $main = $div.find('.vis-hq-main');
             $main.css({borderRadius: radius});
@@ -959,25 +988,27 @@ vis.binds.hqwidgets = {
             // If dimmer or number
             if (data.wType == 'number') {
                 var scalaOptions = {
-                    change: function (value) {
+                    change:     function (value) {
                         data.value = parseFloat(value);
+
                         if (data.digits !== null) data.value = data.value.toFixed(data.digits);
-                        if (data.is_comma) data.value = data.value.toString().replace('.', ',');
-                        data.value = parseFloat(data.value);
-                        data.ack   = false;
-                        console.log('Set value: ' + data.value);
+                        if (data.is_comma)        data.value = data.value.toString().replace('.', ',');
+
+                        data.value     = parseFloat(data.value);
+                        data.ack       = false;
                         data.tempValue = undefined;
+
                         vis.binds.hqwidgets.button.changeState($div, false, false, true);
                         vis.setValue(data.oid, data.value);
                     },
-                    changing: function (value) {
+                    changing:   function (value) {
                         data.tempValue = value;
                         if (data.digits !== null) data.tempValue = data.tempValue.toFixed(data.digits);
                         if (data.is_comma) data.tempValue = data.tempValue.toString().replace('.', ',');
                         data.tempValue = parseFloat(data.tempValue);
                         vis.binds.hqwidgets.button.changeState($div, false, false, true);
                     },
-                    click: function (val) {
+                    click:      function (val) {
                         val = data.value;
                         if (val - data.min > ((data.max - data.min) / 2)) {
                             val = data.min;
@@ -989,12 +1020,13 @@ vis.binds.hqwidgets = {
                     },
                     alwaysShow: data.alwaysShow,
                     hideNumber: !data.showValue,
-                    readOnly: vis.editMode,
-                    width: ((100 + parseInt(data.circleWidth, 10)) * width / 100).toFixed(0)
+                    readOnly:   vis.editMode,
+                    width:      ((100 + parseInt(data.circleWidth, 10)) * width / 100).toFixed(0)
                 };
 
                 // show for temperature color depends on value
                 if (data.temperature) {
+                    scalaOptions.color = 'black';
                     scalaOptions.colorize = function (color, value, isPrevious) {
                         var ratio = (value - data.min) / (data.max - data.min);
                         return 'hsla(' + (180 + Math.round(180 * ratio)) + ', 70%, 50%, ' + ((isPrevious) ? 0.7 : 0.9) + ')';
@@ -1051,12 +1083,13 @@ vis.binds.hqwidgets = {
                 data.ack   = vis.states.attr(data.oid + '.ack');
                 data.lc    = vis.states.attr(data.oid + '.lc');
             }
+
             if (data['oid-working'])  data.working  = vis.states.attr(data['oid-working']  + '.val');
             if (data['oid-battery'])  data.battery  = vis.states.attr(data['oid-battery']  + '.val');
             if (data['oid-signal'])   data.signal   = vis.states.attr(data['oid-signal']   + '.val');
             if (data['oid-humidity']) data.humidity = vis.states.attr(data['oid-humidity'] + '.val');
-            if (data['set-oid'])      data.set      = vis.states.attr(data['set-oid']      + '.val');
-            if (data['drive-oid'])    data.drive    = vis.states.attr(data['drive-oid']    + '.val');
+            if (data['oid-temp'])     data.actual   = vis.states.attr(data['oid-temp']     + '.val');
+            if (data['oid-drive'])    data.drive    = vis.states.attr(data['oid-drive']    + '.val');
 
             vis.binds.hqwidgets.button.draw($div);
         }

@@ -133,11 +133,14 @@
                 if (!settings.alwaysShow && !$knobDiv._mouseEnter && !$knobDiv._mouseDown) {
                     $knobDiv.hide();
                     $scalaWrapped.show();
+                    if (settings.onhide) settings.onhide(false);
                 }
                 //console.log((event || '') +  ' (enter: ' + $knobDiv._mouseEnter + ', down: ' + $knobDiv._mouseDown + ')');
             }
             function show(event){
                 $knobDiv.show();
+                if (settings.onshow) settings.onshow(true);
+
                 //console.log((event || '') +  ' (enter: ' + $knobDiv._mouseEnter + ', down: ' + $knobDiv._mouseDown + ')');
             }
 
@@ -516,7 +519,41 @@
                 $this.find('.vis-hq-battery').hide();
             }
         });
-    }
+    };
+
+    $.fn.popupDialog = function (options) {
+        return this.each(function () {
+            var $this = $(this);
+            var $dialog = $this.find('.vis-hq-dialog');
+
+            if (!$dialog.length) {
+                var text = '<div class="vis-hq-dialog" style="display: none"></div>';
+                $this.append(text);
+                $dialog = $this.find('.vis-hq-dialog');
+                var dialogButtons = {};
+                dialogButtons[_('Ok')] = function () {
+                    $dialog.dialog('close');
+                };
+                $dialog.dialog({
+                    autoOpen: false,
+                    width:    options.width  || 500,
+                    height:   options.height || 220,
+                    modal:    options.modal === undefined ? true : !!options.modal,
+                    title:    options.title || _('Chart'),
+                    open:    function (event, ui) {
+                        $dialog.html(options.content || '');
+                        //$('[aria-describedby="dialog_delete"]').css('z-index', 11002);
+                        //$('.ui-widget-overlay').css('z-index', 1001);
+                    },
+                    close:   function () {
+                        $dialog.html('');
+                    },
+                    buttons: dialogButtons
+                });
+            }
+
+        });
+    };
 }(jQuery));
 
 // Add words for bars
@@ -540,7 +577,7 @@ if (vis.editMode) {
         "infoFontRightSize": {"en": "Right font size",  "de": "Schriftgrosse rechts",   "ru": "Размер шрифта справа"},
         "group_styles":     {"en": "Styles",            "de": "Stil",                   "ru": "Стили"},
         "styleNormal":      {"en": "Normal",            "de": "Normal",                 "ru": "Нормальный"},
-        "styleActive":      {"en": "Active",            "de": "Aktiv",                 "ru": "Активный"},
+        "styleActive":      {"en": "Active",            "de": "Aktiv",                  "ru": "Активный"},
         "usejQueryStyle":   {"en": "Use jQuery Styles", "de": "jQuery Stil anwenden",   "ru": "Применить jQuery стили"},
         "changeEffect":     {"en": "Change effect",     "de": "Anderungseffekt",        "ru": "Эффект при изменении"},
         "waveColor":        {"en": "Wave color",        "de": "Wellenfarbe",            "ru": "Цвет волн"},
@@ -564,7 +601,8 @@ if (vis.editMode) {
         "oid-signal":       {"en": "Signal object ID",  "de": "Signal ObjektID",        "ru": "ID качества сигнала"},
         "oid-humidity":     {"en": "Humidity ID",       "de": "Luftfeuchtigkeit ID",    "ru": "ID влажности"},
         "oid-drive":        {"en": "Valve ID",          "de": "Ventil ID",              "ru": "ID вентиля"},
-        "oid-temp":         {"en": "Actual temperature ID", "de": "Ist ID",             "ru": "ID актуальной температуры"}
+        "oid-actual":       {"en": "Actual temperature ID", "de": "Ist ID",             "ru": "ID актуальной температуры"},
+        "group_chart":      {"en": "Chart",             "de": "Grafik",                 "ru": "График"}
     });
 }
 
@@ -577,7 +615,8 @@ $.extend(true, systemDictionary, {
         "ru": "%s&nbsp;часов&nbsp;и&nbsp;%s&nbsp;мин. назад"
     },
     "yesterday":              {"en": "yesterday", "de": "gestern", "ru": "вчера"},
-    "for&nbsp;%s&nbsp;hours": {"en": "for&nbsp;%s&nbsp;hours", "de": "vor&nbsp;%s&nbsp;Stunden", "ru": "%s&nbsp;часов назад"}
+    "for&nbsp;%s&nbsp;hours": {"en": "for&nbsp;%s&nbsp;hours", "de": "vor&nbsp;%s&nbsp;Stunden", "ru": "%s&nbsp;часов назад"},
+    "Chart":                  {"en": "Chart",     "de": "Grafik",  "ru": "График"},
 });
 // widget can has following parts:
 // left info (descriptionLeft)
@@ -677,7 +716,7 @@ vis.binds.hqwidgets = {
             if (data.wType == 'number') {
                 var html = ((value === undefined || value === null) ? data.min : value) + ((data.unit === undefined) ? '' : data.unit);
                 if (data.drive !== undefined) {
-                    html += '<br>' + data.drive + '%';
+                    html += '<br><span class="vis-hq-drive">' + data.drive + '</span>%';
                 }
                 text = $div.find('.vis-hq-rightinfo-text').html(html);
             }
@@ -697,10 +736,40 @@ vis.binds.hqwidgets = {
             if (data.humidity !== undefined || data.actual !== undefined) {
                 if (isHide) {
                     $div.find('.vis-hq-centerinfo').hide();
+                    $div.find('.vis-hq-middle').css('opacity', 1);
                 } else {
                     if (!$div.find('.vis-hq-centerinfo').length) {
-                        var text = '<div class="vis-hq-centerinfo">';
-                        text += '<span class="vis-hq-centerinfo-top"></span><br><span class="vis-hq-centerinfo-bottom"></span></div>';
+                        var text = '<table class="vis-hq-centerinfo hq-no-space" style="z-index: 2;position: absolute;">';
+
+                        if (data.actual !== undefined) {
+                            text += '<tr class="vis-hq-actual-style hq-no-space"><td class="hq-no-space"><span class="vis-hq-actual"></span>' + ((data.unit === undefined) ? '' : data.unit) + '</tr>';
+                        }
+                        if (data.humidity !== undefined) {
+                            text += '<tr class="vis-hq-humidity-style hq-no-space"><td class="hq-no-space"><span class="vis-hq-humidity"></span>%</td></tr>';
+                        }
+
+                        text += '</table>';
+                        $div.find('.vis-hq-main').prepend(text);
+                    } else {
+                        $div.find('.vis-hq-centerinfo').show();
+                    }
+                    $div.find('.vis-hq-middle').css('opacity', 0.7);
+                    if (data.actual !== undefined) {
+                        $div.find('.vis-hq-actual').html((data.digits !== null) ? data.actual.toFixed(data.digits) : data.actual);
+                    }
+
+                    if (data.humidity !== undefined) {
+                        $div.find('.vis-hq-humidity').html(Math.round(data.humidity));
+                    }
+
+                    console.log('A');
+                    var $center = $div.find('.vis-hq-centerinfo');
+                    var $main   = $div.find('.vis-hq-main');
+                    if ($center.length) {
+                        $center.css({
+                            'top':  ($main.height() - $center.height()) / 2,
+                            'left': ($main.width()  - $center.width())  / 2
+                        });
                     }
                 }
             }
@@ -768,15 +837,15 @@ vis.binds.hqwidgets = {
             if (data['oid-battery']) $div.batteryIndicator('show', data.battery || false);
 
             if (data['oid-signal']) {
-                data.signal;
+                $div.find('.vis-hq-signal').html(data.signal);
             }
 
             if (data['oid-humidity']) {
-                $div.find('.vis-hq-humidity').html(data.humidity);
+                $div.find('.vis-hq-humidity').html(Math.round(data.humidity));
             }
 
             if (data['oid-actual']) {
-                $div.find('.vis-hq-set-temperature').html(data.set);
+                $div.find('.vis-hq-actual').html((data.digits !== null) ? data.actual.toFixed(data.digits) : data.actual);
             }
 
             if (data['oid-drive']) {
@@ -967,15 +1036,15 @@ vis.binds.hqwidgets = {
                     });
                 }
 
-                if (data['set-oid']) {
-                    vis.states.bind(data['set-oid'] + '.val', function (e, newVal, oldVal) {
-                        data.set = newVal;
+                if (data['oid-actual']) {
+                    vis.states.bind(data['oid-actual'] + '.val', function (e, newVal, oldVal) {
+                        data.actual = newVal;
                         vis.binds.hqwidgets.button.changeState($div, false, true);
                     });
                 }
 
-                if (data['drive-oid']) {
-                    vis.states.bind(data['drive-oid'] + '.val', function (e, newVal, oldVal) {
+                if (data['oid-drive']) {
+                    vis.states.bind(data['oid-drive'] + '.val', function (e, newVal, oldVal) {
                         data.drive = newVal;
                         vis.binds.hqwidgets.button.changeState($div, false, true);
                     });
@@ -1001,6 +1070,8 @@ vis.binds.hqwidgets = {
                         vis.binds.hqwidgets.button.changeState($div, false, false, true);
                         vis.setValue(data.oid, data.value);
                     },
+                    min:        data.min,
+                    max:        data.max,
                     changing:   function (value) {
                         data.tempValue = value;
                         if (data.digits !== null) data.tempValue = data.tempValue.toFixed(data.digits);
@@ -1010,22 +1081,42 @@ vis.binds.hqwidgets = {
                     },
                     click:      function (val) {
                         val = data.value;
-                        if (val - data.min > ((data.max - data.min) / 2)) {
-                            val = data.min;
+                        if (!data.temperature) {
+                            if (val - data.min > ((data.max - data.min) / 2)) {
+                                val = data.min;
+                            } else {
+                                val = data.max;
+                            }
                         } else {
-                            val = data.max;
+                            data.tempValue = undefined;
+                            vis.binds.hqwidgets.button.changeState($div, false, false, true);
+
+                            // Show dialog
+                            if (data.url) {
+                                
+                            }
                         }
                         console.log('Click. Set value ' + val);
                         return val;
                     },
                     alwaysShow: data.alwaysShow,
-                    hideNumber: !data.showValue,
+                    onshow:     function () {
+                        if (!data.alwaysShow) {
+                            vis.binds.hqwidgets.button.showCenterInfo($div, true);
+                        }
+                    },
+                    onhide:     function (){
+                        vis.binds.hqwidgets.button.showCenterInfo($div);
+                    },
+                    hideNumber: !data.showValue || (data.temperature && data.alwaysShow),
                     readOnly:   vis.editMode,
-                    width:      ((100 + parseInt(data.circleWidth, 10)) * width / 100).toFixed(0)
+                    width:      ((100 + parseInt(data.circleWidth || 50, 10)) * width / 100).toFixed(0)
                 };
 
                 // show for temperature color depends on value
                 if (data.temperature) {
+                    vis.binds.hqwidgets.button.showCenterInfo($div);
+
                     scalaOptions.color = 'black';
                     scalaOptions.colorize = function (color, value, isPrevious) {
                         var ratio = (value - data.min) / (data.max - data.min);
@@ -1033,6 +1124,7 @@ vis.binds.hqwidgets = {
                     }
                 }
                 $main.scala(scalaOptions);
+                $main.scala('value', data.value);
             } else {
                 if (!vis.editMode && data.oid) {
                     $main.click(function () {
@@ -1042,6 +1134,13 @@ vis.binds.hqwidgets = {
                         vis.setValue(data.oid, data.value);
                     });
                 }
+            }
+
+            //Chart dialog
+            if (data.url && !vis.editMode) {
+                $div.popupDialog({
+                    content: 'TEST'
+                });
             }
         },
         init: function (wid, view, data, style, wType) {
@@ -1073,7 +1172,7 @@ vis.binds.hqwidgets = {
             data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'hq-button-base-on');
             data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
             data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : ((data.max !== undefined) ? parseFloat(data.max) : 100));
-            data.digits = (!data.digits && data.digits !== 0) ? parseInt(data.digits, 10) : null;
+            data.digits = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
 
             $div.data('data',  data);
             $div.data('style', style);
@@ -1088,7 +1187,7 @@ vis.binds.hqwidgets = {
             if (data['oid-battery'])  data.battery  = vis.states.attr(data['oid-battery']  + '.val');
             if (data['oid-signal'])   data.signal   = vis.states.attr(data['oid-signal']   + '.val');
             if (data['oid-humidity']) data.humidity = vis.states.attr(data['oid-humidity'] + '.val');
-            if (data['oid-temp'])     data.actual   = vis.states.attr(data['oid-temp']     + '.val');
+            if (data['oid-actual'])   data.actual   = vis.states.attr(data['oid-actual']   + '.val');
             if (data['oid-drive'])    data.drive    = vis.states.attr(data['oid-drive']    + '.val');
 
             vis.binds.hqwidgets.button.draw($div);

@@ -524,34 +524,119 @@
     $.fn.popupDialog = function (options) {
         return this.each(function () {
             var $this = $(this);
-            var $dialog = $this.find('.vis-hq-dialog');
+            var $dialog;
+            //    timeout: data.dialog_timeout,
 
-            if (!$dialog.length) {
+            var dialog = $this.data('dialog');
+            if (!dialog) {
+                if (typeof options == 'string') {
+                    console.log('Show prior init');
+                    return;
+                }
                 var text = '<div class="vis-hq-dialog" style="display: none"></div>';
                 $this.append(text);
                 $dialog = $this.find('.vis-hq-dialog');
-                var dialogButtons = {};
+
+                $this.data('dialog', $dialog[0]);
+
+                var dialogButtons = [
+                    {
+                        text: _('Ok'),
+                        click: function () {
+                            $dialog.dialog('close');
+                        },
+                        id: 'ok'
+                    }
+                ];
+
                 dialogButtons[_('Ok')] = function () {
                     $dialog.dialog('close');
                 };
+                if (options.timeout) {
+                    dialogButtons.unshift( {
+                        id: 'donthide',
+                        text: '',
+                        icons: {primary: 'ui-icon-pin-w'},
+                        click: function () {
+                            $dialog.data('no-timeout', !$dialog.data('no-timeout'));
+                            debugger;
+                            if ($dialog.data('no-timeout')) {
+                                $(this).parent().find('#donthide').addClass('ui-state-error').button({
+                                    icons: {primary: 'ui-icon-pin-s'}
+                                });
+                                var timeout = $dialog.data('timeout');
+                                if (timeout) {
+                                    clearTimeout(timeout);
+                                    $dialog.data('timeout', null);
+                                }
+                            } else {
+                                $(this).parent().find('#donthide').removeClass('ui-state-error').button({
+                                    icons: {primary: 'ui-icon-pin-w'}
+                                });
+                                $dialog.data('timeout', setTimeout(function () {
+                                    $dialog.dialog('close');
+                                }, data.timeout));
+                            }
+                        }
+                    });
+                }
+
                 $dialog.dialog({
-                    autoOpen: false,
-                    width:    options.width  || 500,
-                    height:   options.height || 220,
+                    autoOpen: options.open || false,
+                    width:    options.width  || 800,
+                    height:   options.height || 400,
                     modal:    options.modal === undefined ? true : !!options.modal,
-                    title:    options.title || _('Chart'),
+                    title:    options.title  || _('Chart'),
+                    show:     { effect: options.effect, duration: 500 },
                     open:    function (event, ui) {
-                        $dialog.html(options.content || '');
+                        $(this).parent().find('#donthide').css({width: 37, height: 37});
+                        $(this).parent().find("#ok").focus();
+                        if (options.effect) {
+                            setTimeout(function () {
+                                $dialog.html(options.content || '');
+                            }, 500);
+                        } else {
+                            $dialog.html(options.content || '');
+                        }
+                        if (options.timeout && !$dialog.data('no-timeout')) {
+                            $dialog.data('timeout', setTimeout(function () {
+                                $dialog.dialog('close');
+                            }, options.timeout));
+                        }
                         //$('[aria-describedby="dialog_delete"]').css('z-index', 11002);
                         //$('.ui-widget-overlay').css('z-index', 1001);
                     },
                     close:   function () {
                         $dialog.html('');
+                        var timeout = $dialog.data('timeout');
+                        if (timeout) {
+                            clearTimeout(timeout);
+                            $dialog.data('timeout', null);
+                        }
                     },
                     buttons: dialogButtons
                 });
+                $dialog.data('data', options);
+            } else {
+                $dialog = $(dialog);
             }
+            var data = $dialog.data('data');
 
+            if (typeof options == 'string') {
+                switch (options) {
+                    case 'show':
+                        $dialog.dialog('open');
+                        break;
+
+                    case 'hide':
+                        $dialog.dialog('close');
+                        break;
+
+                    default:
+                        console.log('Unknown command ' + options);
+                        break;
+                }
+            }
         });
     };
 }(jQuery));
@@ -602,7 +687,10 @@ if (vis.editMode) {
         "oid-humidity":     {"en": "Humidity ID",       "de": "Luftfeuchtigkeit ID",    "ru": "ID влажности"},
         "oid-drive":        {"en": "Valve ID",          "de": "Ventil ID",              "ru": "ID вентиля"},
         "oid-actual":       {"en": "Actual temperature ID", "de": "Ist ID",             "ru": "ID актуальной температуры"},
-        "group_chart":      {"en": "Chart",             "de": "Grafik",                 "ru": "График"}
+        "group_chart":      {"en": "Chart",             "de": "Grafik",                 "ru": "График"},
+        "dialog_effect":    {"en": "Show effect",       "de": "Anzeigeeffekt",          "ru": "Эффект открытия"},
+        "dialog_timeout":   {"en": "Hide timeout(ms)",  "de": "Zumachen nach(ms)",      "ru": "Закрыть после(мс)"},
+        "dialog_open":      {"en": "Test open",         "de": "Testen",                 "ru": "Тест"},
     });
 }
 
@@ -762,7 +850,6 @@ vis.binds.hqwidgets = {
                         $div.find('.vis-hq-humidity').html(Math.round(data.humidity));
                     }
 
-                    console.log('A');
                     var $center = $div.find('.vis-hq-centerinfo');
                     var $main   = $div.find('.vis-hq-main');
                     if ($center.length) {
@@ -1093,7 +1180,7 @@ vis.binds.hqwidgets = {
 
                             // Show dialog
                             if (data.url) {
-                                
+                                $div.popupDialog('show');
                             }
                         }
                         console.log('Click. Set value ' + val);
@@ -1137,9 +1224,16 @@ vis.binds.hqwidgets = {
             }
 
             //Chart dialog
-            if (data.url && !vis.editMode) {
+            if (data.url/* && !vis.editMode*/) {
                 $div.popupDialog({
-                    content: 'TEST'
+                    content: '<iframe src="' + data.url + '" style="width: 100%; height: calc(100% - 5px); border: 0"></iframe>',
+                    width:   data.dialog_width,
+                    height:  data.dialog_height,
+                    effect:  data.dialog_effect,
+                    timeout: data.dialog_timeout,
+                    modal:   data.dialog_modal,
+                    title:   data.dialog_title || data['oid-actual'],
+                    open:    data.dialog_open && vis.editMode
                 });
             }
         },

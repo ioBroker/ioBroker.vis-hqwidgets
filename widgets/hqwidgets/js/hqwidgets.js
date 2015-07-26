@@ -1287,6 +1287,139 @@ vis.binds.hqwidgets = {
             vis.binds.hqwidgets.button.draw($div);
         }
     },
+    window: {
+        _drawOneWindow: function (index, type, xoffset, width_, height_) {
+            var name = this.intern._jelement.attr("id") + "_" + index;
+            if (!this.intern._jelement.leaf) this.intern._jelement.leaf = [];
+            this.intern._jelement.prepend("<div id='"+name+"_0' class='hq-blind-blind1'></div>");
+            var wnd = {};
+            wnd.ooffset = (Math.tan(10 * Math.PI/180) * width_)/2 + 2;
+            wnd.width   = width_  - 9;
+            wnd.height  = height_ - 9;
+            wnd.owidth  = (wnd.width  * Math.cos(15 * Math.PI/180)) * 0.9;
+            wnd.oheight = (wnd.height * Math.cos(15 * Math.PI/180)) * 0.9;
+            wnd.divs = [];
+            wnd.style = type;
+            wnd.state = hqWidgets.gWindowState.gWindowClosed;
+            wnd.handleState = hqWidgets.gHandlePos.gPosClosed;
+            wnd.leafIndex  = 3;
+            wnd.blindIndex = 2;
+            wnd.divs[0] = $("#"+name+"_0");
+            wnd.divs[0].css({height: height_-2, width: width_-2, top: 3, position: 'absolute', left: xoffset+4}); // Set size
+            wnd.divs[0].append("<div id='"+name+"_1'  class='hq-blind-blind2'></div>");
+            wnd.divs[0].addClass('hq-no-select');
+            wnd.divs[1] = $("#"+name+"_1");
+            wnd.divs[1].css({height: height_-9, width: width_-9}); // Set size
+            wnd.divs[1].append("<div id='"+name+"_2'  class='hq-blind-blind'></div>");
+            wnd.divs[1].addClass('hq-no-select');
+            wnd.divs[2] = $("#"+name+"_2");
+            wnd.divs[2].css({height: 0, width: width_-9}); // Set size
+            wnd.divs[2].append("<div id='"+name+"_3'  class='hq-blind-blind3'></div>");
+            wnd.divs[2].addClass('hq-no-select');
+            wnd.divs[3] = $("#"+name+"_3");
+            wnd.divs[3].css({height: height_-9, width: width_-9}); // Set size
+            wnd.divs[3].addClass('hq-no-select');
+            // handle
+            if (type != hqWidgets.gSwingType.gSwingDeaf) {
+                wnd.divs[3].append("<div id='"+name+"_4'></div>");
+                wnd.divs[4] = $("#"+name+"_4");
+                wnd.divs[4].addClass('hq-no-select hq-blind-handle-closed hq-blind-handle-bg');
+                var h = wnd.divs[3].height();
+                var w = wnd.divs[3].width();
+                var size = (h > w) ? w : h;
+                wnd.divs[4].css({height: size * 0.15});
+                if (type == hqWidgets.gSwingType.gSwingLeft)
+                    wnd.divs[4].css({left: wnd.divs[2].width() - wnd.divs[4].width(), top: wnd.divs[3].height() / 2});
+                else if (type == hqWidgets.gSwingType.gSwingTop)
+                    wnd.divs[4].css({left: (wnd.divs[2].width() - size * 0.15) / 2, top: 0});
+                else // Right
+                    wnd.divs[4].css({left: 0, top: wnd.divs[3].height() / 2});
+            }
+
+            this.intern._jelement.leaf[index] = wnd;
+
+            wnd.divs[3].parentQuery=this;
+            if (!this.intern._blinds) this.intern._blinds = [];
+            this.intern._blinds[index] = wnd;
+        },
+        drawOneWindow: function (index, state, options) {
+            //var style = 'height: ' + height_ - 2, width: width_-2, top: 3, position: 'absolute', left: xoffset+4
+            var bWidth = options.border_width;
+            var div1 = '<div class="hq-blind-blind1" style="' +
+                'border-width: ' + bWidth + 'px;' + //'px 2px 2px 2px; ' +
+                'border-color: #a9a7a8;' +
+                '">';
+
+            var div2 = '<div class="hq-blind-blind2" style="' +
+                'border-width: ' + bWidth + 'px; ' +
+                '">';
+
+            var div3 = '<div class="hq-blind-blind3">';
+
+            var div4 = '<div class="hq-blind-blind4" style="' +
+                'border-width: ' + bWidth + 'px;' + //'3px 1px 1px 1px;' +
+                'border-color: #a5aaad;' +
+                '">';
+
+            var text = div1 + div2 + div3 + div4 + '</div></div></div></div>';
+
+            return text;
+        },
+        draw: function ($div) {
+            var data = $div.data('data');
+
+            $div.css({'padding-top': data.border_width, 'padding-bottom' : data.border_width - 1, 'padding-right': data.border_width + 1, 'padding-left': data.border_width + 1});
+
+            //var windowHeight = $div.height();
+            //var windowWidth  = $div.width() / data.slide_count;
+            var text = '<table class="hq-blind hq-no-space" style="width: 100%; height: 100%"><tr>';
+            for (var i = 1; i <= data.slide_count; i++) {
+                var options = {
+                    slideOid:     data['slide_sensor' + i],
+                    handleOid:    data['slide_handle' + i],
+                    type:         data['slide_type' + i],
+                    border_width: data.border_width
+                };
+                text += '<td>' + this.drawOneWindow(i, 'closed', options) + '</td>';
+            }
+            text += '</tr></table>';
+            $div.html(text);
+        },
+        init: function (wid, view, data, style) {
+            var $div = $('#' + wid).addClass('hq-button-base');
+            if (!$div.length) {
+                setTimeout(function () {
+                    vis.binds.hqwidgets.window.init(wid, view, data, style);
+                }, 100);
+                return;
+            }
+            console.log('Window');
+            var _data = {wid: wid, view: view};
+            for (var a in data) {
+                if (a[0] != '_') _data[a] = data[a];
+            }
+            data = _data;
+
+            data.min    = ((data.min !== undefined) ? parseFloat(data.min) : 0);
+            data.max    = ((data.max !== undefined) ? parseFloat(data.max) : 100);
+            data.digits = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
+            if (!data.border_width && data.border_width != '0') data.border_width = 3;
+            data.border_width = parseInt(data.border_width, 10);
+
+            $div.data('data',  data);
+            $div.data('style', style);
+
+            if (data.oid) {
+                data.value = vis.states.attr(data.oid + '.val');
+                data.ack   = vis.states.attr(data.oid + '.ack');
+                data.lc    = vis.states.attr(data.oid + '.lc');
+            }
+
+            if (data['oid-working'])  data.working  = vis.states.attr(data['oid-working']  + '.val');
+
+            vis.binds.hqwidgets.window.draw($div);
+        }
+    },
     circle: {
         init: function (wid, view, data) {
             var $div = $('#' + wid);

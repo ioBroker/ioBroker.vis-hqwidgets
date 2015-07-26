@@ -65,18 +65,22 @@
     %></div>
 </script>
 
-<!--script type="text/ejs" id="tplHqShutter" class="vis-tpl" data-vis-set="hqwidgets" data-vis-name="Window and Shutter" data-vis-attrs="hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-LC-Bl1-SM,HMW-LC-Bl1-DR,HM-LC-Bl1-FM,HM-LC-Bl1-PB-FM,HM-LC-Bl1PBU-FM;HM-Sec-SC,CC-SC-Rd-WM-W-R5,FHT80TF-2;HM-Sec-RHS">
-    <%
-    if (this && this.data && this.data.attr) {
-		if (this.data.attr('hqoptions')){
-			vis.binds.hqWidgetsExt.hqButtonExt (this.data.wid, this.data.attr('hqoptions'), undefined, this.view);
-		} else {
-			vis.binds.hqWidgetsExt.hqButtonExt (this.data.wid, undefined, "tplHqShutter", this.view);
-		}
-	}
-    %>
-</script>
 <script type="text/ejs"
+        id="tplHqShutter"
+        class="vis-tpl"
+        data-vis-set="hqwidgets"
+        data-vis-type="ctrl;window;shutter"
+        data-vis-name="Window and Shutter"
+        data-vis-attrs="oid;border_width/slider,0,10,1;slide_count[1]/nselect,1,2,3,4;"
+        data-vis-attrs0="group.slides/byindex;slide_type(1-slide_count)/select,Not opened,Left,Right,Top;slide_sensor(1-slide_count)/id;slide_handle(1-slide_count)/id;"
+        data-vis-update-style="true"
+        data-hqwidgets-filter="level.blind">
+    <div class="vis-widget hq-blind-base <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px" id="<%= this.data.attr('wid') %>"><%
+        vis.binds.hqwidgets.window.init(this.data.wid, this.view, this.data, this.style);
+    %></div>
+</script>
+
+<!--script type="text/ejs"
 id="tplHqInTemp" class="vis-tpl"
 data-vis-set="hqwidgets" data-vis-name="Inside temperature"
 data-vis-attrs="hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-CC-TC,HM-CC-RT-DN,HM-TC-IT-WM-W-EU;HM-CC-VD">

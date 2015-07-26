@@ -14,7 +14,7 @@
         "enabled":                  true,
         "mode":                     "once",
         "extIcon":                  "https://raw.githubusercontent.com/ioBroker/ioBroker.vis-hqwidgets/master/admin/hqwidgets.png",
-        "keywords":                 ["hqwidgets", "star trek", "vis", "GUI", "graphical", "scada"],
+        "keywords":                 ["hqwidgets", "vis", "GUI", "graphical", "scada"],
         "readme":                   "https://github.com/ioBroker/ioBroker.vis-hqwidgets/blob/master/README.md",
         "authors": [
             "bluefox <dogafox@gmail.com>"

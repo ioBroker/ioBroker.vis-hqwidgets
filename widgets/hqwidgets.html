@@ -51,13 +51,12 @@
         data-vis-type="ctrl,temperature"
         data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqwidgetsInTemp.png"></img>'
         data-vis-update-style="true"
-        data-vis-attrs="oid[nothing_selected]/id/changedId;oid-humidity;oid-actual;oid-drive;oid-battery;oid-signal;"
+        data-vis-attrs="oid[nothing_selected]/id,value.temperature/changedId;oid-humidity;oid-actual;oid-drive;oid-battery;oid-signal;"
         data-vis-attrs0="group.value;unit[°C];min[6];max[30];digits[0]/number;is_comma[true]/checkbox;"
         data-vis-attrs1="group.center;caption;iconName[img~Heating.png]/image;btIconWidth[45]/slider,0,400,1;offsetAuto[true]/checkbox;leftOffset[25]/slider,0,100,1;topOffset[55]/slider,0,100,1;circleWidth[50]/slider,1,100,1;showValue[true]/checkbox;alwaysShow/checkbox;"
         data-vis-attrs2="group.leftRight;hoursLastAction/nselect,,1,2,3,6,12,24,1024;timeAsInterval[true]/checkbox;format_date/auto,YYYY.MM.DD hh:mm:ss,DD.MM.YYYY hh:mm:ss,YYYY/MM/DD hh:mm:ss,hh:mm:ss,hh:mm;descriptionLeft;infoLeftFontSize[12]/slider,6,50,1;infoFontRightSize[12]/slider,6,50,1;"
         data-vis-attrs3="group.styles;styleNormal[hq-button-base-intemp]/style,hqwidgetsButtons,-button,background;usejQueryStyle/checkbox;changeEffect/nselect,,waves,wobble,tada,swing,shake,rubberBand,pulse,flash,bounce;waveColor/color;testActive/checkbox;"
         data-vis-attrs4="group.chart;url;dialog_title;dialog_width;dialog_height;dialog_effect/effect;dialog_timeout/number,0,3600000,100;dialog_modal/checkbox;dialog_open/checkbox"
-        data-vis-filter="value.temperature"
         >
     <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px; border-radius: 64px" id="<%= this.data.attr('wid') %>"><%
         this.data.temperature = true;
@@ -72,7 +71,7 @@
         data-vis-type="ctrl;window;shutter"
         data-vis-name="Window and Shutter"
         data-vis-attrs="oid;border_width/slider,0,10,1;slide_count[1]/nselect,1,2,3,4;"
-        data-vis-attrs0="group.slides/byindex;slide_type(1-slide_count)/select,Not opened,Left,Right,Top;slide_sensor(1-slide_count)/id;slide_handle(1-slide_count)/id;"
+        data-vis-attrs0="group.slides/byindex;slide_type(1-slide_count)/select,,left,right,top,bottom;slide_sensor(1-slide_count)/id;slide_handle(1-slide_count)/id;"
         data-vis-update-style="true"
         data-hqwidgets-filter="level.blind">
     <div class="vis-widget hq-blind-base <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px" id="<%= this.data.attr('wid') %>"><%

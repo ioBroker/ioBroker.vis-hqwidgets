@@ -1342,7 +1342,7 @@ vis.binds.hqwidgets = {
             if (!this.intern._blinds) this.intern._blinds = [];
             this.intern._blinds[index] = wnd;
         },
-        drawOneWindow: function (index, state, options) {
+        drawOneWindow: function (index, options, state, handleState) {
             //var style = 'height: ' + height_ - 2, width: width_-2, top: 3, position: 'absolute', left: xoffset+4
             var bWidth = options.border_width;
             var div1 = '<div class="hq-blind-blind1" style="' +
@@ -1361,12 +1361,70 @@ vis.binds.hqwidgets = {
                 'border-color: #a5aaad;' +
                 '">';
 
-            var text = div1 + div2 + div3 + div4 + '</div></div></div></div>';
+            var div5 = '';
+            if (options.type) {
+                div5 = '<div class="hq-blind-handle hq-blind-handle-bg';
+                var val;
+                if (options.handleOid) {
+                    val = vis.states[options.handleOid + '.val'];
+                    if (val == 2) {
+                        div5 += ' hq-blind-handle-tilted-bg'
+                    }
+                }
+                var bbWidth = Math.round(bWidth / 3);
+                if (bbWidth < 1) bbWidth = 1;
+                div5 += '" style="border-width: ' + bbWidth + 'px;';
+                if (options.type == 'left' || options.type == 'right') {
+                    div5 += 'top: 50%;	width: ' + bWidth + 'px; height: 15%;'
+                } else if (options.type == 'top' || options.type == 'bottom') {
+                    div5 += 'left: 50%; height: ' + bWidth + 'px; width: 15%;'
+                }
+                if (options.type == 'right') {
+                    div5 += 'left: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
+                } else if (options.type == 'bottom') {
+                    div5 += 'top: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
+                }
+
+                if (options.handleOid) {
+                    var format =
+                        '-moz-transform-origin: ------;' +
+                        '-ms-transform-origin: ------;' +
+                        '-o-transform-origin: ------;' +
+                        '-webkit-transform-origin: ------;' +
+                        'transform-origin: ------;' +
+                        '-moz-transform: rotate(DDDdeg);' +
+                        '-ms-transform: rotate(DDDdeg);' +
+                        '-o-transform: rotate(DDDdeg);' +
+                        '-webkit-transform: rotate(DDDdeg);' +
+                        'transform: rotate(DDDdeg);';
+
+
+                    var w = Math.round(bbWidth + bWidth / 2);
+                    if (options.type == 'left' || options.type == 'bottom') {
+                        if (val == 1) {
+                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '-90');
+                        } else if (val == 2) {
+                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
+                        }
+                    } else {
+                        if (val == 1) {
+                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '90');
+                        } else if (val == 2) {
+                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
+                        }
+                    }
+                }
+
+                div5 += '"></div>';
+
+            }
+            var text = div1 + div2 + div3 + div4 + div5 + '</div></div></div></div>';
 
             return text;
         },
         draw: function ($div) {
             var data = $div.data('data');
+            if (!data) return;
 
             $div.css({'padding-top': data.border_width, 'padding-bottom' : data.border_width - 1, 'padding-right': data.border_width + 1, 'padding-left': data.border_width + 1});
 
@@ -1380,7 +1438,7 @@ vis.binds.hqwidgets = {
                     type:         data['slide_type' + i],
                     border_width: data.border_width
                 };
-                text += '<td>' + this.drawOneWindow(i, 'closed', options) + '</td>';
+                text += '<td>' + this.drawOneWindow(i, options, 'closed') + '</td>';
             }
             text += '</tr></table>';
             $div.html(text);
@@ -1418,6 +1476,20 @@ vis.binds.hqwidgets = {
             if (data['oid-working'])  data.working  = vis.states.attr(data['oid-working']  + '.val');
 
             vis.binds.hqwidgets.window.draw($div);
+
+            for (var i = 1; i <= data.slide_count; i++) {
+                if (data['slide_sensor' + i]) {
+                    vis.states.bind(data['slide_sensor' + i] + '.val', function (e, newVal, oldVal) {
+                        vis.binds.hqwidgets.window.draw($div);
+                    });
+                }
+                if (data['slide_handle' + i]) {
+                    vis.states.bind(data['slide_handle' + i] + '.val', function (e, newVal, oldVal) {
+                        vis.binds.hqwidgets.window.draw($div);
+                    });
+                }
+
+            }
         }
     },
     circle: {

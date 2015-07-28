@@ -398,6 +398,15 @@
     };
 
     $.fn.makeSlider = function (options, onChange, onIdle) {
+        if (options == 'hide') {
+            return this.each(function () {
+                var $this = $(this);
+                var timer = $this.data('hideTimer');
+                if (timer) clearTimeout(timer);
+                $this.data('hideTimer', null);
+                $this.hide();
+            });
+        }
 
         if (typeof options == 'string') {
             if (options == 'restart') {
@@ -414,28 +423,31 @@
             return;
         }
 
-
         if (typeof options == 'function') {
             onIdle   = onChange;
             onChange = options;
             options  = null;
         }
 
-
         options = options || {};
         options.timeout  = (options.timeout === undefined) ? 2000 : options.timeout;
-        options.min      = (options.min === undefined) ? 0: options.min;
-        options.max      = (options.max === undefined) ? 100: options.max;
-        options.value    = (options.value === undefined) ? options.max : options.value;
-        options.show     = (options.show === undefined)  ? true : options.show;
+        options.min      = (options.min     === undefined) ? 0: options.min;
+        options.max      = (options.max     === undefined) ? 100: options.max;
+        options.value    = (options.value   === undefined) ? options.max : options.value;
+        options.show     = (options.show    === undefined)  ? true : options.show;
         options.onIdle   = onIdle;
         options.onChange = onChange;
+
+        if (options.invert) {
+            options.value = options.max - options.value + options.min;
+        }
 
         return this.each(function () {
             var $this = $(this);
 
             if (options.timeout && options.show) {
                 $this.data('hideTimer', setTimeout(function () {
+                    $this.data('hideTimer', null);
                     if (onIdle) onIdle();
                 }, options.timeout));
             }
@@ -457,7 +469,14 @@
 
                     $this.data('timer', setTimeout(function () {
                         $this.data('timer', null);
-                        if (options.onChange) options.onChange(ui.value);
+                        if (options.onChange) {
+                            var val = ui.value;
+                            if (options.invert) {
+                                val = options.max - ui.value + options.min;
+                            }
+
+                            options.onChange(val);
+                        }
                     }, 500));
 
                     if (options.timeout) {
@@ -1256,6 +1275,7 @@ vis.binds.hqwidgets = {
             }
             var _data = {wid: wid, view: view, wType: wType};
             for (var a in data) {
+                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
                 if (a[0] != '_') {
                     _data[a] = data[a];
                 }
@@ -1288,62 +1308,7 @@ vis.binds.hqwidgets = {
         }
     },
     window: {
-        _drawOneWindow: function (index, type, xoffset, width_, height_) {
-            var name = this.intern._jelement.attr("id") + "_" + index;
-            if (!this.intern._jelement.leaf) this.intern._jelement.leaf = [];
-            this.intern._jelement.prepend("<div id='"+name+"_0' class='hq-blind-blind1'></div>");
-            var wnd = {};
-            wnd.ooffset = (Math.tan(10 * Math.PI/180) * width_)/2 + 2;
-            wnd.width   = width_  - 9;
-            wnd.height  = height_ - 9;
-            wnd.owidth  = (wnd.width  * Math.cos(15 * Math.PI/180)) * 0.9;
-            wnd.oheight = (wnd.height * Math.cos(15 * Math.PI/180)) * 0.9;
-            wnd.divs = [];
-            wnd.style = type;
-            wnd.state = hqWidgets.gWindowState.gWindowClosed;
-            wnd.handleState = hqWidgets.gHandlePos.gPosClosed;
-            wnd.leafIndex  = 3;
-            wnd.blindIndex = 2;
-            wnd.divs[0] = $("#"+name+"_0");
-            wnd.divs[0].css({height: height_-2, width: width_-2, top: 3, position: 'absolute', left: xoffset+4}); // Set size
-            wnd.divs[0].append("<div id='"+name+"_1'  class='hq-blind-blind2'></div>");
-            wnd.divs[0].addClass('hq-no-select');
-            wnd.divs[1] = $("#"+name+"_1");
-            wnd.divs[1].css({height: height_-9, width: width_-9}); // Set size
-            wnd.divs[1].append("<div id='"+name+"_2'  class='hq-blind-blind'></div>");
-            wnd.divs[1].addClass('hq-no-select');
-            wnd.divs[2] = $("#"+name+"_2");
-            wnd.divs[2].css({height: 0, width: width_-9}); // Set size
-            wnd.divs[2].append("<div id='"+name+"_3'  class='hq-blind-blind3'></div>");
-            wnd.divs[2].addClass('hq-no-select');
-            wnd.divs[3] = $("#"+name+"_3");
-            wnd.divs[3].css({height: height_-9, width: width_-9}); // Set size
-            wnd.divs[3].addClass('hq-no-select');
-            // handle
-            if (type != hqWidgets.gSwingType.gSwingDeaf) {
-                wnd.divs[3].append("<div id='"+name+"_4'></div>");
-                wnd.divs[4] = $("#"+name+"_4");
-                wnd.divs[4].addClass('hq-no-select hq-blind-handle-closed hq-blind-handle-bg');
-                var h = wnd.divs[3].height();
-                var w = wnd.divs[3].width();
-                var size = (h > w) ? w : h;
-                wnd.divs[4].css({height: size * 0.15});
-                if (type == hqWidgets.gSwingType.gSwingLeft)
-                    wnd.divs[4].css({left: wnd.divs[2].width() - wnd.divs[4].width(), top: wnd.divs[3].height() / 2});
-                else if (type == hqWidgets.gSwingType.gSwingTop)
-                    wnd.divs[4].css({left: (wnd.divs[2].width() - size * 0.15) / 2, top: 0});
-                else // Right
-                    wnd.divs[4].css({left: 0, top: wnd.divs[3].height() / 2});
-            }
-
-            this.intern._jelement.leaf[index] = wnd;
-
-            wnd.divs[3].parentQuery=this;
-            if (!this.intern._blinds) this.intern._blinds = [];
-            this.intern._blinds[index] = wnd;
-        },
-        drawOneWindow: function (index, options, state, handleState) {
-            //var style = 'height: ' + height_ - 2, width: width_-2, top: 3, position: 'absolute', left: xoffset+4
+        drawOneWindow: function (index, options) {
             var bWidth = options.border_width;
             var div1 = '<div class="hq-blind-blind1" style="' +
                 'border-width: ' + bWidth + 'px;' + //'px 2px 2px 2px; ' +
@@ -1354,22 +1319,43 @@ vis.binds.hqwidgets = {
                 'border-width: ' + bWidth + 'px; ' +
                 '">';
 
-            var div3 = '<div class="hq-blind-blind3">';
+            var div3 = '<div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tr class="hq-no-space hq-blind-position" style="height: ' + options.shutterPos + '%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space"><td class="hq-no-space"></td></tr></table>';
 
-            var div4 = '<div class="hq-blind-blind4" style="' +
+            var hanldePos  = null;
+            var slidePos   = null;
+
+            if (options.handleOid) {
+                hanldePos = vis.states[options.handleOid + '.val'];
+                slidePos = hanldePos;
+            }
+            if (options.slideOid) {
+                slidePos = vis.states[options.slideOid + '.val'];
+                if (!options.handleOid) hanldePos = slidePos;
+            }
+            if (options.oid) {
+
+            }
+
+
+            var div4 = '<div class="hq-blind-blind4';
+            if ((slidePos == 1 || slidePos === true || slidePos === 'true' || slidePos === 'open' || slidePos === 'opened') && options.type) {
+                div4 +=' hq-blind-blind4-opened-' + options.type;
+            }
+            if ((slidePos == 2 || slidePos === 'tilt' || slidePos === 'tilted') && options.type) {
+                div4 +=' hq-blind-blind4-tilted';
+            }
+            options.shutterPos = options.shutterPos || 0;
+            div4 +='" style="' +
                 'border-width: ' + bWidth + 'px;' + //'3px 1px 1px 1px;' +
                 'border-color: #a5aaad;' +
                 '">';
 
             var div5 = '';
+
             if (options.type) {
                 div5 = '<div class="hq-blind-handle hq-blind-handle-bg';
-                var val;
-                if (options.handleOid) {
-                    val = vis.states[options.handleOid + '.val'];
-                    if (val == 2) {
-                        div5 += ' hq-blind-handle-tilted-bg'
-                    }
+                if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
+                    div5 += ' hq-blind-handle-tilted-bg';
                 }
                 var bbWidth = Math.round(bWidth / 3);
                 if (bbWidth < 1) bbWidth = 1;
@@ -1385,7 +1371,7 @@ vis.binds.hqwidgets = {
                     div5 += 'top: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
                 }
 
-                if (options.handleOid) {
+                if (hanldePos) {
                     var format =
                         '-moz-transform-origin: ------;' +
                         '-ms-transform-origin: ------;' +
@@ -1398,27 +1384,27 @@ vis.binds.hqwidgets = {
                         '-webkit-transform: rotate(DDDdeg);' +
                         'transform: rotate(DDDdeg);';
 
-
                     var w = Math.round(bbWidth + bWidth / 2);
                     if (options.type == 'left' || options.type == 'bottom') {
-                        if (val == 1) {
+                        if (hanldePos == 1 || hanldePos === true || hanldePos === 'true' || hanldePos === 'open' || hanldePos === 'opened') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '-90');
-                        } else if (val == 2) {
+                        } else if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
                         }
                     } else {
-                        if (val == 1) {
+                        if (hanldePos == 1 || hanldePos === true || hanldePos === 'true' || hanldePos === 'open' || hanldePos === 'opened') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '90');
-                        } else if (val == 2) {
+                        } else if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
                         }
                     }
                 }
 
                 div5 += '"></div>';
-
             }
-            var text = div1 + div2 + div3 + div4 + div5 + '</div></div></div></div>';
+
+
+            var text = div1 + div2 + div3 + div4 + div5 + '</div></div></div></div></div>';
 
             return text;
         },
@@ -1428,20 +1414,55 @@ vis.binds.hqwidgets = {
 
             $div.css({'padding-top': data.border_width, 'padding-bottom' : data.border_width - 1, 'padding-right': data.border_width + 1, 'padding-left': data.border_width + 1});
 
-            //var windowHeight = $div.height();
-            //var windowWidth  = $div.width() / data.slide_count;
+            // get position
+            data.shutterPos = 0;
+            if (data.oid) {
+                data.shutterPos = vis.states[data.oid + '.val'];
+                if (data.shutterPos === undefined || data.shutterPos === null) {
+                    data.shutterPos = 0;
+                } else {
+                    if (data.shutterPos < data.min) data.shutterPos = data.min;
+                    if (data.shutterPos > data.max) data.shutterPos = data.max
+
+                    data.shutterPos = Math.round(100 * (data.shutterPos - data.min) / (data.max - data.min));
+                }
+            }
+
             var text = '<table class="hq-blind hq-no-space" style="width: 100%; height: 100%"><tr>';
             for (var i = 1; i <= data.slide_count; i++) {
                 var options = {
                     slideOid:     data['slide_sensor' + i],
                     handleOid:    data['slide_handle' + i],
                     type:         data['slide_type' + i],
-                    border_width: data.border_width
+                    border_width: data.border_width,
+                    shutterPos:   data.shutterPos
                 };
                 text += '<td>' + this.drawOneWindow(i, options, 'closed') + '</td>';
             }
             text += '</tr></table>';
             $div.html(text);
+        },
+        openPopup: function ($div){
+            var data = $div.data('data');
+            if (!data) return;
+
+            var $big = $div.find('.hq-blind-big');
+            if (!$big.length) {
+                var text = '<div class="hq-blind-big"></div>';
+                $div.append(text);
+                $big = $div.find('.hq-blind-big').makeSlider({
+                    max:    data.max,
+                    min:    data.min,
+                    invert: !data.invert
+                }, function (newValue) {
+                    vis.setValue(data.oid, newValue);
+                    $big.makeSlider('hide');
+                }, function () {
+                    $big.hide();
+                });
+            } else{
+                $big.show();
+            }
         },
         init: function (wid, view, data, style) {
             var $div = $('#' + wid).addClass('hq-button-base');
@@ -1454,6 +1475,7 @@ vis.binds.hqwidgets = {
             console.log('Window');
             var _data = {wid: wid, view: view};
             for (var a in data) {
+                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
                 if (a[0] != '_') _data[a] = data[a];
             }
             data = _data;
@@ -1467,15 +1489,25 @@ vis.binds.hqwidgets = {
             $div.data('data',  data);
             $div.data('style', style);
 
-            if (data.oid) {
-                data.value = vis.states.attr(data.oid + '.val');
-                data.ack   = vis.states.attr(data.oid + '.ack');
-                data.lc    = vis.states.attr(data.oid + '.lc');
+            data.min = parseFloat(data.min);
+            data.max = parseFloat(data.max);
+            data.view
+            if (data.max < data.min) {
+                var tmp = data.min;
+                data.min = data.max;
+                data.max = tmp;
             }
 
             if (data['oid-working'])  data.working  = vis.states.attr(data['oid-working']  + '.val');
 
             vis.binds.hqwidgets.window.draw($div);
+
+            if (data.oid) {
+                // prepare big window
+                $div.click(function () {
+                    vis.binds.hqwidgets.window.openPopup($div);
+                });
+            }
 
             for (var i = 1; i <= data.slide_count; i++) {
                 if (data['slide_sensor' + i]) {
@@ -1488,7 +1520,20 @@ vis.binds.hqwidgets = {
                         vis.binds.hqwidgets.window.draw($div);
                     });
                 }
+            }
+            if (data.oid) {
+                vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
+                    var shutterPos = newVal;
+                    if (shutterPos === undefined || shutterPos === null) {
+                        data.shutterPos = 0;
+                    } else {
+                        if (shutterPos < data.min) shutterPos = data.min;
+                        if (shutterPos > data.max) shutterPos = data.max
 
+                        data.shutterPos = Math.round(100 * (shutterPos - data.min) / (data.max - data.min));
+                    }
+                    $div.find('.hq-blind-position').animate({'height': data.shutterPos + '%'}, 500);
+                });
             }
         }
     },

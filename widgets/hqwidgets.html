@@ -46,6 +46,7 @@
 <script id="tplHqInTemp"
         type="text/ejs"
         class="vis-tpl"
+        data-vis-beta="true"
         data-vis-set="hqwidgets"
         data-vis-name="Inner temperature"
         data-vis-type="ctrl,temperature"
@@ -67,10 +68,12 @@
 <script type="text/ejs"
         id="tplHqShutter"
         class="vis-tpl"
+        data-vis-beta="true"
         data-vis-set="hqwidgets"
         data-vis-type="ctrl;window;shutter"
         data-vis-name="Window and Shutter"
-        data-vis-attrs="oid;border_width/slider,0,10,1;slide_count[1]/nselect,1,2,3,4;"
+        data-vis-prev='<div id="prev_tplHqShutter" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev hq-blind-base hq-button-base" style="overflow: visible; width: 110px; height: 90px; left: 109px; top: 74px; position: absolute; padding: 3px 4px 2px;"><table class="hq-blind hq-no-space" style="width: 100%; height: 100%"><tbody><tr><td><div class="hq-blind-blind1" style="border-width: 3px;border-color: #a9a7a8;"><div class="hq-blind-blind2" style="border-width: 3px; "><div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tbody><tr class="hq-no-space hq-blind-position" style="height: 20%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space"><td class="hq-no-space"></td></tr></tbody></table><div class="hq-blind-blind4" style="border-width: 3px;border-color: #a5aaad;"><div class="hq-blind-handle hq-blind-handle-bg" style="border-width: 1px;top: 50%; width: 3px; height: 15%;left: calc(100% - 5px);"></div></div></div></div></div></td><td><div class="hq-blind-blind1" style="border-width: 3px;border-color: #a9a7a8;"><div class="hq-blind-blind2" style="border-width: 3px; "><div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tbody><tr class="hq-no-space hq-blind-position" style="height: 20%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space"><td class="hq-no-space"></td></tr></tbody></table><div class="hq-blind-blind4 hq-blind-blind4-opened-left" style="border-width: 3px;border-color: #a5aaad;"><div class="hq-blind-handle hq-blind-handle-bg" style="border-width: 1px;top: 50%; width: 3px; height: 15%;-moz-transform-origin: 3px 3px;-ms-transform-origin: 3px 3px;-o-transform-origin: 3px 3px;-webkit-transform-origin: 3px 3px;transform-origin: 3px 3px;-moz-transform: rotate(-90deg);-ms-transform: rotate(-90deg);-o-transform: rotate(-90deg);-webkit-transform: rotate(-90deg);transform: rotate(-90deg);"></div></div></div></div></div></td></tr></tbody></table></div></div>'
+        data-vis-attrs="oid;min[0];max[100];border_width/slider,0,10,1;slide_count[1]/nselect,1,2,3,4,5,6;"
         data-vis-attrs0="group.slides/byindex;slide_type(1-slide_count)/select,,left,right,top,bottom;slide_sensor(1-slide_count)/id;slide_handle(1-slide_count)/id;"
         data-vis-update-style="true"
         data-hqwidgets-filter="level.blind">

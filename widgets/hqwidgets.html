@@ -30,7 +30,7 @@
         data-vis-set="hqwidgets"
         data-vis-name="Dimmer"
         data-vis-type="ctrl,dimmer,button"
-        data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqWidgetsDimmer.png"></img>'
+        data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqwidgetsDimmer.png"></img>'
         data-vis-update-style="true"
         data-vis-attrs="oid[nothing_selected]/id/changedId;oid-working;oid-battery;oid-signal;"
         data-vis-attrs0="group.value;unit[%];min[0];max[100];digits[0];is_comma[true]/checkbox;"
@@ -46,18 +46,18 @@
 <script id="tplHqInTemp"
         type="text/ejs"
         class="vis-tpl"
+        data-vis-beta="true"
         data-vis-set="hqwidgets"
         data-vis-name="Inner temperature"
         data-vis-type="ctrl,temperature"
         data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqwidgetsInTemp.png"></img>'
         data-vis-update-style="true"
-        data-vis-attrs="oid[nothing_selected]/id/changedId;oid-humidity;oid-actual;oid-drive;oid-battery;oid-signal;"
+        data-vis-attrs="oid[nothing_selected]/id,value.temperature/changedId;oid-humidity;oid-actual;oid-drive;oid-battery;oid-signal;"
         data-vis-attrs0="group.value;unit[°C];min[6];max[30];digits[0]/number;is_comma[true]/checkbox;"
         data-vis-attrs1="group.center;caption;iconName[img~Heating.png]/image;btIconWidth[45]/slider,0,400,1;offsetAuto[true]/checkbox;leftOffset[25]/slider,0,100,1;topOffset[55]/slider,0,100,1;circleWidth[50]/slider,1,100,1;showValue[true]/checkbox;alwaysShow/checkbox;"
         data-vis-attrs2="group.leftRight;hoursLastAction/nselect,,1,2,3,6,12,24,1024;timeAsInterval[true]/checkbox;format_date/auto,YYYY.MM.DD hh:mm:ss,DD.MM.YYYY hh:mm:ss,YYYY/MM/DD hh:mm:ss,hh:mm:ss,hh:mm;descriptionLeft;infoLeftFontSize[12]/slider,6,50,1;infoFontRightSize[12]/slider,6,50,1;"
         data-vis-attrs3="group.styles;styleNormal[hq-button-base-intemp]/style,hqwidgetsButtons,-button,background;usejQueryStyle/checkbox;changeEffect/nselect,,waves,wobble,tada,swing,shake,rubberBand,pulse,flash,bounce;waveColor/color;testActive/checkbox;"
         data-vis-attrs4="group.chart;url;dialog_title;dialog_width;dialog_height;dialog_effect/effect;dialog_timeout/number,0,3600000,100;dialog_modal/checkbox;dialog_open/checkbox"
-        data-vis-filter="value.temperature"
         >
     <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px; border-radius: 64px" id="<%= this.data.attr('wid') %>"><%
         this.data.temperature = true;
@@ -65,18 +65,24 @@
     %></div>
 </script>
 
-<!--script type="text/ejs" id="tplHqShutter" class="vis-tpl" data-vis-set="hqwidgets" data-vis-name="Window and Shutter" data-vis-attrs="hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-LC-Bl1-SM,HMW-LC-Bl1-DR,HM-LC-Bl1-FM,HM-LC-Bl1-PB-FM,HM-LC-Bl1PBU-FM;HM-Sec-SC,CC-SC-Rd-WM-W-R5,FHT80TF-2;HM-Sec-RHS">
-    <%
-    if (this && this.data && this.data.attr) {
-		if (this.data.attr('hqoptions')){
-			vis.binds.hqWidgetsExt.hqButtonExt (this.data.wid, this.data.attr('hqoptions'), undefined, this.view);
-		} else {
-			vis.binds.hqWidgetsExt.hqButtonExt (this.data.wid, undefined, "tplHqShutter", this.view);
-		}
-	}
-    %>
-</script>
 <script type="text/ejs"
+        id="tplHqShutter"
+        class="vis-tpl"
+        data-vis-beta="true"
+        data-vis-set="hqwidgets"
+        data-vis-type="ctrl;window;shutter"
+        data-vis-name="Window and Shutter"
+        data-vis-prev='<div id="prev_tplHqShutter" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev hq-blind-base hq-button-base" style="overflow: visible; width: 110px; height: 90px; left: 109px; top: 74px; position: absolute; padding: 3px 4px 2px;"><table class="hq-blind hq-no-space" style="width: 100%; height: 100%"><tbody><tr><td><div class="hq-blind-blind1" style="border-width: 3px;border-color: #a9a7a8;"><div class="hq-blind-blind2" style="border-width: 3px; "><div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tbody><tr class="hq-no-space hq-blind-position" style="height: 20%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space"><td class="hq-no-space"></td></tr></tbody></table><div class="hq-blind-blind4" style="border-width: 3px;border-color: #a5aaad;"><div class="hq-blind-handle hq-blind-handle-bg" style="border-width: 1px;top: 50%; width: 3px; height: 15%;left: calc(100% - 5px);"></div></div></div></div></div></td><td><div class="hq-blind-blind1" style="border-width: 3px;border-color: #a9a7a8;"><div class="hq-blind-blind2" style="border-width: 3px; "><div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tbody><tr class="hq-no-space hq-blind-position" style="height: 20%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space"><td class="hq-no-space"></td></tr></tbody></table><div class="hq-blind-blind4 hq-blind-blind4-opened-left" style="border-width: 3px;border-color: #a5aaad;"><div class="hq-blind-handle hq-blind-handle-bg" style="border-width: 1px;top: 50%; width: 3px; height: 15%;-moz-transform-origin: 3px 3px;-ms-transform-origin: 3px 3px;-o-transform-origin: 3px 3px;-webkit-transform-origin: 3px 3px;transform-origin: 3px 3px;-moz-transform: rotate(-90deg);-ms-transform: rotate(-90deg);-o-transform: rotate(-90deg);-webkit-transform: rotate(-90deg);transform: rotate(-90deg);"></div></div></div></div></div></td></tr></tbody></table></div></div>'
+        data-vis-attrs="oid;min[0];max[100];border_width/slider,0,10,1;slide_count[1]/nselect,1,2,3,4,5,6;invert/checkbox;"
+        data-vis-attrs0="group.slides/byindex;slide_type(1-slide_count)/select,,left,right,top,bottom;slide_sensor(1-slide_count)/id;slide_handle(1-slide_count)/id;"
+        data-vis-update-style="true"
+        data-hqwidgets-filter="level.blind">
+    <div class="vis-widget hq-blind-base <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px" id="<%= this.data.attr('wid') %>"><%
+        vis.binds.hqwidgets.window.init(this.data.wid, this.view, this.data, this.style);
+    %></div>
+</script>
+
+<!--script type="text/ejs"
 id="tplHqInTemp" class="vis-tpl"
 data-vis-set="hqwidgets" data-vis-name="Inside temperature"
 data-vis-attrs="hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-CC-TC,HM-CC-RT-DN,HM-TC-IT-WM-W-EU;HM-CC-VD">
@@ -280,7 +286,7 @@ data-vis-attrs="hqoptions" data-vis-render-visible="true" data-hqwidgets-filter=
         data-vis-name="CircleKnob"
         data-vis-update-style="true"
         data-vis-type="ctrl,number,dimmer,knob"
-        data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqWidgetsCircleKnob.png"></img>'
+        data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqwidgetsCircleKnob.png"></img>'
         data-vis-attrs="oid[nothing_selected]/id/changedId;oid-working;oid-battery;oid-signal;"
         data-vis-attrs0="group.value;unit;min[0];max[100];step[1];readOnly/checkbox;"
         data-vis-attrs1="group.center;caption;hideNumber/checkbox;"

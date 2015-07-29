@@ -398,15 +398,6 @@
     };
 
     $.fn.makeSlider = function (options, onChange, onIdle) {
-        if (options == 'hide') {
-            return this.each(function () {
-                var $this = $(this);
-                var timer = $this.data('hideTimer');
-                if (timer) clearTimeout(timer);
-                $this.data('hideTimer', null);
-                $this.hide();
-            });
-        }
 
         if (typeof options == 'string') {
             if (options == 'restart') {
@@ -423,31 +414,28 @@
             return;
         }
 
+
         if (typeof options == 'function') {
             onIdle   = onChange;
             onChange = options;
             options  = null;
         }
 
+
         options = options || {};
         options.timeout  = (options.timeout === undefined) ? 2000 : options.timeout;
-        options.min      = (options.min     === undefined) ? 0: options.min;
-        options.max      = (options.max     === undefined) ? 100: options.max;
-        options.value    = (options.value   === undefined) ? options.max : options.value;
-        options.show     = (options.show    === undefined)  ? true : options.show;
+        options.min      = (options.min === undefined) ? 0: options.min;
+        options.max      = (options.max === undefined) ? 100: options.max;
+        options.value    = (options.value === undefined) ? options.max : options.value;
+        options.show     = (options.show === undefined)  ? true : options.show;
         options.onIdle   = onIdle;
         options.onChange = onChange;
-
-        if (options.invert) {
-            options.value = options.max - options.value + options.min;
-        }
 
         return this.each(function () {
             var $this = $(this);
 
             if (options.timeout && options.show) {
                 $this.data('hideTimer', setTimeout(function () {
-                    $this.data('hideTimer', null);
                     if (onIdle) onIdle();
                 }, options.timeout));
             }
@@ -469,14 +457,7 @@
 
                     $this.data('timer', setTimeout(function () {
                         $this.data('timer', null);
-                        if (options.onChange) {
-                            var val = ui.value;
-                            if (options.invert) {
-                                val = options.max - ui.value + options.min;
-                            }
-
-                            options.onChange(val);
-                        }
+                        if (options.onChange) options.onChange(ui.value);
                     }, 500));
 
                     if (options.timeout) {
@@ -1275,7 +1256,6 @@ vis.binds.hqwidgets = {
             }
             var _data = {wid: wid, view: view, wType: wType};
             for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
                 if (a[0] != '_') {
                     _data[a] = data[a];
                 }
@@ -1305,236 +1285,6 @@ vis.binds.hqwidgets = {
             if (data['oid-drive'])    data.drive    = vis.states.attr(data['oid-drive']    + '.val');
 
             vis.binds.hqwidgets.button.draw($div);
-        }
-    },
-    window: {
-        drawOneWindow: function (index, options) {
-            var bWidth = options.border_width;
-            var div1 = '<div class="hq-blind-blind1" style="' +
-                'border-width: ' + bWidth + 'px;' + //'px 2px 2px 2px; ' +
-                'border-color: #a9a7a8;' +
-                '">';
-
-            var div2 = '<div class="hq-blind-blind2" style="' +
-                'border-width: ' + bWidth + 'px; ' +
-                '">';
-
-            var div3 = '<div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tr class="hq-no-space hq-blind-position" style="height: ' + options.shutterPos + '%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space"><td class="hq-no-space"></td></tr></table>';
-
-            var hanldePos  = null;
-            var slidePos   = null;
-
-            if (options.handleOid) {
-                hanldePos = vis.states[options.handleOid + '.val'];
-                slidePos = hanldePos;
-            }
-            if (options.slideOid) {
-                slidePos = vis.states[options.slideOid + '.val'];
-                if (!options.handleOid) hanldePos = slidePos;
-            }
-            if (options.oid) {
-
-            }
-
-
-            var div4 = '<div class="hq-blind-blind4';
-            if ((slidePos == 1 || slidePos === true || slidePos === 'true' || slidePos === 'open' || slidePos === 'opened') && options.type) {
-                div4 +=' hq-blind-blind4-opened-' + options.type;
-            }
-            if ((slidePos == 2 || slidePos === 'tilt' || slidePos === 'tilted') && options.type) {
-                div4 +=' hq-blind-blind4-tilted';
-            }
-            options.shutterPos = options.shutterPos || 0;
-            div4 +='" style="' +
-                'border-width: ' + bWidth + 'px;' + //'3px 1px 1px 1px;' +
-                'border-color: #a5aaad;' +
-                '">';
-
-            var div5 = '';
-
-            if (options.type) {
-                div5 = '<div class="hq-blind-handle hq-blind-handle-bg';
-                if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
-                    div5 += ' hq-blind-handle-tilted-bg';
-                }
-                var bbWidth = Math.round(bWidth / 3);
-                if (bbWidth < 1) bbWidth = 1;
-                div5 += '" style="border-width: ' + bbWidth + 'px;';
-                if (options.type == 'left' || options.type == 'right') {
-                    div5 += 'top: 50%;	width: ' + bWidth + 'px; height: 15%;'
-                } else if (options.type == 'top' || options.type == 'bottom') {
-                    div5 += 'left: 50%; height: ' + bWidth + 'px; width: 15%;'
-                }
-                if (options.type == 'right') {
-                    div5 += 'left: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
-                } else if (options.type == 'bottom') {
-                    div5 += 'top: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
-                }
-
-                if (hanldePos) {
-                    var format =
-                        '-moz-transform-origin: ------;' +
-                        '-ms-transform-origin: ------;' +
-                        '-o-transform-origin: ------;' +
-                        '-webkit-transform-origin: ------;' +
-                        'transform-origin: ------;' +
-                        '-moz-transform: rotate(DDDdeg);' +
-                        '-ms-transform: rotate(DDDdeg);' +
-                        '-o-transform: rotate(DDDdeg);' +
-                        '-webkit-transform: rotate(DDDdeg);' +
-                        'transform: rotate(DDDdeg);';
-
-                    var w = Math.round(bbWidth + bWidth / 2);
-                    if (options.type == 'left' || options.type == 'bottom') {
-                        if (hanldePos == 1 || hanldePos === true || hanldePos === 'true' || hanldePos === 'open' || hanldePos === 'opened') {
-                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '-90');
-                        } else if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
-                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
-                        }
-                    } else {
-                        if (hanldePos == 1 || hanldePos === true || hanldePos === 'true' || hanldePos === 'open' || hanldePos === 'opened') {
-                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '90');
-                        } else if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
-                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
-                        }
-                    }
-                }
-
-                div5 += '"></div>';
-            }
-
-
-            var text = div1 + div2 + div3 + div4 + div5 + '</div></div></div></div></div>';
-
-            return text;
-        },
-        draw: function ($div) {
-            var data = $div.data('data');
-            if (!data) return;
-
-            $div.css({'padding-top': data.border_width, 'padding-bottom' : data.border_width - 1, 'padding-right': data.border_width + 1, 'padding-left': data.border_width + 1});
-
-            // get position
-            data.shutterPos = 0;
-            if (data.oid) {
-                data.shutterPos = vis.states[data.oid + '.val'];
-                if (data.shutterPos === undefined || data.shutterPos === null) {
-                    data.shutterPos = 0;
-                } else {
-                    if (data.shutterPos < data.min) data.shutterPos = data.min;
-                    if (data.shutterPos > data.max) data.shutterPos = data.max
-
-                    data.shutterPos = Math.round(100 * (data.shutterPos - data.min) / (data.max - data.min));
-                }
-            }
-
-            var text = '<table class="hq-blind hq-no-space" style="width: 100%; height: 100%"><tr>';
-            for (var i = 1; i <= data.slide_count; i++) {
-                var options = {
-                    slideOid:     data['slide_sensor' + i],
-                    handleOid:    data['slide_handle' + i],
-                    type:         data['slide_type' + i],
-                    border_width: data.border_width,
-                    shutterPos:   data.shutterPos
-                };
-                text += '<td>' + this.drawOneWindow(i, options, 'closed') + '</td>';
-            }
-            text += '</tr></table>';
-            $div.html(text);
-        },
-        openPopup: function ($div){
-            var data = $div.data('data');
-            if (!data) return;
-
-            var $big = $div.find('.hq-blind-big');
-            if (!$big.length) {
-                var text = '<div class="hq-blind-big"></div>';
-                $div.append(text);
-                $big = $div.find('.hq-blind-big').makeSlider({
-                    max:    data.max,
-                    min:    data.min,
-                    invert: !data.invert
-                }, function (newValue) {
-                    vis.setValue(data.oid, newValue);
-                    $big.makeSlider('hide');
-                }, function () {
-                    $big.hide();
-                });
-            } else{
-                $big.show();
-            }
-        },
-        init: function (wid, view, data, style) {
-            var $div = $('#' + wid).addClass('hq-button-base');
-            if (!$div.length) {
-                setTimeout(function () {
-                    vis.binds.hqwidgets.window.init(wid, view, data, style);
-                }, 100);
-                return;
-            }
-            console.log('Window');
-            var _data = {wid: wid, view: view};
-            for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
-                if (a[0] != '_') _data[a] = data[a];
-            }
-            data = _data;
-
-            data.min    = ((data.min !== undefined) ? parseFloat(data.min) : 0);
-            data.max    = ((data.max !== undefined) ? parseFloat(data.max) : 100);
-            data.digits = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
-            if (!data.border_width && data.border_width != '0') data.border_width = 3;
-            data.border_width = parseInt(data.border_width, 10);
-
-            $div.data('data',  data);
-            $div.data('style', style);
-
-            data.min = parseFloat(data.min);
-            data.max = parseFloat(data.max);
-            data.view
-            if (data.max < data.min) {
-                var tmp = data.min;
-                data.min = data.max;
-                data.max = tmp;
-            }
-
-            if (data['oid-working'])  data.working  = vis.states.attr(data['oid-working']  + '.val');
-
-            vis.binds.hqwidgets.window.draw($div);
-
-            if (data.oid) {
-                // prepare big window
-                $div.click(function () {
-                    vis.binds.hqwidgets.window.openPopup($div);
-                });
-            }
-
-            for (var i = 1; i <= data.slide_count; i++) {
-                if (data['slide_sensor' + i]) {
-                    vis.states.bind(data['slide_sensor' + i] + '.val', function (e, newVal, oldVal) {
-                        vis.binds.hqwidgets.window.draw($div);
-                    });
-                }
-                if (data['slide_handle' + i]) {
-                    vis.states.bind(data['slide_handle' + i] + '.val', function (e, newVal, oldVal) {
-                        vis.binds.hqwidgets.window.draw($div);
-                    });
-                }
-            }
-            if (data.oid) {
-                vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
-                    var shutterPos = newVal;
-                    if (shutterPos === undefined || shutterPos === null) {
-                        data.shutterPos = 0;
-                    } else {
-                        if (shutterPos < data.min) shutterPos = data.min;
-                        if (shutterPos > data.max) shutterPos = data.max
-
-                        data.shutterPos = Math.round(100 * (shutterPos - data.min) / (data.max - data.min));
-                    }
-                    $div.find('.hq-blind-position').animate({'height': data.shutterPos + '%'}, 500);
-                });
-            }
         }
     },
     circle: {

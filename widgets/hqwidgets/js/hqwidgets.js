@@ -530,11 +530,6 @@
                     }
                 });
             } else
-            if (options == 'show') {
-                return this.each(function () {
-                    $(this).find('.vis-hq-battery').show();
-                });
-            } else
             if (options == 'hide') {
                 return this.each(function () {
                     $(this).find('.vis-hq-battery').hide();
@@ -546,7 +541,8 @@
         options = options || {};
         options.color = options.color || '#FF5555';
         options.angle = (options.angle !== undefined) ? options.angle : -90;
-        options.size  = options.size || 32;
+        options.size  = options.size  || 32;
+        options.title = options.title || '';
 
         return this.each(function () {
             var $this = $(this);
@@ -554,7 +550,7 @@
             $this.data('options', options);
             if ($this.find('.vis-hq-battery').length) return;
 
-            $this.append('<div class="vis-hq-battery">' +
+            $this.append('<div class="vis-hq-battery ' + (options.classes || '') + '" title="' + options.title + '">' +
                 '<svg xmlns="http://www.w3.org/2000/svg" width="' + options.size + '" height="' + options.size + '" viewBox="0 0 48 48">' +
                 '<path d="M0 0h48v48h-48z" fill="none"/>' +
                 '<path fill="' + options.color + '" transform="rotate(' + options.angle + ', 24, 24)" d="M31.33 8h-3.33v-4h-8v4h-3.33c-1.48 0-2.67 1.19-2.67 2.67v30.67c0 1.47 1.19 2.67 2.67 2.67h14.67c1.47 0 2.67-1.19 2.67-2.67v-30.67c-.01-1.48-1.2-2.67-2.68-2.67zm-5.33 28h-4v-4h4v4zm0-8h-4v-10h4v10z"/></svg>' +
@@ -1551,6 +1547,31 @@ vis.binds.hqwidgets = {
             }
             text += '</tr></table>';
             $div.html(text);
+            var i = 0;
+            $div.find('.hq-blind-blind2').each(function (id) {
+                id++;
+                if (data['slide_sensor_lowbat' + id]) {
+                    data.slide_sensor_lowbat[id] = vis.states[data['slide_sensor_lowbat' + id] + '.val'];
+                    $(this).batteryIndicator({
+                        show:    data.slide_sensor_lowbat[id] || false,
+                        title:   _('Low battery on sash sensor'),
+                        classes: 'slide-low-battery'
+                    });
+                }
+            });
+            $div.find('.hq-blind-blind3').each(function (id) {
+                id++;
+                if (data['slide_handle_lowbat' + id]) {
+                    data.slide_handle_lowbat[id] = vis.states[data['slide_handle_lowbat' + id] + '.val'];
+                    $(this).batteryIndicator({
+                        show:    data.slide_handle_lowbat[id] || false,
+                        color:   '#FF55FA',
+                        title:   _('Low battery on handle sensor'),
+                        classes: 'handle-low-battery'
+                    });
+                    $(this).find('.handle-low-battery').css({top: 8});
+                }
+            });
         },
 
         init: function (wid, view, data, style) {
@@ -1586,6 +1607,8 @@ vis.binds.hqwidgets = {
                 data.min = data.max;
                 data.max = tmp;
             }
+            data.slide_sensor_lowbat = [];
+            data.slide_handle_lowbat = [];
 
             if (data['oid-working'])  data.working  = vis.states.attr(data['oid-working']  + '.val');
 
@@ -1593,13 +1616,52 @@ vis.binds.hqwidgets = {
 
             for (var i = 1; i <= data.slide_count; i++) {
                 if (data['slide_sensor' + i]) {
-                    vis.states.bind(data['slide_sensor' + i] + '.val', function (e, newVal, oldVal) {
+                    vis.states.bind(data['slide_sensor' + i] + '.val', function () {
                         vis.binds.hqwidgets.window.draw($div);
                     });
                 }
                 if (data['slide_handle' + i]) {
-                    vis.states.bind(data['slide_handle' + i] + '.val', function (e, newVal, oldVal) {
+                    vis.states.bind(data['slide_handle' + i] + '.val', function () {
                         vis.binds.hqwidgets.window.draw($div);
+                    });
+                }
+                if (data['slide_sensor_lowbat' + i]) {
+                    vis.states.bind(data['slide_sensor_lowbat' + i] + '.val', function (e, newVal, oldVal) {
+                        for (var id = 1; id <= data.slide_count; id++) {
+                            if (data['slide_sensor_lowbat' + id]) {
+                                data.slide_sensor_lowbat[id] = vis.states[data['slide_sensor_lowbat' + id] + '.val'];
+                            }
+                        }
+
+                        $div.find('.slide-low-battery').each(function (id) {
+                            id++;
+                            if (data['slide_sensor_lowbat' + id]) {
+                                if (data.slide_sensor_lowbat[id]) {
+                                    $(this).show();
+                                } else {
+                                    $(this).hide();
+                                }
+                            }
+                        });
+                    });
+                }
+                if (data['slide_handle_lowbat' + i]) {
+                    vis.states.bind(data['slide_handle_lowbat' + i] + '.val', function () {
+                        for (var id = 1; id <= data.slide_count; id++) {
+                            if (data['slide_handle_lowbat' + id]) {
+                                data.slide_handle_lowbat[id] = vis.states[data['slide_handle_lowbat' + id] + '.val'];
+                            }
+                        }
+                        $div.find('.handle-low-battery').each(function (id) {
+                            id++;
+                            if (data['slide_handle_lowbat' + id]) {
+                                if (data.slide_handle_lowbat[id]) {
+                                    $(this).show();
+                                } else {
+                                    $(this).hide();
+                                }
+                            }
+                        });
                     });
                 }
             }

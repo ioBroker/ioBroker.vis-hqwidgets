@@ -297,14 +297,19 @@
 
 .hq-blind-big {
 	position: absolute;
-	z-index:901;
-	top: calc(50% - 120px);
-	left: calc(50% - 55px);
+	z-index:  901;
+	/*top: calc(50% - 120px);
+	left: calc(50% - 55px);*/
+	width:  7em;
+	height: 18em;
+}
+
+.hq-blind-big-slider {
 	border-width: 3px 2px 2px 2px;
 	border-color: #a5aaad;
 	border-style: solid;
-	width:120px;
-	height:240px;
+	width: 100%;
+	height: 100%;
 	-webkit-border-radius: 15px;
 	-moz-border-radius:    15px;
 	border-radius:         15px;
@@ -318,6 +323,33 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dde7f3', endColorstr='#c9ced2',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
+.hq-blind-big-button {
+	height: 2.5em;
+	width: 100%;
+	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+	background-color:#79bbff;
+	-webkit-border-radius:15px;
+	-moz-border-radius:15px;
+	border-radius:15px;
+	text-indent:0;
+	border:1px solid #84bbf3;
+}
+.hq-blind-big-button-up {
+	background-image: url(../img/inject-bottom.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.hq-blind-big-button-down {
+	background-image: url(../img/inject-top.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
 
 /* ------------- Animation ---------------------------*/
 .animated05s {

@@ -409,18 +409,16 @@
             });
         } else if (options == 'show') {
             return this.each(function () {
-                var $this = $(this);
-                var timer = $this.data('timer');
+                var $this     = $(this).show();
                 var hideTimer = $this.data('hideTimer');
+
                 options = $this.data('options');
+
                 if (onChange !== undefined) {
-                    if (options.invert) {
-                        onChange = options.max - onChange + options.min;
-                    }
+                    if (options.invert) onChange = options.max - onChange + options.min;
                     $this.slider("value", onChange);
                 }
 
-                if (timer)     clearTimeout(timer);
                 if (hideTimer) clearTimeout(hideTimer);
 
                 if (options.timeout) {
@@ -447,18 +445,19 @@
         }
 
         if (typeof options == 'function') {
-            onIdle = onChange;
+            onIdle   = onChange;
             onChange = options;
-            options = null;
+            options  = null;
         }
 
         options = options || {};
-        options.timeout = (options.timeout === undefined) ? 2000 : options.timeout;
-        options.min = (options.min === undefined) ? 0 : options.min;
-        options.max = (options.max === undefined) ? 100 : options.max;
-        options.value = (options.value === undefined) ? options.max : options.value;
-        options.show = (options.show === undefined) ? true : options.show;
-        options.onIdle = onIdle;
+
+        options.timeout  = (options.timeout === undefined) ? 2000  : options.timeout;
+        options.min      = (options.min === undefined)     ? 0     : options.min;
+        options.max      = (options.max === undefined)     ? 100   : options.max;
+        options.value    = (options.value === undefined)   ? options.max : options.value;
+        options.show     = (options.show === undefined)    ? true  : options.show;
+        options.onIdle   = onIdle;
         options.onChange = onChange;
 
         if (options.invert) {
@@ -478,30 +477,31 @@
             $this.data('options', options);
 
             $this.slider({
-                orientation: "vertical",
-                range: "max",
-                min: options.min,
-                max: options.max,
-                value: options.value,
-                slide: function (event, ui) {
-                    console.log(ui.value);
-                    var timer = $this.data('timer');
+                orientation:    "vertical",
+                range:          "max",
+                min:            options.min,
+                max:            options.max,
+                value:          options.value,
+                start:          function () {
+                    var timer = $this.data('hideTimer');
+                    if (timer) {
+                        clearTimeout(timer);
+                        $this.data('hideTimer', null);
+                    }
+                },
+                stop:           function (event, ui) {
                     var hideTimer = $this.data('hideTimer');
 
-                    if (timer)     clearTimeout(timer);
                     if (hideTimer) clearTimeout(hideTimer);
 
-                    $this.data('timer', setTimeout(function () {
-                        $this.data('timer', null);
-                        if (options.onChange) {
-                            var val = ui.value;
-                            if (options.invert) {
-                                val = options.max - ui.value + options.min;
-                            }
-
-                            options.onChange(val);
+                    if (options.onChange) {
+                        var val = ui.value;
+                        if (options.invert) {
+                            val = options.max - ui.value + options.min;
                         }
-                    }, 500));
+
+                        options.onChange(val);
+                    }
 
                     if (options.timeout) {
                         $this.data('hideTimer', setTimeout(function () {
@@ -511,6 +511,7 @@
                     }
                 }
             });
+
             $this.find('.ui-slider-range').removeClass("ui-widget-header").addClass('hq-blind-blind').css({'background-position': '0% 100%'});
         });
     };
@@ -602,7 +603,6 @@
                         icons: {primary: 'ui-icon-pin-w'},
                         click: function () {
                             $dialog.data('no-timeout', !$dialog.data('no-timeout'));
-                            debugger;
                             if ($dialog.data('no-timeout')) {
                                 $(this).parent().find('#donthide').addClass('ui-state-error').button({
                                     icons: {primary: 'ui-icon-pin-s'}
@@ -1432,41 +1432,88 @@ vis.binds.hqwidgets = {
 
             return text;
         },
-        openPopup: function ($div){
+        hidePopup: function ($div) {
             var data = $div.data('data');
             if (!data) return;
 
             var $big = $div.find('.hq-blind-big');
+            if (data.noAnimate) {
+                //$big.makeSlider('hide');
+                setTimeout(function () {
+                    $big.find('.hq-blind-big-slider').makeSlider('hide');
+                    $big.hide();
+                    $big.data('show', false);
+                }, 200);
+            } else {
+                $big.animate({width: $div.width(), height: $div.height(), opacity: 0, top: 0, left: 0}, 500, 'swing', function () {
+                    $big.find('.hq-blind-big-slider').makeSlider('hide');
+                    $big.hide();
+                    $big.data('show', false);
+                });
+            }
+
+        },
+        openPopup: function ($div) {
+            var data = $div.data('data');
+            if (!data) return;
+            var $big = $div.find('.hq-blind-big');
             if (!$big.length) {
-                var text = '<div class="hq-blind-big" style="display:none"></div>';
+                var text = '<table class="hq-blind-big hq-no-space" style="display:none">' +
+                    '    <tr><td><div class="hq-blind-big-button hq-blind-big-button-up"></div></td></tr>' +
+                    '    <tr style="height: 100%"><td><div class="hq-blind-big-slider"></div></td></tr>' +
+                    '    <tr><td><div class="hq-blind-big-button hq-blind-big-button-down"></div></td></tr>' +
+                    '</table>';
                 $div.append(text);
-                $big = $div.find('.hq-blind-big').makeSlider({
+                $div.find('.hq-blind-big-slider').makeSlider({
                     max:      data.max,
                     min:      data.min,
                     invert:   !data.invert,
                     show:     false,
                     relative: true,
-                    value:    data.value
-
+                    value:    data.value,
+                    timeout:  data.hide_timeout
                 }, function (newValue) {
                     vis.setValue(data.oid, newValue);
-                    $big.makeSlider('hide');
-                    $big.data('show', false);
+                    vis.binds.hqwidgets.window.hidePopup($div);
                 }, function () {
-                    $big.makeSlider('hide');
-                    $big.data('show', false);
+                    vis.binds.hqwidgets.window.hidePopup($div);
                 });
-            } else {
-
+                $div.find('.hq-blind-big-button-down').click(function () {
+                    vis.setValue(data.oid, data.invert ? data.min : data.max);
+                    vis.binds.hqwidgets.window.hidePopup($div);
+                });
+                $div.find('.hq-blind-big-button-up').click(function () {
+                    vis.setValue(data.oid, data.invert ? data.max : data.min);
+                    vis.binds.hqwidgets.window.hidePopup($div);
+                });
+                $big = $div.find('.hq-blind-big');
             }
+
             $big.data('show', true);
 
+            if (data.bigLeft === undefined) {
+                var pos = $div.position();
+                var w   = $div.width();
+                var h   = $div.height();
+
+                data.bigWidth  = $big.width();
+                data.bigHeight = $big.height();
+                data.bigLeft   = Math.round((w - data.bigWidth) / 2);
+                data.bigTop    = Math.round((h - data.bigHeight) / 2);
+
+                if (pos.top  + data.bigTop < 0)  data.bigTop  = -pos.top;
+                if (pos.left + data.bigLeft < 0) data.bigLeft = -pos.left;
+            }
+
+            $big.css({top: data.bigTop, left: data.bigLeft});
+
             if (data.noAnimate) {
-                $big.makeSlider('show', data.value);
+                $big.find('.hq-blind-big-slider').makeSlider('show', data.value);
+                $big.show();
             } else {
-                $big.css({width: $div.width(), height: $div.height(), opacity: 0}).show();
-                $big.makeSlider('show', data.value);
-                $big.animate({width: 120, height: 240, opacity: 1}, 500);
+                $big.css({top:0, left: 0, width: $div.width(), height: $div.height(), opacity: 0}).show();
+                $big.find('.hq-blind-big-slider').makeSlider('show', data.value);
+                $big.animate({top: data.bigTop, left: data.bigLeft, width: data.bigWidth, height: data.bigHeight, opacity: 1}, 500);
             }
         },
         draw: function ($div) {
@@ -1479,15 +1526,16 @@ vis.binds.hqwidgets = {
             data.shutterPos = 0;
             if (data.oid) {
                 data.value      = vis.states[data.oid + '.val'];
-                data.shutterPos = data.value
+                data.shutterPos = data.value;
                 if (data.shutterPos === undefined || data.shutterPos === null) {
                     data.shutterPos = 0;
                 } else {
                     if (data.shutterPos < data.min) data.shutterPos = data.min;
-                    if (data.shutterPos > data.max) data.shutterPos = data.max
+                    if (data.shutterPos > data.max) data.shutterPos = data.max;
 
                     data.shutterPos = Math.round(100 * (data.shutterPos - data.min) / (data.max - data.min));
                 }
+                if (data.invert) data.shutterPos = 100 - data.shutterPos;
             }
 
             var text = '<table class="hq-blind hq-no-space" style="width: 100%; height: 100%"><tr>';
@@ -1513,7 +1561,6 @@ vis.binds.hqwidgets = {
                 }, 100);
                 return;
             }
-            console.log('Window');
             var _data = {wid: wid, view: view};
             for (var a in data) {
                 if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
@@ -1521,9 +1568,11 @@ vis.binds.hqwidgets = {
             }
             data = _data;
 
-            data.min    = ((data.min !== undefined) ? parseFloat(data.min) : 0);
-            data.max    = ((data.max !== undefined) ? parseFloat(data.max) : 100);
-            data.digits = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
+            data.hide_timeout = (data.hide_timeout === 0 || data.hide_timeout === '0') ? 0 : (parseInt(data.hide_timeout, 10) || 2000);
+            data.min          = ((data.min !== undefined) ? parseFloat(data.min) : 0);
+            data.max          = ((data.max !== undefined) ? parseFloat(data.max) : 100);
+            data.digits       = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
+
             if (!data.border_width && data.border_width != '0') data.border_width = 3;
             data.border_width = parseInt(data.border_width, 10);
 
@@ -1566,7 +1615,6 @@ vis.binds.hqwidgets = {
                     });
                 }
 
-
                 vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
                     var shutterPos = newVal;
                     data.value = shutterPos;
@@ -1578,6 +1626,9 @@ vis.binds.hqwidgets = {
 
                         data.shutterPos = Math.round(100 * (shutterPos - data.min) / (data.max - data.min));
                     }
+
+                    if (data.invert) data.shutterPos = 100 - data.shutterPos;
+
                     $div.find('.hq-blind-position').animate({'height': data.shutterPos + '%'}, 500);
                 });
             }

@@ -730,6 +730,15 @@ if (vis.editMode) {
         "dialog_effect":    {"en": "Show effect",       "de": "Anzeigeeffekt",          "ru": "Эффект открытия"},
         "dialog_timeout":   {"en": "Hide timeout(ms)",  "de": "Zumachen nach(ms)",      "ru": "Закрыть после(мс)"},
         "dialog_open":      {"en": "Test open",         "de": "Testen",                 "ru": "Тест"},
+        "border_width":     {"en": "Border width",      "de": "Rahmenbreite",           "ru": "border_width"},
+        "slide_count":      {"en": "Slides count",      "de": "Flügelanzahl",           "ru": "slide_count"},
+        "hide_timeout":     {"en": "Timeout for hide",  "de": "Timeout für ", "ru": "hide_timeout"},
+        "group_slides":     {"en": "Slides",            "de": "group_slides", "ru": "group_slides"},
+        "slide_type":       {"en": "Slide type",        "de": "slide_type", "ru": "slide_type"},
+        "slide_sensor":     {"en": "Slide sensor",      "de": "slide_sensor", "ru": "slide_sensor"},
+        "slide_sensor_lowbat": {"en": "Slide sensor lowbat", "de": "slide_sensor_lowbat", "ru": "slide_sensor_lowbat"},
+        "slide_handle":     {"en": "Slide handle",      "de": "slide_handle", "ru": "slide_handle"},
+        "slide_handle_lowbat": {"en": "slide_handle_lowbat", "de": "slide_handle_lowbat", "ru": "slide_handle_lowbat"}
     });
 }
 
@@ -1218,11 +1227,8 @@ vis.binds.hqwidgets = {
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
 
                             // Show dialog
-                            if (data.url) {
-                                $div.popupDialog('show');
-                            }
+                            if (data.url) $div.popupDialog('show');
                         }
-                        console.log('Click. Set value ' + val);
                         return val;
                     },
                     alwaysShow: data.alwaysShow,
@@ -1253,7 +1259,13 @@ vis.binds.hqwidgets = {
                 $main.scala('value', data.value);
             } else {
                 if (!vis.editMode && data.oid) {
-                    $main.click(function () {
+                    $main.on('click touchstart', function () {
+                        // Protect against two events
+                        var now = (new Date()).getTime();
+                        var lastClick = $(this).data('lc');
+                        if (lastClick && now - lastClick < 50) return;
+                        $(this).data('lc', now);
+
                         data.value = (data.state == 'normal') ? data.max : data.min;
                         data.ack   = false;
                         vis.binds.hqwidgets.button.changeState($div, false, false, true);
@@ -1603,7 +1615,7 @@ vis.binds.hqwidgets = {
             data.min = parseFloat(data.min);
             data.max = parseFloat(data.max);
             if (data.max < data.min) {
-                var tmp = data.min;
+                var tmp  = data.min;
                 data.min = data.max;
                 data.max = tmp;
             }

@@ -1261,10 +1261,7 @@ vis.binds.hqwidgets = {
                 if (!vis.editMode && data.oid) {
                     $main.on('click touchstart', function () {
                         // Protect against two events
-                        var now = (new Date()).getTime();
-                        var lastClick = $(this).data('lc');
-                        if (lastClick && now - lastClick < 50) return;
-                        $(this).data('lc', now);
+                        if (vis.detectBounce(this)) return;
 
                         data.value = (data.state == 'normal') ? data.max : data.min;
                         data.ack   = false;

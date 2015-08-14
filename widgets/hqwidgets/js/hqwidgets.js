@@ -1,3 +1,9 @@
+/*
+    ioBroker.vis high quality Widget-Set
+
+    Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
+
+*/
 "use strict";
 
 
@@ -1311,6 +1317,11 @@ vis.binds.hqwidgets = {
             }
             data = _data;
 
+            if (!data.wType) {
+                if (data.min === undefined || data.min === null || data.min === '') data.min = false;
+                if (data.max === undefined || data.max === null || data.max === '') data.max = true;
+            }
+
             data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'hq-button-base-normal');
             data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'hq-button-base-on');
             data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
@@ -1841,3 +1852,21 @@ vis.binds.hqwidgets = {
         }
     }
 };
+if (vis.editMode) {
+    vis.binds.hqwidgets.convertOldWidgets = function (widget) {
+        if (widget.data && widget.data.hqoptions) {
+            try {
+                var hqoptions = JSON.parse(widget.data.hqoptions);
+                for (var opt in hqoptions) {
+                    if (opt == 'position') {
+
+                    }
+                }
+            } catch (e) {
+                console.log('Cannot convert. Invalid JSON in hqoptions: ' + widget.data.hqoptions);
+            }
+            delete widget.data.baroptions;
+        }
+        return widget;
+    };
+}

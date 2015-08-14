@@ -25,11 +25,11 @@ module.exports = function (grunt) {
                 options: {
                     patterns: [
                         {
-                            match: /var version = *'[\.0-9]*';/g,
-                            replacement: "var version = '" + version + "';"
+                            match: /version: *"[\.0-9]*"/,
+                            replacement: 'version: "' + version + '"'
                         },
                         {
-                            match: /"version"\: *"[\.0-9]*",/g,
+                            match: /"version": *"[\.0-9]*",/g,
                             replacement: '"version": "' + version + '",'
                         }
                     ]
@@ -39,12 +39,19 @@ module.exports = function (grunt) {
                         expand:  true,
                         flatten: true,
                         src:     [
-                                srcDir + 'controller.js',
                                 srcDir + 'package.json',
                                 srcDir + 'io-package.json'
                         ],
                         dest:    srcDir
-                    }
+                    },
+                    {
+                        expand:  true,
+                        flatten: true,
+                        src:     [
+                                srcDir + 'widgets/' + pkg.name.substring('iobroker.vis-'.length) + '.html'
+                        ],
+                        dest:    srcDir + 'widgets'
+                    },
                 ]
             }
         },
@@ -53,7 +60,7 @@ module.exports = function (grunt) {
         // Lint
         jshint: require(__dirname + '/tasks/jshint.js'),
         http: {
-            /*get_hjscs: {
+            get_hjscs: {
                 options: {
                     url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/tasks/jscs.js'
                 },
@@ -64,7 +71,7 @@ module.exports = function (grunt) {
                     url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/tasks/jshint.js'
                 },
                 dest: 'tasks/jshint.js'
-            },
+            },/*
             get_gruntfile: {
                 options: {
                     url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.build/master/adapters/Gruntfile.js'
@@ -213,5 +220,9 @@ module.exports = function (grunt) {
         'copy',
         'jshint',
         'jscs'
+    ]);
+    grunt.registerTask('prepublish', [
+        'http',
+        'replace'
     ]);
 };

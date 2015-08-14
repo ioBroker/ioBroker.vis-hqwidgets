@@ -8,7 +8,6 @@ module.exports = {
                 srcDir + "adapter/example/*.js",
                 srcDir + "tasks/**/*.js",
                 srcDir + "www/**/*.js",
-                '!' + srcDir + "www/widgets/**/*.js",
                 '!' + srcDir + "www/lib/**/*.js",
                 '!' + srcDir + 'node_modules/**/*.js',
                 '!' + srcDir + 'adapter/*/node_modules/**/*.js'

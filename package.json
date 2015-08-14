@@ -1,7 +1,7 @@
 {
   "name": "iobroker.vis-hqwidgets",
   "description": "hqwidgets Widgets for ioBroker.vis",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "bluefox",
     "email": "dogafox@gmail.com"
@@ -45,7 +45,8 @@
   },
   "main": "widgets/hqwidgets.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "node node_modules/grunt/lib/grunt prepublish"
   },
   "license": "MIT"
 }

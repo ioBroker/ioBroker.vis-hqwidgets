@@ -736,15 +736,15 @@ if (vis.editMode) {
         "dialog_effect":    {"en": "Show effect",       "de": "Anzeigeeffekt",          "ru": "Эффект открытия"},
         "dialog_timeout":   {"en": "Hide timeout(ms)",  "de": "Zumachen nach(ms)",      "ru": "Закрыть после(мс)"},
         "dialog_open":      {"en": "Test open",         "de": "Testen",                 "ru": "Тест"},
-        "border_width":     {"en": "Border width",      "de": "Rahmenbreite",           "ru": "border_width"},
-        "slide_count":      {"en": "Slides count",      "de": "Flügelanzahl",           "ru": "slide_count"},
-        "hide_timeout":     {"en": "Timeout for hide",  "de": "Timeout für ", "ru": "hide_timeout"},
-        "group_slides":     {"en": "Slides",            "de": "group_slides", "ru": "group_slides"},
-        "slide_type":       {"en": "Slide type",        "de": "slide_type", "ru": "slide_type"},
-        "slide_sensor":     {"en": "Slide sensor",      "de": "slide_sensor", "ru": "slide_sensor"},
-        "slide_sensor_lowbat": {"en": "Slide sensor lowbat", "de": "slide_sensor_lowbat", "ru": "slide_sensor_lowbat"},
-        "slide_handle":     {"en": "Slide handle",      "de": "slide_handle", "ru": "slide_handle"},
-        "slide_handle_lowbat": {"en": "slide_handle_lowbat", "de": "slide_handle_lowbat", "ru": "slide_handle_lowbat"}
+        "border_width":     {"en": "Border width",      "de": "Rahmenbreite",           "ru": "Ширина рамы"},
+        "slide_count":      {"en": "Slides count",      "de": "Flügelanzahl",           "ru": "Кол-во створок"},
+        "hide_timeout":     {"en": "Timeout for hide",  "de": "Timeout für ",           "ru": "Интервал для скрытия"},
+        "group_slides":     {"en": "Slides",            "de": "Flügel",                 "ru": "Створка"},
+        "slide_type":       {"en": "Slide type",        "de": "Flügeltyp",              "ru": "Тип створки"},
+        "slide_sensor":     {"en": "Slide sensor",      "de": "Fensterblatt-Sensor",    "ru": "Сенсор на створке"},
+        "slide_sensor_lowbat": {"en": "Slide sensor lowbat", "de": "FB-Sensor lowbat",  "ru": "Сенсор на створке (lowbat)"},
+        "slide_handle":     {"en": "Slide handle",      "de": "Griff-Sensor",           "ru": "Сенсор на ручке"},
+        "slide_handle_lowbat": {"en": "slide_handle_lowbat", "de": "Griff-Sensor lowbat", "ru": "Сенсор на ручке (lowbat)"}
     });
 }
 
@@ -1358,8 +1358,9 @@ vis.binds.hqwidgets = {
             var div2 = '<div class="hq-blind-blind2" style="' +
                 'border-width: ' + bWidth + 'px; ' +
                 '">';
+            options.shutterPos = options.shutterPos || 0;
 
-            var div3 = '<div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tr class="hq-no-space hq-blind-position" style="height: ' + options.shutterPos + '%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space"><td class="hq-no-space"></td></tr></table>';
+            var div3 = '<div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tr class="hq-no-space hq-blind-position" style="height: ' + options.shutterPos + '%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space" style="height: ' + (100 - options.shutterPos) + '%"><td class="hq-no-space"></td></tr></table>';
 
             var hanldePos  = null;
             var slidePos   = null;
@@ -1376,9 +1377,8 @@ vis.binds.hqwidgets = {
 
             }
 
-
             var div4 = '<div class="hq-blind-blind4';
-            if ((slidePos == 1 || slidePos === true || slidePos === 'true' || slidePos === 'open' || slidePos === 'opened') && options.type) {
+            if ((slidePos == 1 || slidePos === true   || slidePos === 'true' || slidePos === 'open' || slidePos === 'opened') && options.type) {
                 div4 +=' hq-blind-blind4-opened-' + options.type;
             }
             if ((slidePos == 2 || slidePos === 'tilt' || slidePos === 'tilted') && options.type) {
@@ -1405,7 +1405,7 @@ vis.binds.hqwidgets = {
                 } else if (options.type == 'top' || options.type == 'bottom') {
                     div5 += 'left: 50%; height: ' + bWidth + 'px; width: 15%;'
                 }
-                if (options.type == 'right') {
+                if (options.type == 'left') {
                     div5 += 'left: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
                 } else if (options.type == 'bottom') {
                     div5 += 'top: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
@@ -1563,7 +1563,7 @@ vis.binds.hqwidgets = {
                     border_width: data.border_width,
                     shutterPos:   data.shutterPos
                 };
-                text += '<td>' + this.drawOneWindow(i, options, 'closed') + '</td>';
+                text += '<td style="height: 100%">' + this.drawOneWindow(i, options, 'closed') + '</td>';
             }
             text += '</tr></table>';
             $div.html(text);
@@ -1953,12 +1953,55 @@ if (vis.editMode) {
  */
 
     vis.binds.hqwidgets.convertOldWidgets = function (widget) {
+        debugger;
         if (widget.data && widget.data.hqoptions) {
             try {
                 var hqoptions = JSON.parse(widget.data.hqoptions);
+                widget.style.height = 45;
+                widget.style.width = 45;
                 for (var opt in hqoptions) {
-                    if (opt == 'position') {
-
+                    if (opt == 'width') {
+                        widget.style.width = hqoptions.width || 45;
+                    } else if (opt == 'height') {
+                        widget.style.height = hqoptions.height || 45;
+                    } else if (opt == 'radius') {
+                        widget.style['border-radius'] = hqoptions.radius + 'px';
+                    } else if (opt == 'zindex') {
+                        widget.style['z-index'] = hqoptions.zindex;
+                    } else if (opt == 'iconName') {
+                        if (hqoptions.iconName && hqoptions.iconName.indexOf('http://') == -1 && hqoptions.iconName[0] != '/') {
+                            widget.data.iconName = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconName;
+                        } else {
+                            widget.data.iconName = hqoptions.iconName;
+                        }
+                    } else if (opt == 'iconOn') {
+                        if (hqoptions.iconOn && hqoptions.iconOn.indexOf('http://') == -1 && hqoptions.iconOn[0] != '/') {
+                            widget.data.iconOn = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconOn;
+                        } else {
+                            widget.data.iconOn = hqoptions.iconOn;
+                        }
+                    } else if (opt == 'title') {
+                        widget.data.descriptionLeft = hqoptions.title;
+                    } else if (opt == 'room') {
+                        widget.data.descriptionLeft += '<br>' + hqoptions.room;
+                    } else if (opt == 'windowConfig') {
+                        var parts = hqoptions.windowConfig.split(',');
+                        widget.data.slide_count = parts.length || 1;
+                        for (var p = 0; p < parts.length; p++) {
+                            if (parts[p] == "0") {
+                                widget.data['slide_type' + (p + 1)] = '';
+                            } else if (parts[p] == "1") {
+                                widget.data['slide_type' + (p + 1)] = 'left';
+                            } else if (parts[p] == "2") {
+                                widget.data['slide_type' + (p + 1)] = 'right';
+                            } else if (parts[p] == "3") {
+                                widget.data['slide_type' + (p + 1)] = 'top';
+                            }
+                        }
+                        widget.data.border_width = 1;
+                        if (widget.data.hm_id  !== undefined) delete widget.data.hm_id;
+                        if (widget.data.digits !== undefined) delete widget.data.digits;
+                        if (widget.data.factor !== undefined) delete widget.data.factor;
                     }
                 }
             } catch (e) {

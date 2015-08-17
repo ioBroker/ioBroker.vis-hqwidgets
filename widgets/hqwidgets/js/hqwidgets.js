@@ -1853,6 +1853,105 @@ vis.binds.hqwidgets = {
     }
 };
 if (vis.editMode) {
+/*
+		"tpl": "tplHqShutter",
+        "hqoptions" : "{
+			"x":1095,
+			"y":336,
+			"height":54,
+			"width":54,
+			"radius":0,
+			"zindex":3,
+			"buttonType":3,
+			"windowConfig":"1",
+			"title":"Schlaffzimmer.Rolladen.Aktor",
+			"room":"Schlafzimmer",
+
+		}",
+
+        *  /
+	  /*
+		"tpl": "tplHqButton",
+        "hqoptions": "{
+			"x":1040,
+			"y":429,
+			"height":46,
+			"width":46,
+			"radius":22,
+			"zindex":2,
+			"iconName":"img/KinderBug.png",
+			"title":"LampeAmFenster.Aktor",
+			"room":"Kinderzimmer",
+			"hm_id":"7480"
+		}",
+	*/
+	  /*
+		"tpl": "tplHqOutTemp",
+        "hqoptions": "{
+			"x":481,
+			"y":45,
+			"width":46,
+			"radius":22,
+			"zindex":2,
+			"buttonType":2,
+			"iconName":"Temperature.png",
+			"title":"Temperatur.Sensor",
+			"room":"Balkon",
+			"hm_id":"12871",
+			"charts":{
+				"navigator":"",
+				"percentaxis":"true",
+				"period":"72",
+				"theme":"dark-blue",
+				"range":"24",
+				"scrollbar":"true",
+				"grouping":"true",
+				"legend":"inline",
+				"zoom":"true",
+				"loader":"false"
+			}
+		}",
+        "informWindow": "{"x":85,
+			"y":20,
+			"width":656,
+			"height":491}"
+		},
+*//*
+      "tpl": "tplHqInTemp",
+        "hqoptions": "{
+			"x":877,
+			"y":430,
+			"height":44,
+			"width":46,
+			"radius":22,
+			"zindex":2,
+			"buttonType":1,
+			"iconName":"Temperature.png",
+			"title":"Heizung.Regler",
+			"room":"Kinderzimmer",
+			"hm_id":"3837",
+			"hm_idV":"3822",
+			"charts":{
+				"navigator":"",
+				"percentaxis":"true",
+				"period":"72",
+				"theme":"dark-green",
+				"range":"24",
+				"scrollbar":"true",
+				"grouping":"true",
+				"legend":"inline",
+				"zoom":"true",
+				"loader":"false"
+			}
+		}",
+        "informWindow": "{
+			"x":500,
+			"y":253,
+			"width":800,
+			"height":400
+		}"
+ */
+
     vis.binds.hqwidgets.convertOldWidgets = function (widget) {
         if (widget.data && widget.data.hqoptions) {
             try {
@@ -1865,7 +1964,7 @@ if (vis.editMode) {
             } catch (e) {
                 console.log('Cannot convert. Invalid JSON in hqoptions: ' + widget.data.hqoptions);
             }
-            delete widget.data.baroptions;
+            delete widget.data.hqoptions;
         }
         return widget;
     };

@@ -1338,6 +1338,7 @@ vis.binds.hqwidgets = {
             if (options.slideOid) {
                 slidePos = vis.states[options.slideOid + '.val'];
                 if (!options.handleOid) hanldePos = slidePos;
+                if (hanldePos == 2) slidePos = 2;
             }
 
             var div4 = '<div class="hq-blind-blind4';

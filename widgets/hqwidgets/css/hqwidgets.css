@@ -237,7 +237,7 @@
 	background: linear-gradient(45deg,  rgba(221,231,243,0.7) 0%,rgba(120,132,146,0.7) 52%,rgba(166,178,190,0.7) 68%,rgba(201,206,210,0.7) 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dde7f3', endColorstr='#c9ced2',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
-.hq-blind-blind4-opened-right {
+.hq-blind-blind4-opened-left {
 	-moz-transform: skew(0deg,10deg) scale(0.9, 1);
 	-webkit-transform: skew(0deg, 10deg) scale(0.9, 1);
 	-o-transform: skew(0deg,10deg) scale(0.9, 1);
@@ -245,7 +245,7 @@
 	transform: skew(0deg,10deg) scale(0.9, 1);
 	transform-origin: 0 0
 }
-.hq-blind-blind4-opened-left {
+.hq-blind-blind4-opened-right {
 	-moz-transform: skew(0deg,-10deg) scale(0.9, 1);
 	-webkit-transform: skew(0deg, -10deg) scale(0.9, 1);
 	-o-transform: skew(0deg,-10deg) scale(0.9, 1);

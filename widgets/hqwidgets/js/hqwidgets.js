@@ -1,6 +1,8 @@
 /*
     ioBroker.vis high quality Widget-Set
 
+    version: "0.1.0"
+
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
 */
@@ -741,10 +743,10 @@ if (vis.editMode) {
         "hide_timeout":     {"en": "Timeout for hide",  "de": "Timeout für ",           "ru": "Интервал для скрытия"},
         "group_slides":     {"en": "Slides",            "de": "Flügel",                 "ru": "Створка"},
         "slide_type":       {"en": "Slide type",        "de": "Flügeltyp",              "ru": "Тип створки"},
-        "slide_sensor":     {"en": "Slide sensor",      "de": "Fensterblatt-Sensor",    "ru": "Сенсор на створке"},
-        "slide_sensor_lowbat": {"en": "Slide sensor lowbat", "de": "FB-Sensor lowbat",  "ru": "Сенсор на створке (lowbat)"},
-        "slide_handle":     {"en": "Slide handle",      "de": "Griff-Sensor",           "ru": "Сенсор на ручке"},
-        "slide_handle_lowbat": {"en": "slide_handle_lowbat", "de": "Griff-Sensor lowbat", "ru": "Сенсор на ручке (lowbat)"}
+        "oid-slide-sensor":         {"en": "Slide sensor",          "de": "Fensterblatt-Sensor",    "ru": "Сенсор на створке"},
+        "oid-slide-sensor-lowbat":  {"en": "Slide sensor lowbat",   "de": "FB-Sensor lowbat",       "ru": "Сенсор на створке (lowbat)"},
+        "oid-slide-handle":         {"en": "Slide handle",          "de": "Griff-Sensor",           "ru": "Сенсор на ручке"},
+        "oid-slide-handle-lowbat":  {"en": "Slide handle lowbat",   "de": "Griff-Sensor lowbat",    "ru": "Сенсор на ручке (lowbat)"}
     });
 }
 
@@ -998,48 +1000,6 @@ vis.binds.hqwidgets = {
                 var $main = $div.find('.vis-hq-main');
                 $main.animateDiv(data.changeEffect, {color: data.waveColor});
             }
-        },
-        changedId: function (widgetID, view, newId, attr, isCss) {
-            var obj = vis.objects[newId];
-            var changed = [];
-            // If it is real object and SETPOINT
-            if (obj && obj.common) {
-                var roles = [];
-                // If some attributes are not set
-                if (!vis.views[view].widgets[widgetID].data['oid-battery']) roles.push('indicator.battery');
-                if (!vis.views[view].widgets[widgetID].data['oid-working']) roles.push('indicator.working');
-                if (!vis.views[view].widgets[widgetID].data['oid-signal'])  roles.push('indicator.signal');
-
-                if (roles.length) {
-                    var result = vis.findByRoles(newId, roles);
-                    if (result) {
-                        var name;
-                        for (var r in result) {
-                            switch (r) {
-                                case  'indicator.battery':
-                                    name = 'oid-battery';
-                                    break
-                                case  'indicator.working':
-                                    name = 'oid-working';
-                                    break
-                                case  'indicator.signal':
-                                    name = 'oid-signal';
-                                    break
-                                default:
-                                    name = '';
-                                    break;
-                            }
-                            if (name) {
-                                changed.push(name);
-                                vis.views[view].widgets[widgetID].data[name] = result[r];
-                                vis.widgets[widgetID].data[name] = result[r];
-                            }
-                        }
-                    }
-                }
-            }
-
-            return changed.length ? changed : null;
         },
         draw: function ($div) {
             var data = $div.data('data');
@@ -1367,14 +1327,17 @@ vis.binds.hqwidgets = {
 
             if (options.handleOid) {
                 hanldePos = vis.states[options.handleOid + '.val'];
+                /* problem ?? */
+                if (hanldePos == 2) {
+                    hanldePos = 1;
+                } else if (hanldePos == 1) {
+                    hanldePos = 2;
+                }
                 slidePos = hanldePos;
             }
             if (options.slideOid) {
                 slidePos = vis.states[options.slideOid + '.val'];
                 if (!options.handleOid) hanldePos = slidePos;
-            }
-            if (options.oid) {
-
             }
 
             var div4 = '<div class="hq-blind-blind4';
@@ -1392,6 +1355,7 @@ vis.binds.hqwidgets = {
 
             var div5 = '';
 
+            console.log('HOID: ' + options.handleOid + ', ' + hanldePos);
             if (options.type) {
                 div5 = '<div class="hq-blind-handle hq-blind-handle-bg';
                 if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
@@ -1425,16 +1389,18 @@ vis.binds.hqwidgets = {
                         'transform: rotate(DDDdeg);';
 
                     var w = Math.round(bbWidth + bWidth / 2);
-                    if (options.type == 'left' || options.type == 'bottom') {
+                    if (options.type == 'right' || options.type == 'bottom') {
                         if (hanldePos == 1 || hanldePos === true || hanldePos === 'true' || hanldePos === 'open' || hanldePos === 'opened') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '-90');
-                        } else if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
+                        } else
+                        if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
                         }
                     } else {
                         if (hanldePos == 1 || hanldePos === true || hanldePos === 'true' || hanldePos === 'open' || hanldePos === 'opened') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '90');
-                        } else if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
+                        } else
+                        if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
                         }
                     }
@@ -1557,23 +1523,23 @@ vis.binds.hqwidgets = {
             var text = '<table class="hq-blind hq-no-space" style="width: 100%; height: 100%"><tr>';
             for (var i = 1; i <= data.slide_count; i++) {
                 var options = {
-                    slideOid:     data['slide_sensor' + i],
-                    handleOid:    data['slide_handle' + i],
+                    slideOid:     data['oid-slide-sensor' + i],
+                    handleOid:    data['oid-slide-handle' + i],
                     type:         data['slide_type' + i],
                     border_width: data.border_width,
                     shutterPos:   data.shutterPos
                 };
-                text += '<td style="height: 100%">' + this.drawOneWindow(i, options, 'closed') + '</td>';
+                text += '<td style="height: 100%">' + this.drawOneWindow(i, options) + '</td>';
             }
             text += '</tr></table>';
             $div.html(text);
             var i = 0;
             $div.find('.hq-blind-blind2').each(function (id) {
                 id++;
-                if (data['slide_sensor_lowbat' + id]) {
-                    data.slide_sensor_lowbat[id] = vis.states[data['slide_sensor_lowbat' + id] + '.val'];
+                if (data['oid-slide-sensor-lowbat' + id]) {
+                    data['oid-slide-sensor-lowbat'][id] = vis.states[data['oid-slide-sensor-lowbat' + id] + '.val'];
                     $(this).batteryIndicator({
-                        show:    data.slide_sensor_lowbat[id] || false,
+                        show:    data['oid-slide-sensor-lowbat'][id] || false,
                         title:   _('Low battery on sash sensor'),
                         classes: 'slide-low-battery'
                     });
@@ -1581,10 +1547,10 @@ vis.binds.hqwidgets = {
             });
             $div.find('.hq-blind-blind3').each(function (id) {
                 id++;
-                if (data['slide_handle_lowbat' + id]) {
-                    data.slide_handle_lowbat[id] = vis.states[data['slide_handle_lowbat' + id] + '.val'];
+                if (data['oid-slide-handle-lowbat' + id]) {
+                    data['oid-slide-handle-lowbat'][id] = vis.states[data['oid-slide-handle-lowbat' + id] + '.val'];
                     $(this).batteryIndicator({
-                        show:    data.slide_handle_lowbat[id] || false,
+                        show:    data['oid-slide-handle-lowbat'][id] || false,
                         color:   '#FF55FA',
                         title:   _('Low battery on handle sensor'),
                         classes: 'handle-low-battery'
@@ -1627,36 +1593,36 @@ vis.binds.hqwidgets = {
                 data.min = data.max;
                 data.max = tmp;
             }
-            data.slide_sensor_lowbat = [];
-            data.slide_handle_lowbat = [];
+            data['oid-slide-sensor-lowbat'] = [];
+            data['oid-slide-handle-lowbat'] = [];
 
             if (data['oid-working'])  data.working  = vis.states.attr(data['oid-working']  + '.val');
 
             vis.binds.hqwidgets.window.draw($div);
 
             for (var i = 1; i <= data.slide_count; i++) {
-                if (data['slide_sensor' + i]) {
-                    vis.states.bind(data['slide_sensor' + i] + '.val', function () {
+                if (data['oid-slide-sensor' + i]) {
+                    vis.states.bind(data['oid-slide-sensor' + i] + '.val', function () {
                         vis.binds.hqwidgets.window.draw($div);
                     });
                 }
-                if (data['slide_handle' + i]) {
-                    vis.states.bind(data['slide_handle' + i] + '.val', function () {
+                if (data['oid-slide-handle' + i]) {
+                    vis.states.bind(data['oid-slide-handle' + i] + '.val', function () {
                         vis.binds.hqwidgets.window.draw($div);
                     });
                 }
-                if (data['slide_sensor_lowbat' + i]) {
-                    vis.states.bind(data['slide_sensor_lowbat' + i] + '.val', function (e, newVal, oldVal) {
+                if (data['oid-slide-sensor-lowbat' + i]) {
+                    vis.states.bind(data['oid-slide-sensor-lowbat' + i] + '.val', function (e, newVal, oldVal) {
                         for (var id = 1; id <= data.slide_count; id++) {
-                            if (data['slide_sensor_lowbat' + id]) {
-                                data.slide_sensor_lowbat[id] = vis.states[data['slide_sensor_lowbat' + id] + '.val'];
+                            if (data['oid-slide-sensor-lowbat' + id]) {
+                                data['oid-slide-sensor-lowbat'][id] = vis.states[data['oid-slide-sensor-lowbat' + id] + '.val'];
                             }
                         }
 
                         $div.find('.slide-low-battery').each(function (id) {
                             id++;
-                            if (data['slide_sensor_lowbat' + id]) {
-                                if (data.slide_sensor_lowbat[id]) {
+                            if (data['oid-slide-sensor-lowbat' + id]) {
+                                if (data.oid-slide-sensor-lowbat[id]) {
                                     $(this).show();
                                 } else {
                                     $(this).hide();
@@ -1665,17 +1631,17 @@ vis.binds.hqwidgets = {
                         });
                     });
                 }
-                if (data['slide_handle_lowbat' + i]) {
-                    vis.states.bind(data['slide_handle_lowbat' + i] + '.val', function () {
+                if (data['oid-slide-handle-lowbat' + i]) {
+                    vis.states.bind(data['oid-slide-handle-lowbat' + i] + '.val', function () {
                         for (var id = 1; id <= data.slide_count; id++) {
-                            if (data['slide_handle_lowbat' + id]) {
-                                data.slide_handle_lowbat[id] = vis.states[data['slide_handle_lowbat' + id] + '.val'];
+                            if (data['oid-slide-handle-lowbat' + id]) {
+                                data['oid-slide-handle-lowbat'][id] = vis.states[data['oid-slide-handle-lowbat' + id] + '.val'];
                             }
                         }
                         $div.find('.handle-low-battery').each(function (id) {
                             id++;
-                            if (data['slide_handle_lowbat' + id]) {
-                                if (data.slide_handle_lowbat[id]) {
+                            if (data['oid-slide-handle-lowbat' + id]) {
+                                if (data['oid-slide-handle-lowbat'][id]) {
                                     $(this).show();
                                 } else {
                                     $(this).hide();
@@ -1953,12 +1919,11 @@ if (vis.editMode) {
  */
 
     vis.binds.hqwidgets.convertOldWidgets = function (widget) {
-        debugger;
         if (widget.data && widget.data.hqoptions) {
             try {
                 var hqoptions = JSON.parse(widget.data.hqoptions);
                 widget.style.height = 45;
-                widget.style.width = 45;
+                widget.style.width  = 45;
                 for (var opt in hqoptions) {
                     if (opt == 'width') {
                         widget.style.width = hqoptions.width || 45;
@@ -1969,12 +1934,25 @@ if (vis.editMode) {
                     } else if (opt == 'zindex') {
                         widget.style['z-index'] = hqoptions.zindex;
                     } else if (opt == 'iconName') {
+                        widget.data.btIconWidth = 32;
+                        if (hqoptions.iconName == 'Temperature.png') {
+                            widget.data.iconName = 'img/Heating.png'
+                        } else
+                        if (hqoptions.iconName == 'Lamp.png') {
+                            widget.data.iconName = 'img/Lamp.png'
+                        } else
                         if (hqoptions.iconName && hqoptions.iconName.indexOf('http://') == -1 && hqoptions.iconName[0] != '/') {
                             widget.data.iconName = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconName;
                         } else {
                             widget.data.iconName = hqoptions.iconName;
                         }
                     } else if (opt == 'iconOn') {
+                        if (hqoptions.iconOn == 'Temperature.png') {
+                            widget.data.iconOn = 'img/Heating.png'
+                        } else
+                        if (hqoptions.iconOn == 'Lamp.png') {
+                            widget.data.iconOn = 'img/Lamp.png'
+                        } else
                         if (hqoptions.iconOn && hqoptions.iconOn.indexOf('http://') == -1 && hqoptions.iconOn[0] != '/') {
                             widget.data.iconOn = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconOn;
                         } else {
@@ -2010,5 +1988,114 @@ if (vis.editMode) {
             delete widget.data.hqoptions;
         }
         return widget;
+    };
+    vis.binds.hqwidgets.changedSensorId = function (widgetID, view, newId, attr, isCss) {
+        var obj = vis.objects[newId];
+        var changed = [];
+        // If it is real object and SETPOINT
+        if (obj && obj.common) {
+            var index = attr.match(/(\d+)$/);
+            if (index) {
+                var bName = (attr === 'oid-slide-handle' + index[1]) ? 'oid-slide-handle-lowbat' : 'oid-slide-sensor-lowbat';
+                bName += index[1];
+                // If some attributes are not set
+                if (!vis.views[view].widgets[widgetID].data[bName]) {
+                    var result = vis.findByRoles(newId, 'indicator.battery');
+                    if (result) {
+                        changed.push(bName);
+                        vis.views[view].widgets[widgetID].data[bName] = result['indicator.battery'];
+                        vis.widgets[widgetID].data[bName] = result['indicator.battery'];
+                    }
+                }
+            }
+        }
+
+        return changed.length ? changed : null;
+    };
+
+    vis.binds.hqwidgets.changedWindowId = function (widgetID, view, newId, attr, isCss) {
+        var obj = vis.objects[newId];
+        var changed = [];
+        // If it is real object and SETPOINT
+        if (obj && obj.common) {
+            var roles = [];
+            // If some attributes are not set
+            if (!vis.views[view].widgets[widgetID].data['oid-battery']) roles.push('indicator.battery');
+            if (!vis.views[view].widgets[widgetID].data['oid-working']) roles.push('indicator.working');
+            if (!vis.views[view].widgets[widgetID].data['oid-signal'])  roles.push('indicator.signal');
+
+            if (roles.length) {
+                var result = vis.findByRoles(newId, roles);
+                if (result) {
+                    var name;
+                    for (var r in result) {
+                        switch (r) {
+                            case  'indicator.battery':
+                                name = 'oid-battery';
+                                break
+                            case  'indicator.working':
+                                name = 'oid-working';
+                                break
+                            case  'indicator.signal':
+                                name = 'oid-signal';
+                                break
+                            default:
+                                name = '';
+                                break;
+                        }
+                        if (name) {
+                            changed.push(name);
+                            vis.views[view].widgets[widgetID].data[name] = result[r];
+                            vis.widgets[widgetID].data[name] = result[r];
+                        }
+                    }
+                }
+            }
+        }
+
+        return changed.length ? changed : null;
+    };
+
+    vis.binds.hqwidgets.changedButtonId = function (widgetID, view, newId, attr, isCss) {
+        var obj = vis.objects[newId];
+        var changed = [];
+        // If it is real object and SETPOINT
+        if (obj && obj.common) {
+            var roles = [];
+            // If some attributes are not set
+            if (!vis.views[view].widgets[widgetID].data['oid-battery']) roles.push('indicator.battery');
+            if (!vis.views[view].widgets[widgetID].data['oid-working']) roles.push('indicator.working');
+            if (!vis.views[view].widgets[widgetID].data['oid-signal'])  roles.push('indicator.signal');
+
+            if (roles.length) {
+                var result = vis.findByRoles(newId, roles);
+                if (result) {
+                    var name;
+                    for (var r in result) {
+                        switch (r) {
+                            case  'indicator.battery':
+                                name = 'oid-battery';
+                                break
+                            case  'indicator.working':
+                                name = 'oid-working';
+                                break
+                            case  'indicator.signal':
+                                name = 'oid-signal';
+                                break
+                            default:
+                                name = '';
+                                break;
+                        }
+                        if (name) {
+                            changed.push(name);
+                            vis.views[view].widgets[widgetID].data[name] = result[r];
+                            vis.widgets[widgetID].data[name] = result[r];
+                        }
+                    }
+                }
+            }
+        }
+
+        return changed.length ? changed : null;
     };
 }

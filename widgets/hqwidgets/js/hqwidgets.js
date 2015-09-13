@@ -1176,7 +1176,6 @@ vis.binds.hqwidgets = {
             // initiate state
             vis.binds.hqwidgets.button.changeState($div, true);
 
-            debugger;
             // If dimmer or number
             if (data.wType == 'number') {
                 var scalaOptions = {

@@ -44,7 +44,8 @@
             color:      '#FFCC00',
             alwaysShow: false,
             hideNumber: false,
-            change:      function (value) {
+            step:       1,
+            change:     function (value) {
                 console.log('change ' + value);
             },
             changing:   function (value) {},
@@ -53,11 +54,12 @@
             click:      function () {
                 //console.log('click');
             },
-            colorize: function (color, value) {
+            colorize:   function (color, value) {
                 return h2rgba(color, (value - settings.min) / (settings.max - settings.min) + 0.5)
             },
-            min: 0,
-            max: 100
+            min:        0,
+            max:        100,
+            isComma:    false
         }, options);
 
         return this.each(function () {
@@ -74,7 +76,7 @@
             if (!settings.width)     settings.width = Math.round(divMax + 30) + '';
             if (!settings.thickness) settings.thickness = 1 - (divMax / settings.width);
 
-            $this.prepend('<input type="text" value="' + settings.value + '" class="scalaInput" data-width="' + settings.width + '" data-thickness="' + settings.thickness + '"/>');
+            $this.prepend('<input type="text" value="' + settings.value + '" class="scalaInput" data-width="' + settings.width + '" data-height="' + settings.width + '" data-thickness="' + settings.thickness + '"/>');
 
             var $scalaInput   = $this.find('.scalaInput');
             var $scalaWrapped = $this.find('.scalaWrapped');
@@ -102,21 +104,23 @@
                         if (settings.change && $knobDiv._oldValue != val) settings.change(val);
                     }
                 },
-                cancel: function () {
+                cancel:  function () {
                     $knobDiv._mouseDown = false;
                     hide('cancel');
                     // set old value
                     setValue($knobDiv._oldValue);
 
                 },
-                change: function (value) {
+                change:  function (value) {
                     if (settings.changing) settings.changing(value);
                 },
-                format: function (v) {
+                format:  function (v) {
+                    if (settings.digits !== null) v = v.toFixed(settings.digits);
+                    if (settings.isComma && v) v = v.toString().replace('.', ',');
                     if (settings.unit) v = v + settings.unit;
                     return v;
                 },
-                displayPrevious : true,
+                displayPrevious:  true,
                 displayInput:     !settings.hideNumber,
                 bgColor:          settings.bgColor,
                 readOnly:         settings.readOnly,
@@ -124,7 +128,8 @@
                 inputColor:       settings.color,
                 colorize:         settings.colorize ? settings.colorize : undefined,
                 min:              settings.min,
-                max:              settings.max
+                max:              settings.max,
+                step:             parseFloat(settings.step || 1)
             });
 
             var w = $knobDiv.width();
@@ -164,13 +169,13 @@
                     $knobDiv._pressTimer = setTimeout(function () {
                         $knobDiv._pressTimer = null;
                     }, 300);
-                    console.log((new Date().getSeconds() + '.' + new Date().getMilliseconds())+ ' ' + (event || '') +  ' (enter: ' + $knobDiv._mouseEnter + ', down: ' + $knobDiv._mouseDown + ')');
+                    //console.log((new Date().getSeconds() + '.' + new Date().getMilliseconds())+ ' ' + (event || '') +  ' (enter: ' + $knobDiv._mouseEnter + ', down: ' + $knobDiv._mouseDown + ')');
                     show(event);
                 }
             }
             function unpress(event) {
                 $knobDiv._mouseDown = false;
-                console.log((new Date().getSeconds() + '.' + new Date().getMilliseconds()) + ' ' + (event || '') +  ' (enter: ' + $knobDiv._mouseEnter + ', down: ' + $knobDiv._mouseDown + ')');
+                //console.log((new Date().getSeconds() + '.' + new Date().getMilliseconds()) + ' ' + (event || '') +  ' (enter: ' + $knobDiv._mouseEnter + ', down: ' + $knobDiv._mouseDown + ')');
                 hide(event);
 
                 if ($knobDiv._pressTimer) {
@@ -281,7 +286,7 @@
 
             $this.wrap('<div class="checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-wrap" style="' + checkboxStyle + '"><div class="checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-button" style="' + buttonStyle + '"></div></div>');
             $this.change(function () {
-                console.log('change ' + $this.prop('checked'));
+                //console.log('change ' + $this.prop('checked'));
                 if ($this.prop('checked')) {
                     setTimeout(function () {
                         $this.parent().addClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-button-active');
@@ -293,7 +298,7 @@
 
             if (!settings.readOnly) {
                 $this.parent().parent().click(function () {
-                    console.log($this.prop('checked'));
+                    //console.log($this.prop('checked'));
                     $this.prop('checked', !$this.prop('checked')).trigger('change');
                 });
             }
@@ -320,8 +325,8 @@
                     'px;height: ' + Math.round($this.height()) + 'px;border-radius: ' + (options.radius || $this.css('border-radius')) +
                     border +
                     '; position: absolute"></div>';
-                $this.append(text);
-                $this.append(text.replace('wave1', 'wave2'));
+                $this.prepend(text);
+                $this.prepend(text.replace('wave1', 'wave2'));
 
                 $this.find('.wave1').show().addClass('animated' + options.speed + 's zoomIn1');
                 $this.find('.wave2').show().addClass('animated' + options.speed + 's zoomIn2');
@@ -924,8 +929,11 @@ vis.binds.hqwidgets = {
 
             var value = (data.tempValue !== undefined) ? data.tempValue : data.value;
 
-            if (!isForce && data.oldValue !== undefined && data.oldValue == value) return;
+            if (!isForce && data.oldValue !== undefined && data.oldValue == value && !data.ack) return;
 
+            if (data.wType == 'number') {
+                value = parseFloat((value || 0).toString().replace(',', '.'));
+            }
             data.oldValue = value;
 
             if (data.temperature  ||
@@ -947,6 +955,7 @@ vis.binds.hqwidgets = {
             if (value !== null && value !== undefined) {
                 $div.find('.vis-hq-nodata').remove();
             }
+
             switch (data.state) {
                 case 'normal':
                     $('#' + data.wid + ' .vis-hq-main')
@@ -968,6 +977,8 @@ vis.binds.hqwidgets = {
 
                     break;
             }
+            if (data.digits !== null && value !== null) value = value.toFixed(data.digits);
+            if (data.is_comma && value)                 value = value.toString().replace('.', ',');
 
             vis.binds.hqwidgets.button.showRightInfo($div, value);
 
@@ -1092,7 +1103,11 @@ vis.binds.hqwidgets = {
                     $div.append('<div class="vis-hq-nodata"><span class="ui-icon ui-icon-cancel"></span></div>');
 
                     vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
-                        data.value = newVal;
+                        if (data.wType == 'number') {
+                            data.value = parseFloat(newVal || 0);
+                        } else {
+                            data.value = newVal;
+                        }
                         data.ack   = vis.states[data.oid + '.ack'];
                         data.lc    = vis.states[data.oid + '.lc'];
 
@@ -1104,8 +1119,14 @@ vis.binds.hqwidgets = {
                         vis.binds.hqwidgets.button.changeState($div);
 
                         if (data.wType == 'number') {
-                            $main.scala('value', data.value);
+                            $main.scala('value', (data.digits !== null) ? data.value.toFixed(data.digits) : data.value);
                         }
+                    });
+                    vis.states.bind(data.oid + '.ack', function (e, newVal, oldVal) {
+                        data.ack   = vis.states[data.oid + '.ack'];
+                        data.lc    = vis.states[data.oid + '.lc'];
+
+                        vis.binds.hqwidgets.button.changeState($div);
                     });
                 }
 
@@ -1155,14 +1176,16 @@ vis.binds.hqwidgets = {
             // initiate state
             vis.binds.hqwidgets.button.changeState($div, true);
 
+            debugger;
             // If dimmer or number
             if (data.wType == 'number') {
                 var scalaOptions = {
                     change:     function (value) {
-                        data.value = parseFloat(value);
+                        if (data.readOnly || (data.value || 0).toString() == value.toString()) return;
+
+                        data.value = parseFloat(value.toString().replace(',', '.'));
 
                         if (data.digits !== null) data.value = data.value.toFixed(data.digits);
-                        if (data.is_comma)        data.value = data.value.toString().replace('.', ',');
 
                         data.value     = parseFloat(data.value);
                         data.ack       = false;
@@ -1174,10 +1197,8 @@ vis.binds.hqwidgets = {
                     min:        data.min,
                     max:        data.max,
                     changing:   function (value) {
-                        data.tempValue = value;
-                        if (data.digits !== null) data.tempValue = data.tempValue.toFixed(data.digits);
-                        if (data.is_comma) data.tempValue = data.tempValue.toString().replace('.', ',');
-                        data.tempValue = parseFloat(data.tempValue);
+                        // round to step
+                        data.tempValue = Math.round(parseFloat(value) / data.step) * data.step;
                         vis.binds.hqwidgets.button.changeState($div, false, false, true);
                     },
                     click:      function (val) {
@@ -1208,6 +1229,9 @@ vis.binds.hqwidgets = {
                     },
                     hideNumber: !data.showValue || (data.temperature && data.alwaysShow),
                     readOnly:   vis.editMode,
+                    step:       data.step,
+                    digits:     data.digits,
+                    isComma:    data.is_comma,
                     width:      ((100 + parseInt(data.circleWidth || 50, 10)) * width / 100).toFixed(0)
                 };
 
@@ -1215,7 +1239,7 @@ vis.binds.hqwidgets = {
                 if (data.temperature) {
                     vis.binds.hqwidgets.button.showCenterInfo($div);
 
-                    scalaOptions.color = 'black';
+                    scalaOptions.color    = 'black';
                     scalaOptions.colorize = function (color, value, isPrevious) {
                         var ratio = (value - data.min) / (data.max - data.min);
                         return 'hsla(' + (180 + Math.round(180 * ratio)) + ', 70%, 50%, ' + ((isPrevious) ? 0.7 : 0.9) + ')';
@@ -1287,6 +1311,10 @@ vis.binds.hqwidgets = {
             data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
             data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : ((data.max !== undefined) ? parseFloat(data.max) : 100));
             data.digits = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
+            if (typeof data.step == 'string') data.step = data.step.replace(',', '.');
+            data.step = parseFloat(data.step || 1);
+            data.is_comma = (data.is_comma === 'true' || data.is_comma === true);
+            data.readOnly = (data.readOnly === 'true' || data.readOnly === true);
 
             $div.data('data',  data);
             $div.data('style', style);
@@ -1356,7 +1384,7 @@ vis.binds.hqwidgets = {
 
             var div5 = '';
 
-            console.log('HOID: ' + options.handleOid + ', ' + hanldePos);
+            //console.log('HOID: ' + options.handleOid + ', ' + hanldePos);
             if (options.type) {
                 div5 = '<div class="hq-blind-handle hq-blind-handle-bg';
                 if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
@@ -1695,7 +1723,7 @@ vis.binds.hqwidgets = {
 
             var settings = data;
             var $scalaInput = $div.find('input');
-            $div.addClass('hq-button-base')
+            $div.addClass('hq-button-base');
 
             if (settings.oid) {
                 $scalaInput.val(vis.states.attr(settings.oid + '.val'));
@@ -1723,6 +1751,7 @@ vis.binds.hqwidgets = {
                 width:   parseInt($div.width(),  10),
                 height:  parseInt($div.height(), 10),
                 release: function () {
+                    if (settings.readOnly) return;
                     // remove unit
                     var oldValue = $scalaInput.data('oldValue');
                     var val = $scalaInput.val();
@@ -1732,6 +1761,7 @@ vis.binds.hqwidgets = {
                     }
                     if (oldValue != val && !vis.editMode && settings.oid) {
                         $scalaInput.data('oldValue', val);
+                        val = parseFloat(val.toString().replace(',', '.'));
                         vis.setValue(settings.oid, val);
                     }
                 },
@@ -1740,6 +1770,8 @@ vis.binds.hqwidgets = {
                 change:  function (value) {
                 },
                 format:  function (v) {
+                    if (settings.digits !== null) v = v.toFixed(settings.digits);
+                    if ((settings.is_comma === 'true' || settings.is_comma === true) && v) v = v.toString().replace('.', ',');
                     if (settings.unit) v = v + settings.unit;
                     return v;
                 },
@@ -1753,7 +1785,7 @@ vis.binds.hqwidgets = {
                 min:              settings.min,
                 max:              settings.max,
                 step:             settings.step,
-                cursor:           settings.cursor,
+               cursor:           settings.cursor,
                 rotation:         settings.anticlockwise ? 'anticlockwise' : 'clockwise'
 
             });

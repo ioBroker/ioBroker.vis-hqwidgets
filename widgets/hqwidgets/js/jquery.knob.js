@@ -679,7 +679,7 @@
             if (this.v < this.o.min
                 || this.v > this.o.max) { this.v = this.o.min; }
 
-            this.$.val(this.v);
+            this.$.val(this.o.format(this.v));
             this.w2 = this.w / 2;
             this.cursorExt = this.o.cursor / 100;
             this.xy = this.w2 * this.scale;

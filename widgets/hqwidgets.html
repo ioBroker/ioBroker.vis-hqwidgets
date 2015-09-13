@@ -1,7 +1,7 @@
 <!--
     ioBroker.vis high quality Widget-Set
 
-    version: "0.1.1"
+    version: "0.1.2"
 
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
@@ -41,7 +41,7 @@
         data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqwidgetsDimmer.png"></img>'
         data-vis-update-style="true"
         data-vis-attrs="oid[nothing_selected]/id/changedId;oid-working;oid-battery;oid-signal;"
-        data-vis-attrs0="group.value;unit[%];min[0];max[100];digits[0];is_comma[true]/checkbox;"
+        data-vis-attrs0="group.value;unit[%];min[0];max[100];digits[0]/number;step[1];is_comma[true]/checkbox;"
         data-vis-attrs1="group.center;caption;iconName[img~bulb_off.png]/image;iconOn/image;btIconWidth[56]/slider,0,400,1;offsetAuto[true]/checkbox;leftOffset[15]/slider,0,100,1;topOffset[55]/slider,0,100,1;circleWidth[50]/slider,1,200,1;showValue[true]/checkbox;alwaysShow/checkbox;"
         data-vis-attrs2="group.leftRight;hoursLastAction/nselect,,1,2,3,6,12,24,1024;timeAsInterval[true]/checkbox;format_date/auto,YYYY.MM.DD hh:mm:ss,DD.MM.YYYY hh:mm:ss,YYYY/MM/DD hh:mm:ss,hh:mm:ss,hh:mm;descriptionLeft;infoLeftFontSize[12]/slider,6,50,1;infoFontRightSize[12]/slider,6,50,1;"
         data-vis-attrs3="group.styles;styleNormal/style,hqwidgetsButtons glossy,-button,background;styleActive/style,hqwidgetsButtons glossy,-button,background;usejQueryStyle/checkbox;changeEffect/nselect,,waves,wobble,tada,swing,shake,rubberBand,pulse,flash,bounce;waveColor/color;testActive/checkbox"
@@ -61,7 +61,7 @@
         data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqwidgetsInTemp.png"></img>'
         data-vis-update-style="true"
         data-vis-attrs="oid[nothing_selected]/id,level.temperature/changedId;oid-humidity/id,value.humidity;oid-actual/id,value.temperature;oid-drive/id,value.valve;oid-battery/id,indicator.battery;"
-        data-vis-attrs0="group.value;unit[°C];min[6];max[30];digits[0]/number;is_comma[true]/checkbox;"
+        data-vis-attrs0="group.value;unit[°C];min[6];max[30];digits[0]/number;step[1];is_comma[true]/checkbox;"
         data-vis-attrs1="group.center;caption;iconName[img~Heating.png]/image;btIconWidth[45]/slider,0,400,1;offsetAuto[true]/checkbox;leftOffset[25]/slider,0,100,1;topOffset[55]/slider,0,100,1;circleWidth[50]/slider,1,100,1;showValue[true]/checkbox;alwaysShow/checkbox;"
         data-vis-attrs2="group.leftRight;hoursLastAction/nselect,,1,2,3,6,12,24,1024;timeAsInterval[true]/checkbox;format_date/auto,YYYY.MM.DD hh:mm:ss,DD.MM.YYYY hh:mm:ss,YYYY/MM/DD hh:mm:ss,hh:mm:ss,hh:mm;descriptionLeft;infoLeftFontSize[12]/slider,6,50,1;infoFontRightSize[12]/slider,6,50,1;"
         data-vis-attrs3="group.styles;styleNormal[hq-button-base-intemp]/style,hqwidgetsButtons,-button,background;usejQueryStyle/checkbox;changeEffect/nselect,,waves,wobble,tada,swing,shake,rubberBand,pulse,flash,bounce;waveColor/color;testActive/checkbox;"
@@ -296,7 +296,7 @@ data-vis-attrs="hqoptions" data-vis-render-visible="true" data-hqwidgets-filter=
         data-vis-type="ctrl,number,dimmer,knob"
         data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqwidgetsCircleKnob.png"></img>'
         data-vis-attrs="oid[nothing_selected]/id/changedId;oid-working;oid-battery;oid-signal;"
-        data-vis-attrs0="group.value;unit;min[0];max[100];step[1];readOnly/checkbox;"
+        data-vis-attrs0="group.value;unit;min[0];max[100];digits[0]/number;step[1];is_comma[true]/checkbox;readOnly/checkbox;"
         data-vis-attrs1="group.center;caption;hideNumber/checkbox;"
         data-vis-attrs2="group.arc;angleOffset/slider,0,360,1;angleArc/slider,0,360,1;displayPrevious[true]/checkbox;"
         data-vis-attrs3="group.style;cursor/slider,1,350,1;thickness/slider,0.05,1,0.05;color/color;bgcolor/color;linecap/checkbox;anticlockwise/checkbox"

@@ -161,8 +161,13 @@
                         'change blur',
                         function () {
                             var val = {};
+                            var setByUser = false;
                             val[k] = $this.val();
-                            s.val(s._validate(val));
+                            if ($this.data('setByUser')) {
+                                $this.data('setByUser', false);
+                                setByUser = true;
+                            }
+                            s.val(s._validate(val), undefined, setByUser);
                         }
                     );
                 });
@@ -176,7 +181,12 @@
                 this.$.bind(
                     'change blur',
                     function () {
-                        s.val(s._validate(s.o.parse(s.$.val())));
+                        var setByUser = false;
+                        if (s.$.data('setByUser')) {
+                            s.$.data('setByUser', false);
+                            setByUser = true;
+                        }
+                        s.val(s._validate(s.o.parse(s.$.val())), undefined, setByUser);
                     }
                 );
 
@@ -344,7 +354,7 @@
                     "touchend.k",
                     function () {
                         k.c.d.unbind('touchmove.k touchend.k');
-                        s.val(s.cv);
+                        s.val(s.cv, undefined, true);
                     }
                 );
 
@@ -387,7 +397,7 @@
                     "mouseup.k",
                     function (e) {
                         k.c.d.unbind('mousemove.k mouseup.k keyup.k');
-                        s.val(s.cv);
+                        s.val(s.cv, undefined, true);
                     }
                 );
 
@@ -516,7 +526,7 @@
             }, this.o);
         };
 
-        this.val = function (v, triggerRelease) {
+        this.val = function (v, triggerRelease, setByUser) {
             if (null != v) {
 
                 // reverse format
@@ -525,7 +535,7 @@
                 if (triggerRelease !== false
                     && v != this.v
                     && this.rH
-                    && this.rH(v) === false) { return; }
+                    && this.rH(v, setByUser) === false) { return; }
 
                 this.cv = this.o.stopper ? max(min(v, this.o.max), this.o.min) : v;
                 this.v = this.cv;
@@ -589,7 +599,7 @@
                         // Handle mousewheel stop
                         clearTimeout(mwTimerStop);
                         mwTimerStop = setTimeout(function () {
-                            s.rH(v);
+                            s.rH(v, true);
                             mwTimerStop = null;
                         }, 100);
 
@@ -597,7 +607,7 @@
                         if (!mwTimerRelease) {
                             mwTimerRelease = setTimeout(function () {
                                 if (mwTimerStop)
-                                    s.rH(v);
+                                    s.rH(v, true);
                                 mwTimerRelease = null;
                             }, 200);
                         }
@@ -661,7 +671,7 @@
                                 window.clearTimeout(to);
                                 to = null;
                                 m = 1;
-                                s.val(s.$.val());
+                                s.val(s.$.val(), undefined, true);
                             }
                         } else {
                             // kval postcond

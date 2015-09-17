@@ -7,6 +7,9 @@ hqWidgets - High quality widgets for ioBroker.vis
 
 ## Changelog
 
+### 0.1.3 (2015-09-17)
+* (bluefox) try to fix feedback in hqWidgets/Dimmer
+
 ### 0.1.2 (2015-09-13)
 * (bluefox) add step to dimmer and temperature
 * (bluefox) add "is comma" and "digits after comma" to circle

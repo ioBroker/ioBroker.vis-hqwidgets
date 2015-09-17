@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "0.1.0"
+    version: "0.1.3"
 
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
@@ -15,7 +15,10 @@
             if (options == 'value') {
                 return this.each(function () {
                     var $this = $(this);
-                    $this.find('.scalaInput').val(arg).trigger('change');
+                    var $input = $this.find('.scalaInput');
+                    if ($input.val().toString() != arg.toString()) {
+                        $this.find('.scalaInput').val(arg).trigger('change');
+                    }
                 });
             }
             return;
@@ -82,7 +85,7 @@
             var $scalaWrapped = $this.find('.scalaWrapped');
 
             var $knobDiv = $scalaInput.knob({
-                release: function () {
+                release: function (v, noAck) {
                     $knobDiv._mouseDown = false;
 
                     hide('release');
@@ -101,7 +104,7 @@
                         if (settings.unit !== null && val.substring(val.length - settings.unit.length, val.length) == settings.unit) {
                             val = val.substring(0, val.length - settings.unit.length);
                         }
-                        if (settings.change && $knobDiv._oldValue != val) settings.change(val);
+                        if (settings.change && $knobDiv._oldValue != val) settings.change(val, noAck);
                     }
                 },
                 cancel:  function () {
@@ -138,6 +141,7 @@
             function setValue(value) {
                 console.log('Restore value ' + value);
                 setTimeout(function () {
+                    $scalaInput.data('setByUser', true);
                     $scalaInput.val(value).trigger('change');
                 }, 200);
             }
@@ -784,6 +788,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
+    version: "0.1.3",
     getTimeInterval: function (oldTime, hoursToShow) {
         var result = '';
 
@@ -1179,7 +1184,10 @@ vis.binds.hqwidgets = {
             // If dimmer or number
             if (data.wType == 'number') {
                 var scalaOptions = {
-                    change:     function (value) {
+                    change:     function (value, notAck) {
+                        //console.log(data.wid + ' filtered out:' + value + '(' + notAck + ')');
+                        if (!notAck) return;
+
                         if (data.readOnly || (data.value || 0).toString() == value.toString()) return;
 
                         data.value = parseFloat(value.toString().replace(',', '.'));
@@ -1275,6 +1283,11 @@ vis.binds.hqwidgets = {
             }
         },
         init: function (wid, view, data, style, wType) {
+            if (vis.binds.hqwidgets.version) {
+                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
+                vis.binds.hqwidgets.version = null;
+            }
+
             var $div = $('#' + wid).addClass('hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
@@ -1589,6 +1602,11 @@ vis.binds.hqwidgets = {
         },
 
         init: function (wid, view, data, style) {
+            if (vis.binds.hqwidgets.version) {
+                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
+                vis.binds.hqwidgets.version = null;
+            }
+
             var $div = $('#' + wid).addClass('hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
@@ -1712,6 +1730,11 @@ vis.binds.hqwidgets = {
     },
     circle: {
         init: function (wid, view, data) {
+            if (vis.binds.hqwidgets.version) {
+                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
+                vis.binds.hqwidgets.version = null;
+            }
+
             var $div = $('#' + wid);
             if (!$div.length) {
                 setTimeout(function () {
@@ -1812,6 +1835,11 @@ vis.binds.hqwidgets = {
     },
     checkbox: {
         init: function (wid, view, data) {
+            if (vis.binds.hqwidgets.version) {
+                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
+                vis.binds.hqwidgets.version = null;
+            }
+
             var $div = $('#' + wid);
             if (!$div.length) {
                 setTimeout(function () {
@@ -1850,6 +1878,7 @@ vis.binds.hqwidgets = {
         }
     }
 };
+
 if (vis.editMode) {
 /*
 		"tpl": "tplHqShutter",

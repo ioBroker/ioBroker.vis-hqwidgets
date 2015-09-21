@@ -13,6 +13,7 @@
     $.fn.scala = function (options, arg) {
         if (typeof options == 'string') {
             if (options == 'value') {
+                if (arg === null || arg === undefined) arg = "0";
                 return this.each(function () {
                     var $this = $(this);
                     var $input = $this.find('.scalaInput');
@@ -372,8 +373,8 @@
             var dh = $div.show().height();
             var dw = $div.width();
             // calculate center
-            var x = $this.width();
-            var y = $this.height();
+            //var x = $this.width();
+            //var y = $this.height();
             var zindex = $div.css('z-index');
             zindex = options.zindex || ((zindex == 'auto') ? 1 : (zindex || 0) + 1);
             $div.css({position: 'absolute', left: eLeft + ($this.width() - dw) / 2, top: eTop + ($this.height() - dh) / 2, 'z-index': zindex});
@@ -769,7 +770,7 @@ $.extend(true, systemDictionary, {
     },
     "yesterday":              {"en": "yesterday", "de": "gestern", "ru": "вчера"},
     "for&nbsp;%s&nbsp;hours": {"en": "for&nbsp;%s&nbsp;hours", "de": "vor&nbsp;%s&nbsp;Stunden", "ru": "%s&nbsp;часов назад"},
-    "Chart":                  {"en": "Chart",     "de": "Grafik",  "ru": "График"},
+    "Chart":                  {"en": "Chart",     "de": "Grafik",  "ru": "График"}
 });
 // widget can has following parts:
 // left info (descriptionLeft)
@@ -867,7 +868,7 @@ vis.binds.hqwidgets = {
 
             // Set number value
             var text = null;
-            if (data.wType == 'number') {
+            if (data.wType == 'number' && data.oid) {
                 var html = ((value === undefined || value === null) ? data.min : value) + ((data.unit === undefined) ? '' : data.unit);
                 if (data.drive !== undefined) {
                     html += '<br><span class="vis-hq-drive">' + data.drive + '</span>%';
@@ -941,16 +942,45 @@ vis.binds.hqwidgets = {
             }
             data.oldValue = value;
 
-            if (data.temperature  ||
-                value == data.min ||
-                value === null    ||
-                value === ''      ||
-                value === undefined ||
-                value === 'false' ||
-                value === false) {
+            if (data.temperature) {
+                data.state = 'normal';
+            } else if (value == data.min) {
+                data.state = 'normal';
+            } else if (value == data.max) {
+                data.state = 'active';
+            } else if (data.max &&
+                (value === null    ||
+                 value === ''      ||
+                 value === undefined ||
+                 value === 'false' ||
+                 value === false))  {
                 data.state = 'normal';
             } else {
-                data.state = 'active';
+                if (data.wType == 'number') {
+                    if (data.max) {
+                        if (value > data.min) {
+                            data.state = 'active';
+                        } else {
+                            data.state = 'normal';
+                        }
+                    } else if (value) {
+                        data.state = 'active';
+                    } else {
+                        data.state = 'normal';
+                    }
+                } else {
+                    if (data.max) {
+                        if (value == data.max) {
+                            data.state = 'active';
+                        } else {
+                            data.state = 'normal';
+                        }
+                    } else if (value) {
+                        data.state = 'active';
+                    } else {
+                        data.state = 'normal';
+                    }
+                }
             }
 
             if (vis.editMode && data.testActive) {
@@ -1000,15 +1030,15 @@ vis.binds.hqwidgets = {
             }
 
             if (data['oid-humidity']) {
-                $div.find('.vis-hq-humidity').html(Math.round(data.humidity));
+                $div.find('.vis-hq-humidity').html(Math.round(data.humidity || 0));
             }
 
             if (data['oid-actual']) {
-                $div.find('.vis-hq-actual').html((data.digits !== null) ? data.actual.toFixed(data.digits) : data.actual);
+                $div.find('.vis-hq-actual').html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
             }
 
             if (data['oid-drive']) {
-                $div.find('.vis-hq-drive').html(data.drive);
+                $div.find('.vis-hq-drive').html(data.drive || 0);
             }
 
             // Show change effect
@@ -1183,77 +1213,85 @@ vis.binds.hqwidgets = {
 
             // If dimmer or number
             if (data.wType == 'number') {
-                var scalaOptions = {
-                    change:     function (value, notAck) {
-                        //console.log(data.wid + ' filtered out:' + value + '(' + notAck + ')');
-                        if (!notAck) return;
+                var scalaOptions;
+                if (data.oid) {
+                    scalaOptions = {
+                        change:     function (value, notAck) {
+                            //console.log(data.wid + ' filtered out:' + value + '(' + notAck + ')');
+                            if (!notAck) return;
 
-                        if (data.readOnly || (data.value || 0).toString() == value.toString()) return;
+                            if (data.readOnly || (data.value || 0).toString() == value.toString()) return;
 
-                        data.value = parseFloat(value.toString().replace(',', '.'));
+                            data.value = parseFloat(value.toString().replace(',', '.'));
 
-                        if (data.digits !== null) data.value = data.value.toFixed(data.digits);
+                            if (data.digits !== null) data.value = data.value.toFixed(data.digits);
 
-                        data.value     = parseFloat(data.value);
-                        data.ack       = false;
-                        data.tempValue = undefined;
-
-                        vis.binds.hqwidgets.button.changeState($div, false, false, true);
-                        vis.setValue(data.oid, data.value);
-                    },
-                    min:        data.min,
-                    max:        data.max,
-                    changing:   function (value) {
-                        // round to step
-                        data.tempValue = Math.round(parseFloat(value) / data.step) * data.step;
-                        vis.binds.hqwidgets.button.changeState($div, false, false, true);
-                    },
-                    click:      function (val) {
-                        val = data.value;
-                        if (!data.temperature) {
-                            if (val - data.min > ((data.max - data.min) / 2)) {
-                                val = data.min;
-                            } else {
-                                val = data.max;
-                            }
-                        } else {
+                            data.value     = parseFloat(data.value);
+                            data.ack       = false;
                             data.tempValue = undefined;
-                            vis.binds.hqwidgets.button.changeState($div, false, false, true);
 
-                            // Show dialog
-                            if (data.url) $div.popupDialog('show');
-                        }
-                        return val;
-                    },
-                    alwaysShow: data.alwaysShow,
-                    onshow:     function () {
-                        if (!data.alwaysShow) {
-                            vis.binds.hqwidgets.button.showCenterInfo($div, true);
-                        }
-                    },
-                    onhide:     function (){
-                        vis.binds.hqwidgets.button.showCenterInfo($div);
-                    },
-                    hideNumber: !data.showValue || (data.temperature && data.alwaysShow),
-                    readOnly:   vis.editMode,
-                    step:       data.step,
-                    digits:     data.digits,
-                    isComma:    data.is_comma,
-                    width:      ((100 + parseInt(data.circleWidth || 50, 10)) * width / 100).toFixed(0)
-                };
+                            vis.binds.hqwidgets.button.changeState($div, false, false, true);
+                            vis.setValue(data.oid, data.value);
+                        },
+                        min:        data.min,
+                        max:        data.max,
+                        changing:   function (value) {
+                            // round to step
+                            data.tempValue = Math.round(parseFloat(value) / data.step) * data.step;
+                            vis.binds.hqwidgets.button.changeState($div, false, false, true);
+                        },
+                        click:      function (val) {
+                            val = data.value;
+                            if (!data.temperature) {
+                                if (val - data.min > ((data.max - data.min) / 2)) {
+                                    val = data.min;
+                                } else {
+                                    val = data.max;
+                                }
+                            } else {
+                                data.tempValue = undefined;
+                                vis.binds.hqwidgets.button.changeState($div, false, false, true);
+
+                                // Show dialog
+                                if (data.url) $div.popupDialog('show');
+                            }
+                            return val;
+                        },
+                        alwaysShow: data.alwaysShow,
+                        onshow:     function () {
+                            if (!data.alwaysShow) {
+                                vis.binds.hqwidgets.button.showCenterInfo($div, true);
+                            }
+                        },
+                        onhide:     function (){
+                            vis.binds.hqwidgets.button.showCenterInfo($div);
+                        },
+                        hideNumber: !data.showValue || (data.temperature && data.alwaysShow),
+                        readOnly:   vis.editMode,
+                        step:       data.step,
+                        digits:     data.digits,
+                        isComma:    data.is_comma,
+                        width:      ((100 + parseInt(data.circleWidth || 50, 10)) * width / 100).toFixed(0)
+                    };
+                }
+
 
                 // show for temperature color depends on value
                 if (data.temperature) {
                     vis.binds.hqwidgets.button.showCenterInfo($div);
 
-                    scalaOptions.color    = 'black';
-                    scalaOptions.colorize = function (color, value, isPrevious) {
-                        var ratio = (value - data.min) / (data.max - data.min);
-                        return 'hsla(' + (180 + Math.round(180 * ratio)) + ', 70%, 50%, ' + ((isPrevious) ? 0.7 : 0.9) + ')';
+                    if (scalaOptions) {
+                        scalaOptions.color    = 'black';
+                        scalaOptions.colorize = function (color, value, isPrevious) {
+                            var ratio = (value - data.min) / (data.max - data.min);
+                            return 'hsla(' + (180 + Math.round(180 * ratio)) + ', 70%, 50%, ' + ((isPrevious) ? 0.7 : 0.9) + ')';
+                        }
                     }
                 }
-                $main.scala(scalaOptions);
-                $main.scala('value', data.value);
+                if (scalaOptions) {
+                    $main.scala(scalaOptions);
+                    $main.scala('value', data.value);
+                }
             } else {
                 if (!vis.editMode && data.oid) {
                     $main.on('click touchstart', function () {
@@ -1280,6 +1318,17 @@ vis.binds.hqwidgets = {
                     title:   data.dialog_title || data['oid-actual'],
                     open:    data.dialog_open && vis.editMode
                 });
+                if (!data.oid) {
+                    $main.on('click touchstart', function () {
+                        // Protect against two events
+                        if (vis.detectBounce(this)) return;
+
+                        $div.popupDialog('show');
+                    });
+                }
+            }
+            if (!data.oid && !data.url) {
+                $main.addClass('vis-hq-main-none');
             }
         },
         init: function (wid, view, data, style, wType) {
@@ -1320,14 +1369,19 @@ vis.binds.hqwidgets = {
 
             data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'hq-button-base-normal');
             data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'hq-button-base-on');
-            data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
-            data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : ((data.max !== undefined) ? parseFloat(data.max) : 100));
             data.digits = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
             if (typeof data.step == 'string') data.step = data.step.replace(',', '.');
             data.step = parseFloat(data.step || 1);
             data.is_comma = (data.is_comma === 'true' || data.is_comma === true);
             data.readOnly = (data.readOnly === 'true' || data.readOnly === true);
 
+            if (data.wType == 'number') {
+                data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
+                data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : ((data.max !== undefined) ? parseFloat(data.max) : 100));
+            } else {
+                data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined && data.min !== null && data.min !== '') ? data.min : 0));
+                data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : ((data.max !== undefined && data.max !== null && data.max !== '') ? data.max : 100));
+            }
             $div.data('data',  data);
             $div.data('style', style);
 
@@ -1450,10 +1504,7 @@ vis.binds.hqwidgets = {
                 div5 += '"></div>';
             }
 
-
-            var text = div1 + div2 + div3 + div4 + div5 + '</div></div></div></div></div>';
-
-            return text;
+            return div1 + div2 + div3 + div4 + div5 + '</div></div></div></div></div>';
         },
         hidePopup: function ($div) {
             var data = $div.data('data');
@@ -1574,7 +1625,7 @@ vis.binds.hqwidgets = {
             }
             text += '</tr></table>';
             $div.html(text);
-            var i = 0;
+
             $div.find('.hq-blind-blind2').each(function (id) {
                 id++;
                 if (data['oid-slide-sensor-lowbat' + id]) {
@@ -1716,7 +1767,7 @@ vis.binds.hqwidgets = {
                         data.shutterPos = 0;
                     } else {
                         if (shutterPos < data.min) shutterPos = data.min;
-                        if (shutterPos > data.max) shutterPos = data.max
+                        if (shutterPos > data.max) shutterPos = data.max;
 
                         data.shutterPos = Math.round(100 * (shutterPos - data.min) / (data.max - data.min));
                     }
@@ -1769,7 +1820,8 @@ vis.binds.hqwidgets = {
             $scalaInput.attr('data-thickness',   settings.thickness);
             $scalaInput.attr('data-linecap',     (settings.linecap === 'true' || settings.linecap === true) ? 'round' : 'butt');
             $scalaInput.show();
-            var $knobDiv = $scalaInput.knob({
+
+            $scalaInput.knob({
                 width:   parseInt($div.width(),  10),
                 height:  parseInt($div.height(), 10),
                 release: function () {
@@ -1811,6 +1863,7 @@ vis.binds.hqwidgets = {
                 rotation:         settings.anticlockwise ? 'anticlockwise' : 'clockwise'
 
             });
+
             if (settings.caption) {
                 $scalaInput.after('<div style="position: absolute; left: 50%; top: 60%"><span style="position:relative; left: -50%" >' + settings.caption + '</span></div>');
             }
@@ -2093,13 +2146,13 @@ if (vis.editMode) {
                         switch (r) {
                             case  'indicator.battery':
                                 name = 'oid-battery';
-                                break
+                                break;
                             case  'indicator.working':
                                 name = 'oid-working';
-                                break
+                                break;
                             case  'indicator.signal':
                                 name = 'oid-signal';
-                                break
+                                break;
                             default:
                                 name = '';
                                 break;

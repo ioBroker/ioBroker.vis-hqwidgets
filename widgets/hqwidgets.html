@@ -76,7 +76,6 @@
 <script type="text/ejs"
         id="tplHqShutter"
         class="vis-tpl"
-        data-vis-beta="true"
         data-vis-set="hqwidgets"
         data-vis-type="ctrl;window;shutter"
         data-vis-name="Window and Shutter"
@@ -90,34 +89,28 @@
     %></div>
 </script>
 
-<!--script type="text/ejs"
-id="tplHqInTemp" class="vis-tpl"
-data-vis-set="hqwidgets" data-vis-name="Inside temperature"
-data-vis-attrs="hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-CC-TC,HM-CC-RT-DN,HM-TC-IT-WM-W-EU;HM-CC-VD">
-    <%
-    if (this && this.data && this.data.attr) {
-        if (this.data.attr('hqoptions')){
-            vis.binds.hqWidgetsExt.hqButtonExt (this.data.wid, this.data.attr('hqoptions'), undefined, this.view);
-        }
-        else {
-            vis.binds.hqWidgetsExt.hqButtonExt (this.data.wid, undefined, "tplHqInTemp", this.view);
-        }
-    }
-    %>
+<script id="tplHqOutTemp"
+        type="text/ejs"
+        class="vis-tpl"
+        data-vis-beta="true"
+        data-vis-set="hqwidgets"
+        data-vis-name="Outdoor temperature"
+        data-vis-type="value,temperature"
+        data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqwidgetsOutTemp.png"></img>'
+        data-vis-update-style="true"
+        data-vis-attrs="oid-actual/id,value.temperature/changedId;oid-humidity/id,value.humidity;oid-battery/id,indicator.battery;"
+        data-vis-attrs0="group.value;unit[°C];min[6];max[30];digits[0]/number;step[1];is_comma[true]/checkbox;"
+        data-vis-attrs1="group.center;caption;iconName[img~Heating.png]/image;btIconWidth[45]/slider,0,400,1;offsetAuto[true]/checkbox;leftOffset[25]/slider,0,100,1;topOffset[55]/slider,0,100,1;circleWidth[50]/slider,1,100,1;showValue[true]/checkbox;alwaysShow/checkbox;"
+        data-vis-attrs2="group.leftRight;hoursLastAction/nselect,,1,2,3,6,12,24,1024;timeAsInterval[true]/checkbox;format_date/auto,YYYY.MM.DD hh:mm:ss,DD.MM.YYYY hh:mm:ss,YYYY/MM/DD hh:mm:ss,hh:mm:ss,hh:mm;descriptionLeft;infoLeftFontSize[12]/slider,6,50,1;infoFontRightSize[12]/slider,6,50,1;"
+        data-vis-attrs3="group.styles;styleNormal[hq-button-base-outtemp]/style,hqwidgetsButtons,-button,background;usejQueryStyle/checkbox;changeEffect/nselect,,waves,wobble,tada,swing,shake,rubberBand,pulse,flash,bounce;waveColor/color;testActive/checkbox;"
+        data-vis-attrs4="group.chart;url;dialog_title;dialog_width;dialog_height;dialog_effect/effect;dialog_timeout/number,0,3600000,100;dialog_modal/checkbox;dialog_open/checkbox"
+        >
+    <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px; border-radius: 64px" id="<%= this.data.attr('wid') %>"><%
+        this.data.temperature = true;
+        vis.binds.hqwidgets.button.init(this.data.wid, this.view, this.data, this.style, 'number');
+    %></div>
 </script>
-<script type="text/ejs" id="tplHqOutTemp" class="vis-tpl" data-vis-set="hqwidgets" data-vis-name="Temperature" data-vis-attrs="hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-WDC7000,HM-WDS10-TH-O,HM-WDS40-TH-I,HM-WDS100-C6-O,HM-WDS30-T-O">
-    <%
-    if (this && this.data && this.data.attr) {
-        if (this.data.attr('hqoptions')){
-            vis.binds.hqWidgetsExt.hqButtonExt (this.data.wid, this.data.attr('hqoptions'), undefined, this.view);
-        }
-        else {
-            vis.binds.hqWidgetsExt.hqButtonExt (this.data.wid, undefined, "tplHqOutTemp", this.view);
-        }
-    }
-    %>
-</script>
-<script type="text/ejs" id="tplHqDoor" class="vis-tpl" data-vis-set="hqwidgets" data-vis-name="Door" data-vis-attrs="hm_id;hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-Sec-SC,HM-SCI-3-FM,HMW-Sen-SC-12-DR,HMW-IO-12-Sw14-DR">
+<!--script type="text/ejs" id="tplHqDoor" class="vis-tpl" data-vis-set="hqwidgets" data-vis-name="Door" data-vis-attrs="hm_id;hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-Sec-SC,HM-SCI-3-FM,HMW-Sen-SC-12-DR,HMW-IO-12-Sw14-DR">
     <%
     if (this && this.data && this.data.attr) {
         if (this.data.attr('hqoptions')){

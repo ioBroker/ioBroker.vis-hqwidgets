@@ -51,7 +51,10 @@
 	height: 100%;
 }
 .vis-hq-main:active {
-	transform: scale(0.95);
+	 transform: scale(0.95);
+}
+.vis-hq-main-none:active {
+	transform: none !important;
 }
 .vis-hq-leftinfo {
 	background: #bbe9f9; /* Old browsers */

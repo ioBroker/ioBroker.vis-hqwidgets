@@ -53,8 +53,9 @@
 .vis-hq-main:active {
 	 transform: scale(0.95);
 }
-.vis-hq-main-none:active {
-	transform: none !important;
+.vis-hq-main-none {
+	/*transform: none !important;*/
+	pointer-events:none;
 }
 .vis-hq-leftinfo {
 	background: #bbe9f9; /* Old browsers */

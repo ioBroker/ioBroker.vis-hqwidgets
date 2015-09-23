@@ -1329,6 +1329,7 @@ vis.binds.hqwidgets = {
             }
             if (!data.oid && !data.url) {
                 $main.addClass('vis-hq-main-none');
+                $div.css({cursor: 'auto'});
             }
         },
         init: function (wid, view, data, style, wType) {
@@ -2104,58 +2105,47 @@ if (vis.editMode) {
         return widget;
     };
     vis.binds.hqwidgets.changedSensorId = function (widgetID, view, newId, attr, isCss) {
-        var obj = vis.objects[newId];
-        var changed = [];
-        // If it is real object and SETPOINT
-        if (obj && obj.common) {
-            var index = attr.match(/(\d+)$/);
-            if (index) {
-                var bName = (attr === 'oid-slide-handle' + index[1]) ? 'oid-slide-handle-lowbat' : 'oid-slide-sensor-lowbat';
-                bName += index[1];
-                // If some attributes are not set
-                if (!vis.views[view].widgets[widgetID].data[bName]) {
-                    var result = vis.findByRoles(newId, 'indicator.battery');
-                    if (result) {
-                        changed.push(bName);
-                        vis.views[view].widgets[widgetID].data[bName] = result['indicator.battery'];
-                        vis.widgets[widgetID].data[bName] = result['indicator.battery'];
-                    }
-                }
-            }
-        }
+        var index = attr.match(/(\d+)$/);
+        var bName = (attr === 'oid-slide-handle' + index[1]) ? 'oid-slide-handle-lowbat' : 'oid-slide-sensor-lowbat';
+        bName += index[1];
+        var fields = {};
+        fields[bName] = 'indicator.battery';
 
-        return changed.length ? changed : null;
+        return vis.binds.hqwidgets.changedId (widgetID, view, newId, fields);
     };
 
     vis.binds.hqwidgets.changedWindowId = function (widgetID, view, newId, attr, isCss) {
+        return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
+            'oid-battery':  'indicator.battery',
+            'oid-working':  'indicator.working',
+            'oid-signal':   'indicator.signal',
+            'oid-humidity': 'value.humidity'
+        });
+    };
+
+    vis.binds.hqwidgets.changedId = function (widgetID, view, newId, fields) {
         var obj = vis.objects[newId];
         var changed = [];
         // If it is real object and SETPOINT
-        if (obj && obj.common) {
+        if (obj && obj.common && obj.type == 'state') {
             var roles = [];
+
             // If some attributes are not set
-            if (!vis.views[view].widgets[widgetID].data['oid-battery']) roles.push('indicator.battery');
-            if (!vis.views[view].widgets[widgetID].data['oid-working']) roles.push('indicator.working');
-            if (!vis.views[view].widgets[widgetID].data['oid-signal'])  roles.push('indicator.signal');
+            for (var field in fields) {
+                if (!vis.views[view].widgets[widgetID].data[field]) roles.push(fields[field]);
+            }
 
             if (roles.length) {
                 var result = vis.findByRoles(newId, roles);
                 if (result) {
                     var name;
                     for (var r in result) {
-                        switch (r) {
-                            case  'indicator.battery':
-                                name = 'oid-battery';
+                        name = null;
+                        for (field in fields) {
+                            if (fields[field] == r) {
+                                name = field;
                                 break;
-                            case  'indicator.working':
-                                name = 'oid-working';
-                                break;
-                            case  'indicator.signal':
-                                name = 'oid-signal';
-                                break;
-                            default:
-                                name = '';
-                                break;
+                            }
                         }
                         if (name) {
                             changed.push(name);
@@ -2171,45 +2161,17 @@ if (vis.editMode) {
     };
 
     vis.binds.hqwidgets.changedButtonId = function (widgetID, view, newId, attr, isCss) {
-        var obj = vis.objects[newId];
-        var changed = [];
-        // If it is real object and SETPOINT
-        if (obj && obj.common) {
-            var roles = [];
-            // If some attributes are not set
-            if (!vis.views[view].widgets[widgetID].data['oid-battery']) roles.push('indicator.battery');
-            if (!vis.views[view].widgets[widgetID].data['oid-working']) roles.push('indicator.working');
-            if (!vis.views[view].widgets[widgetID].data['oid-signal'])  roles.push('indicator.signal');
+        return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
+            'oid-battery':  'indicator.battery',
+            'oid-working':  'indicator.working',
+            'oid-signal':   'indicator.signal',
+            'oid-humidity': 'value.humidity'
+        });
+    };
 
-            if (roles.length) {
-                var result = vis.findByRoles(newId, roles);
-                if (result) {
-                    var name;
-                    for (var r in result) {
-                        switch (r) {
-                            case  'indicator.battery':
-                                name = 'oid-battery';
-                                break
-                            case  'indicator.working':
-                                name = 'oid-working';
-                                break
-                            case  'indicator.signal':
-                                name = 'oid-signal';
-                                break
-                            default:
-                                name = '';
-                                break;
-                        }
-                        if (name) {
-                            changed.push(name);
-                            vis.views[view].widgets[widgetID].data[name] = result[r];
-                            vis.widgets[widgetID].data[name] = result[r];
-                        }
-                    }
-                }
-            }
-        }
-
-        return changed.length ? changed : null;
+    vis.binds.hqwidgets.changedTemperatureId = function (widgetID, view, newId, attr, isCss) {
+        return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
+            'oid-humidity': 'value.humidity'
+        });
     };
 }

@@ -7,6 +7,12 @@ hqWidgets - High quality widgets for ioBroker.vis
 
 ## Changelog
 
+### 0.1.4 (2015-09-24)
+* (bluefox) add outdoor temperature widget
+* (bluefox) auto fill of OIDs
+* (bluefox) add colors for texts
+* (bluefox) add door widget
+
 ### 0.1.3 (2015-09-17)
 * (bluefox) try to fix feedback in hqWidgets/Dimmer
 

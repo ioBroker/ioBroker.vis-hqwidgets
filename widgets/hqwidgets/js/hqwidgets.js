@@ -894,7 +894,7 @@ vis.binds.hqwidgets = {
                     $div.find('.vis-hq-middle').css('opacity', 1);
                 } else {
                     if (!$div.find('.vis-hq-centerinfo').length) {
-                        var text = '<table class="vis-hq-centerinfo hq-no-space" style="z-index: 2;position: absolute;">';
+                        var text = '<table class="vis-hq-centerinfo hq-no-space" style="z-index: 2;position: absolute' +  (data.midTextColor ? ';color: ' + data.midTextColor : '') + '">';
 
                         if (data.actual !== undefined) {
                             text += '<tr class="vis-hq-actual-style hq-no-space"><td class="hq-no-space"><span class="vis-hq-actual"></span>' + ((data.unit === undefined) ? '' : data.unit) + '</tr>';
@@ -1056,11 +1056,11 @@ vis.binds.hqwidgets = {
             if (!$div.find('.vis-hq-main').length) {
                 var text = '';
                 if (data.descriptionLeft) {
-                    text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px"><span class="vis-hq-leftinfo-text">' +
+                    text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
                         (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
                 }
                 if (data.infoRight || data.wType == 'number' || data.hoursLastAction) {
-                    text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px"><span class="vis-hq-rightinfo-text">' +
+                    text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
                         (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span>';
 
                     if (data.hoursLastAction) {
@@ -1375,6 +1375,9 @@ vis.binds.hqwidgets = {
             data.step = parseFloat(data.step || 1);
             data.is_comma = (data.is_comma === 'true' || data.is_comma === true);
             data.readOnly = (data.readOnly === 'true' || data.readOnly === true);
+            data.midTextColor = data.midTextColor || '';
+            data.infoColor = data.infoColor || '';
+            data.infoBackground = data.infoBackground || 'rgba(182,182,182,0.6)';
 
             if (data.wType == 'number') {
                 data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
@@ -1677,6 +1680,7 @@ vis.binds.hqwidgets = {
             data.min          = ((data.min !== undefined) ? parseFloat(data.min) : 0);
             data.max          = ((data.max !== undefined) ? parseFloat(data.max) : 100);
             data.digits       = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
+            data.noAnimate    = (data.noAnimate === 'true' || data.noAnimate === true || data.noAnimate == 1);
 
             if (!data.border_width && data.border_width != '0') data.border_width = 3;
             data.border_width = parseInt(data.border_width, 10);
@@ -1775,7 +1779,112 @@ vis.binds.hqwidgets = {
 
                     if (data.invert) data.shutterPos = 100 - data.shutterPos;
 
-                    $div.find('.hq-blind-position').animate({'height': data.shutterPos + '%'}, 500);
+                    if (!data.noAnimate) {
+                        $div.find('.hq-blind-position').animate({'height': data.shutterPos + '%'}, 500);
+                    } else {
+                        $div.find('.hq-blind-position').css({'height': data.shutterPos + '%'});
+                    }
+                });
+            }
+        }
+    },
+    door: {
+        draw: function ($div) {
+            var data = $div.data('data');
+            if (!data) return;
+
+            // place left-info, right-info, caption and image
+            if (!$div.find('.vis-hq-main').length) {
+                var text = '';
+                if (data.descriptionLeft) {
+                    text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
+                        (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
+                }
+                if (data.infoRight || data.wType == 'number' || data.hoursLastAction) {
+                    text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
+                        (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span>';
+
+                    if (data.hoursLastAction) {
+                        if (data.infoRight || data.wType == 'number') text += '<br>';
+                        text += '<span class="vis-hq-time"></span>';
+                    }
+
+                    text += '</div>\n';
+                }
+                text += '<div class="vis-hq-main vis-hq-door" style="z-index: 1"><div class="vis-hq-door-handle">\n';
+
+                text += '</div></div></div>';
+                $div.append(text);
+            }
+            $div.css({
+                'padding-top':     data.border_width,
+                'padding-bottom' : data.border_width - 1,
+                'padding-right':   data.border_width + 1,
+                'padding-left':    data.border_width + 1
+            });
+            //$div.addClass()
+
+        },
+        init: function (wid, view, data, style) {
+            if (vis.binds.hqwidgets.version) {
+                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
+                vis.binds.hqwidgets.version = null;
+            }
+
+            var $div = $('#' + wid).addClass('hq-button-base');
+            if (!$div.length) {
+                setTimeout(function () {
+                    vis.binds.hqwidgets.window.init(wid, view, data, style);
+                }, 100);
+                return;
+            }
+            var _data = {wid: wid, view: view};
+            for (var a in data) {
+                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
+                if (a[0] != '_') _data[a] = data[a];
+            }
+            data = _data;
+
+            if (!data.border_width && data.border_width != '0') data.border_width = 3;
+            data.border_width = parseInt(data.border_width, 10);
+
+            $div.data('data',  data);
+            $div.data('style', style);
+
+            vis.binds.hqwidgets.door.draw($div);
+
+            if (data.oid) {
+                if (!vis.editMode) {
+                    // prepare big window
+                    $div.click(function () {
+                        var $big = $div.find('.hq-blind-big');
+                        if (!$big.length || !$big.data('show')) {
+                            //vis.binds.hqwidgets.window.openPopup($div);
+                        }
+                    });
+                }
+
+                vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
+                    var doorState = newVal;
+                    if (newVal === 'true' || newVal === true)  {
+                        doorState = true;
+                    } else if (newVal === 'false' || newVal === false) {
+                        doorState = false;
+                    } else if (typeof newVal === 'string') {
+                        doorState = parseFloat(newVal) > 0;
+                    } else {
+                        doorState = !!newVal;
+                    }
+
+                    if (data.invert) doorState = !doorState;
+
+                    /*if (doorState) {
+                        if (data.noAnimate) {
+                            $div.find('.hq-door').css({'height': data.shutterPos + '%'});
+                        } else {
+                            $div.find('.hq-door').animate({'height': data.shutterPos + '%'}, 500);
+                        }
+                    }*/
                 });
             }
         }

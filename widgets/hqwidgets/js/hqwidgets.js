@@ -790,6 +790,12 @@ $.extend(true, systemDictionary, {
 
 vis.binds.hqwidgets = {
     version: "0.1.3",
+    showVersion: function () {
+        if (vis.binds.hqwidgets.version) {
+            console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
+            vis.binds.hqwidgets.version = null;
+        }
+    },
     getTimeInterval: function (oldTime, hoursToShow) {
         var result = '';
 
@@ -894,13 +900,13 @@ vis.binds.hqwidgets = {
                     $div.find('.vis-hq-middle').css('opacity', 1);
                 } else {
                     if (!$div.find('.vis-hq-centerinfo').length) {
-                        var text = '<table class="vis-hq-centerinfo hq-no-space" style="z-index: 2;position: absolute' +  (data.midTextColor ? ';color: ' + data.midTextColor : '') + '">';
+                        var text = '<table class="vis-hq-centerinfo vis-hq-no-space" style="z-index: 2;position: absolute' +  (data.midTextColor ? ';color: ' + data.midTextColor : '') + '">';
 
                         if (data.actual !== undefined) {
-                            text += '<tr class="vis-hq-actual-style hq-no-space"><td class="hq-no-space"><span class="vis-hq-actual"></span>' + ((data.unit === undefined) ? '' : data.unit) + '</tr>';
+                            text += '<tr class="vis-hq-actual-style vis-hq-no-space"><td class="vis-hq-no-space"><span class="vis-hq-actual"></span>' + ((data.unit === undefined) ? '' : data.unit) + '</tr>';
                         }
                         if (data.humidity !== undefined) {
-                            text += '<tr class="vis-hq-humidity-style hq-no-space"><td class="hq-no-space"><span class="vis-hq-humidity"></span>%</td></tr>';
+                            text += '<tr class="vis-hq-humidity-style vis-hq-no-space"><td class="vis-hq-no-space"><span class="vis-hq-humidity"></span>%</td></tr>';
                         }
 
                         text += '</table>';
@@ -1073,14 +1079,14 @@ vis.binds.hqwidgets = {
                 text += '<div class="vis-hq-main" style="z-index: 1"><div class="vis-hq-middle">\n';
 
                 if (data.offsetAuto) {
-                    text += '<table class="vis-hq-table hq-no-space" style="position: absolute"><tr class="hq-no-space"><td class="hq-no-space"><div class="vis-hq-icon" style="text-align: center;"></div></td>\n';
+                    text += '<table class="vis-hq-table vis-hq-no-space" style="position: absolute"><tr class="vis-hq-no-space"><td class="vis-hq-no-space"><div class="vis-hq-icon" style="text-align: center;"></div></td>\n';
                 } else {
-                    text += '<table class="vis-hq-table hq-no-space" style="position: absolute;top:' + data.topOffset + '%;left:' + data.leftOffset + '%"><tr class="hq-no-space"><td class="hq-no-space"><div class="vis-hq-icon" style="text-align: center;"></div></td>\n';
+                    text += '<table class="vis-hq-table vis-hq-no-space" style="position: absolute;top:' + data.topOffset + '%;left:' + data.leftOffset + '%"><tr class="vis-hq-no-space"><td class="vis-hq-no-space"><div class="vis-hq-icon" style="text-align: center;"></div></td>\n';
                 }
 
                 if (data.caption) {
-                    if ($div.height() > $div.width()) text += '</tr><tr class="hq-no-space">';
-                    text += '<td class="hq-no-space"><div class="vis-hq-text-caption" style="text-align: center;"></div></td>';
+                    if ($div.height() > $div.width()) text += '</tr><tr class="vis-hq-no-space">';
+                    text += '<td class="vis-hq-no-space"><div class="vis-hq-text-caption" style="text-align: center;"></div></td>';
                 }
 
                 text += '</tr></table></div></div></div>';
@@ -1333,12 +1339,8 @@ vis.binds.hqwidgets = {
             }
         },
         init: function (wid, view, data, style, wType) {
-            if (vis.binds.hqwidgets.version) {
-                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
-                vis.binds.hqwidgets.version = null;
-            }
-
-            var $div = $('#' + wid).addClass('hq-button-base');
+            vis.binds.hqwidgets.showVersion();
+            var $div = $('#' + wid).addClass('vis-hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
                     vis.binds.hqwidgets.button.init(wid, view, data, style, wType);
@@ -1368,8 +1370,8 @@ vis.binds.hqwidgets = {
                 if (data.max === undefined || data.max === null || data.max === '') data.max = true;
             }
 
-            data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'hq-button-base-normal');
-            data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'hq-button-base-on');
+            data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
+            data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
             data.digits = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
             if (typeof data.step == 'string') data.step = data.step.replace(',', '.');
             data.step = parseFloat(data.step || 1);
@@ -1418,7 +1420,7 @@ vis.binds.hqwidgets = {
                 '">';
             options.shutterPos = options.shutterPos || 0;
 
-            var div3 = '<div class="hq-blind-blind3"><table class="hq-no-space" style="width: 100%; height: 100%; position: absolute"><tr class="hq-no-space hq-blind-position" style="height: ' + options.shutterPos + '%"><td class="hq-no-space hq-blind-blind"></td></tr><tr class="hq-no-space" style="height: ' + (100 - options.shutterPos) + '%"><td class="hq-no-space"></td></tr></table>';
+            var div3 = '<div class="hq-blind-blind3"><table class="vis-hq-no-space" style="width: 100%; height: 100%; position: absolute"><tr class="vis-hq-no-space hq-blind-position" style="height: ' + options.shutterPos + '%"><td class="vis-hq-no-space hq-blind-blind"></td></tr><tr class="vis-hq-no-space" style="height: ' + (100 - options.shutterPos) + '%"><td class="vis-hq-no-space"></td></tr></table>';
 
             var hanldePos  = null;
             var slidePos   = null;
@@ -1536,7 +1538,7 @@ vis.binds.hqwidgets = {
             if (!data) return;
             var $big = $div.find('.hq-blind-big');
             if (!$big.length) {
-                var text = '<table class="hq-blind-big hq-no-space" style="display:none">' +
+                var text = '<table class="hq-blind-big vis-hq-no-space" style="display:none">' +
                     '    <tr><td><div class="hq-blind-big-button hq-blind-big-button-up"></div></td></tr>' +
                     '    <tr style="height: 100%"><td><div class="hq-blind-big-slider"></div></td></tr>' +
                     '    <tr><td><div class="hq-blind-big-button hq-blind-big-button-down"></div></td></tr>' +
@@ -1616,7 +1618,7 @@ vis.binds.hqwidgets = {
                 if (data.invert) data.shutterPos = 100 - data.shutterPos;
             }
 
-            var text = '<table class="hq-blind hq-no-space" style="width: 100%; height: 100%"><tr>';
+            var text = '<table class="hq-blind vis-hq-no-space" style="width: 100%; height: 100%"><tr>';
             for (var i = 1; i <= data.slide_count; i++) {
                 var options = {
                     slideOid:     data['oid-slide-sensor' + i],
@@ -1657,12 +1659,9 @@ vis.binds.hqwidgets = {
         },
 
         init: function (wid, view, data, style) {
-            if (vis.binds.hqwidgets.version) {
-                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
-                vis.binds.hqwidgets.version = null;
-            }
+            vis.binds.hqwidgets.showVersion();
 
-            var $div = $('#' + wid).addClass('hq-button-base');
+            var $div = $('#' + wid).addClass('vis-hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
                     vis.binds.hqwidgets.window.init(wid, view, data, style);
@@ -1789,6 +1788,42 @@ vis.binds.hqwidgets = {
         }
     },
     door: {
+        changeState: function ($div, notUpdateDoor) {
+            var data = $div.data('data');
+            if (!data) return;
+
+            var value = data.value;
+
+            if (data['oid-battery']) $div.batteryIndicator('show', data.battery || false);
+
+            if (data['oid-signal']) {
+                $div.find('.vis-hq-signal').html(data.signal);
+            }
+
+            if (!notUpdateDoor) {
+                if (value) {
+                    if (data.noAnimate) {
+                        $div.find('.vis-hq-door-sheet').css({width: '80%'});
+                        $div.find('.vis-hq-door-empty-' + data.door_type).css({width: '20%'});
+                        $div.find('.vis-hq-door-handle').css({left: (data.door_type != 'right') ? '60%': '30%'});
+                    } else {
+                        $div.find('.vis-hq-door-sheet').animate({width: '80%'}, 500);
+                        $div.find('.vis-hq-door-empty-' + data.door_type).animate({width: '20%'}, 500);
+                        $div.find('.vis-hq-door-handle').animate({left: (data.door_type != 'right') ? '60%': '30%'}, 500);
+                    }
+                } else {
+                    if (data.noAnimate) {
+                        $div.find('.vis-hq-door-sheet').css({width: '100%'});
+                        $div.find('.vis-hq-door-empty-' + data.door_type).css({width: 0});
+                        $div.find('.vis-hq-door-handle').css({left: (data.door_type != 'right') ? '85%': '15%'});
+                    } else {
+                        $div.find('.vis-hq-door-sheet').animate({width: '100%'}, 500);
+                        $div.find('.vis-hq-door-empty-' + data.door_type).animate({width: 0});
+                        $div.find('.vis-hq-door-handle').animate({left: (data.door_type != 'right') ? '85%': '15%'}, 500);
+                    }
+                }
+            }
+        },
         draw: function ($div) {
             var data = $div.data('data');
             if (!data) return;
@@ -1811,30 +1846,35 @@ vis.binds.hqwidgets = {
 
                     text += '</div>\n';
                 }
-                text += '<div class="vis-hq-main vis-hq-door" style="z-index: 1"><div class="vis-hq-door-handle">\n';
-
-                text += '</div></div></div>';
+                text += '<table class="vis-hq-main vis-hq-door vis-hq-no-space" style="z-index: 1">' +
+                    '<tr class="vis-hq-no-space">' +
+                        '<td class="vis-hq-no-space vis-hq-door-empty-right"></td>' +
+                        '<td class="vis-hq-no-space vis-hq-door-sheet"><div class="vis-hq-door-handle"></div></td>' +
+                        '<td class="vis-hq-no-space vis-hq-door-empty-left"></td>' +
+                    '</tr></table>\n';
                 $div.append(text);
             }
+            $div.find('.vis-hq-door-empty-' + data.door_type).css({background: data.emptyColor || '#515151'});
+            if (data.door_type == 'right') {
+                $div.find('.vis-hq-door-handle').css({left: '15%'});
+            } else {
+                $div.find('.vis-hq-door-handle').css({left: '85%'});
+            }
+
             $div.css({
                 'padding-top':     data.border_width,
                 'padding-bottom' : data.border_width - 1,
                 'padding-right':   data.border_width + 1,
                 'padding-left':    data.border_width + 1
             });
-            //$div.addClass()
-
         },
         init: function (wid, view, data, style) {
-            if (vis.binds.hqwidgets.version) {
-                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
-                vis.binds.hqwidgets.version = null;
-            }
+            vis.binds.hqwidgets.showVersion();
 
-            var $div = $('#' + wid).addClass('hq-button-base');
+            var $div = $('#' + wid).addClass('vis-hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
-                    vis.binds.hqwidgets.window.init(wid, view, data, style);
+                    vis.binds.hqwidgets.door.init(wid, view, data, style);
                 }, 100);
                 return;
             }
@@ -1847,6 +1887,8 @@ vis.binds.hqwidgets = {
 
             if (!data.border_width && data.border_width != '0') data.border_width = 3;
             data.border_width = parseInt(data.border_width, 10);
+            if (data['oid-battery'])  data.battery  = vis.states.attr(data['oid-battery']  + '.val');
+            if (data['oid-signal'])   data.signal   = vis.states.attr(data['oid-signal']   + '.val');
 
             $div.data('data',  data);
             $div.data('style', style);
@@ -1877,24 +1919,49 @@ vis.binds.hqwidgets = {
                     }
 
                     if (data.invert) doorState = !doorState;
+                    data.value = doorState;
 
-                    /*if (doorState) {
-                        if (data.noAnimate) {
-                            $div.find('.hq-door').css({'height': data.shutterPos + '%'});
-                        } else {
-                            $div.find('.hq-door').animate({'height': data.shutterPos + '%'}, 500);
-                        }
-                    }*/
+                    vis.binds.hqwidgets.door.changeState($div);
+                });
+
+
+                var newVal = vis.states.attr(data.oid + '.val');
+                var doorState;
+
+                if (newVal === 'true' || newVal === true)  {
+                    doorState = true;
+                } else if (newVal === 'false' || newVal === false) {
+                    doorState = false;
+                } else if (typeof newVal === 'string') {
+                    doorState = parseFloat(newVal) > 0;
+                } else {
+                    doorState = !!newVal;
+                }
+
+                if (data.invert) doorState = !doorState;
+                data.value = doorState;
+            }
+            if (data['oid-battery']) {
+                $div.batteryIndicator();
+                vis.states.bind(data['oid-battery'] + '.val', function (e, newVal, oldVal) {
+                    data.battery = newVal;
+                    vis.binds.hqwidgets.door.changeState($div, true);
                 });
             }
+
+            if (data['oid-signal']) {
+                vis.states.bind(data['oid-signal'] + '.val', function (e, newVal, oldVal) {
+                    data.signal = newVal;
+                    vis.binds.hqwidgets.door.changeState($div, true);
+                });
+            }
+
+            vis.binds.hqwidgets.door.changeState($div);
         }
     },
     circle: {
         init: function (wid, view, data) {
-            if (vis.binds.hqwidgets.version) {
-                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
-                vis.binds.hqwidgets.version = null;
-            }
+            vis.binds.hqwidgets.showVersion();
 
             var $div = $('#' + wid);
             if (!$div.length) {
@@ -1906,7 +1973,7 @@ vis.binds.hqwidgets = {
 
             var settings = data;
             var $scalaInput = $div.find('input');
-            $div.addClass('hq-button-base');
+            $div.addClass('vis-hq-button-base');
 
             if (settings.oid) {
                 $scalaInput.val(vis.states.attr(settings.oid + '.val'));
@@ -1998,10 +2065,7 @@ vis.binds.hqwidgets = {
     },
     checkbox: {
         init: function (wid, view, data) {
-            if (vis.binds.hqwidgets.version) {
-                console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
-                vis.binds.hqwidgets.version = null;
-            }
+            vis.binds.hqwidgets.showVersion();
 
             var $div = $('#' + wid);
             if (!$div.length) {

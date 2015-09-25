@@ -756,7 +756,12 @@ if (vis.editMode) {
         "oid-slide-sensor":         {"en": "Slide sensor",          "de": "Fensterblatt-Sensor",    "ru": "Сенсор на створке"},
         "oid-slide-sensor-lowbat":  {"en": "Slide sensor lowbat",   "de": "FB-Sensor lowbat",       "ru": "Сенсор на створке (lowbat)"},
         "oid-slide-handle":         {"en": "Slide handle",          "de": "Griff-Sensor",           "ru": "Сенсор на ручке"},
-        "oid-slide-handle-lowbat":  {"en": "Slide handle lowbat",   "de": "Griff-Sensor lowbat",    "ru": "Сенсор на ручке (lowbat)"}
+        "oid-slide-handle-lowbat":  {"en": "Slide handle lowbat",   "de": "Griff-Sensor lowbat",    "ru": "Сенсор на ручке (lowbat)"},
+        "door_type":        {"en": "Door swing",         "de": "Türtyp",                "ru": "Тип двери"},
+        "noAnimate":        {"en": "No animation",       "de": "Keine Animation",       "ru": "Не анимировать"},
+        "infoColor":        {"en": "Text color",         "de": "Textfarbe",             "ru": "Цвет текста"},
+        "infoBackground":   {"en": "Background",         "de": "Hintergrund",           "ru": "Цвет фона"},
+        "midTextColor":     {"en": "Middle text color",  "de": "Textfarbe Mitte",       "ru": "Цвет текста в середине"}
     });
 }
 

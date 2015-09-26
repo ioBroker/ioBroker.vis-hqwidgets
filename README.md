@@ -7,6 +7,9 @@ hqWidgets - High quality widgets for ioBroker.vis
 
 ## Changelog
 
+### 0.1.5 (2015-09-26)
+* (bluefox) add push-button feature to on/off
+
 ### 0.1.4 (2015-09-24)
 * (bluefox) add outdoor temperature widget
 * (bluefox) auto fill of OIDs

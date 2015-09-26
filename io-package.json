@@ -1,7 +1,7 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "0.1.4",
+        "version": "0.1.5",
         "title":                    "ioBroker Visualisation - hqwidgets style Widgets",
         "desc": {
             "en":                   "High quality Widgets for ioBroker.vis",

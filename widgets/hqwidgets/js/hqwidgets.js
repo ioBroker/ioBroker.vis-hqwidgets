@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "0.1.4"
+    version: "0.1.5"
 
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
@@ -794,7 +794,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "0.1.4",
+    version: "0.1.5",
     contextEnabled: true,
     preventDefault: function (e) {
         e.preventDefault();

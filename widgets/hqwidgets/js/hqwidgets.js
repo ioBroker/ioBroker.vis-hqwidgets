@@ -795,6 +795,20 @@ $.extend(true, systemDictionary, {
 
 vis.binds.hqwidgets = {
     version: "0.1.4",
+    contextEnabled: true,
+    preventDefault: function (e) {
+        e.preventDefault();
+    },
+    contextMenu: function (isEnable) {
+        if (isEnable && !vis.binds.hqwidgets.contextEnabled) {
+            vis.binds.hqwidgets.contextEnabled = true;
+            document.removeEventListener("contextmenu", vis.binds.hqwidgets.preventDefault, false);
+        }
+        if (!isEnable && vis.binds.hqwidgets.contextEnabled) {
+            vis.binds.hqwidgets.contextEnabled = false;
+            document.addEventListener("contextmenu", vis.binds.hqwidgets.preventDefault, false);
+        }
+    },
     showVersion: function () {
         if (vis.binds.hqwidgets.version) {
             console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
@@ -1305,15 +1319,40 @@ vis.binds.hqwidgets = {
                 }
             } else {
                 if (!vis.editMode && data.oid) {
-                    $main.on('click touchstart', function () {
-                        // Protect against two events
-                        if (vis.detectBounce(this)) return;
+                    if (!data.pushButton) {
+                        $main.on('click touchstart', function () {
+                            // Protect against two events
+                            if (vis.detectBounce(this)) return;
 
-                        data.value = (data.state == 'normal') ? data.max : data.min;
-                        data.ack   = false;
-                        vis.binds.hqwidgets.button.changeState($div, false, false, true);
-                        vis.setValue(data.oid, data.value);
-                    });
+                            data.value = (data.state == 'normal') ? data.max : data.min;
+                            data.ack   = false;
+                            vis.binds.hqwidgets.button.changeState($div, false, false, true);
+                            vis.setValue(data.oid, data.value);
+                        });
+                    } else {
+                        $main.on('mousedown touchstart', function (e) {
+                            // Protect against two events
+                            if (vis.detectBounce(this)) return;
+                            
+                            vis.binds.hqwidgets.contextMenu(false);
+
+                            data.value = data.max;
+                            data.ack   = false;
+                            vis.binds.hqwidgets.button.changeState($div, false, false, true);
+                            vis.setValue(data.oid, data.value);
+                        });
+                        $main.on('mouseup touchend', function (e) {
+
+                            // Protect against two events
+                            if (vis.detectBounce(this, true)) return;
+
+                            data.value = data.min;
+                            data.ack   = false;
+                            vis.binds.hqwidgets.button.changeState($div, false, false, true);
+                            vis.setValue(data.oid, data.value);
+                            vis.binds.hqwidgets.contextMenu(true);
+                        });
+                    }
                 }
             }
 
@@ -1385,6 +1424,7 @@ vis.binds.hqwidgets = {
             data.midTextColor = data.midTextColor || '';
             data.infoColor = data.infoColor || '';
             data.infoBackground = data.infoBackground || 'rgba(182,182,182,0.6)';
+            data.pushButton = (data.pushButton === 'true' || data.pushButton === true);
 
             if (data.wType == 'number') {
                 data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));

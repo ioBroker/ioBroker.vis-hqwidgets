@@ -729,6 +729,7 @@ if (vis.editMode) {
         "readOnly":         {"en": "Read only",         "de": "Nur lesend",             "ru": "Не изменять"},
         "group_center":     {"en": "Center",            "de": "Zentrum",                "ru": "Центр"},
         "caption":          {"en": "Caption",           "de": "Beschriftung",           "ru": "Подпись"},
+        "captionOn":        {"en": "Caption active",    "de": "Beschriftung bei aktiv", "ru": "Подпись когда активно"},
         "hideNumber":       {"en": "Hide number",       "de": "Nummer ausblenden",      "ru": "Скрыть число"},
         "group_arc":        {"en": "Arc",               "de": "Bogen",                  "ru": "Дуга"},
         "angleOffset":      {"en": "Angle offset",      "de": "Winkeloffset",           "ru": "Сдвиг дуги"},
@@ -761,7 +762,8 @@ if (vis.editMode) {
         "noAnimate":        {"en": "No animation",       "de": "Keine Animation",       "ru": "Не анимировать"},
         "infoColor":        {"en": "Text color",         "de": "Textfarbe",             "ru": "Цвет текста"},
         "infoBackground":   {"en": "Background",         "de": "Hintergrund",           "ru": "Цвет фона"},
-        "midTextColor":     {"en": "Middle text color",  "de": "Textfarbe Mitte",       "ru": "Цвет текста в середине"}
+        "midTextColor":     {"en": "Middle text color",  "de": "Textfarbe Mitte",       "ru": "Цвет текста в середине"},
+        "pushButton":       {"en": "Push-Button",        "de": "Taster",                "ru": "Кнопка"}
     });
 }
 
@@ -1025,6 +1027,9 @@ vis.binds.hqwidgets = {
                     if (data.iconName || data.iconOn) {
                         $div.find('.vis-hq-icon-img').attr('src', (data.iconName || ''));
                     }
+                    if (data.captionOn) {
+                        $div.find('.vis-hq-text-caption').html(data.caption || '');
+                    }
                     break;
                 case 'active':
                     $('#' + data.wid + ' .vis-hq-main')
@@ -1034,7 +1039,9 @@ vis.binds.hqwidgets = {
                     if (data.iconName || data.iconOn) {
                         $div.find('.vis-hq-icon-img').attr('src', (data.iconOn || data.iconName));
                     }
-
+                    if (data.captionOn) {
+                        $div.find('.vis-hq-text-caption').html(data.captionOn);
+                    }
                     break;
             }
             if (data.digits !== null && value !== null) value = value.toFixed(data.digits);
@@ -1103,7 +1110,7 @@ vis.binds.hqwidgets = {
                     text += '<table class="vis-hq-table vis-hq-no-space" style="position: absolute;top:' + data.topOffset + '%;left:' + data.leftOffset + '%"><tr class="vis-hq-no-space"><td class="vis-hq-no-space"><div class="vis-hq-icon" style="text-align: center;"></div></td>\n';
                 }
 
-                if (data.caption) {
+                if (data.caption || data.captionOn) {
                     if ($div.height() > $div.width()) text += '</tr><tr class="vis-hq-no-space">';
                     text += '<td class="vis-hq-no-space"><div class="vis-hq-text-caption" style="text-align: center;"></div></td>';
                 }
@@ -1318,7 +1325,22 @@ vis.binds.hqwidgets = {
                     $main.scala('value', data.value);
                 }
             } else {
-                if (!vis.editMode && data.oid) {
+                if (!data.oidFalse && data.oidTrue) data.oidFalse = data.oidTrue;
+                if (!data.urlFalse && data.urlTrue) data.urlFalse = data.urlTrue;
+                if (data.min === undefined || data.min === 'false' || data.min === null) data.min = false;
+                if (data.max === undefined || data.max === 'true'  || data.max === null) data.max = true;
+                if (data.oidTrueVal === undefined || data.oidTrueVal === null) data.oidTrueVal = data.max;
+                if (data.oidTrueVal === 'false') data.oidTrueVal = false;
+                if (data.oidTrueVal === 'true')  data.oidTrueVal = true;
+                if (data.oidFalseVal === undefined || data.oidFalseVal === null) data.oidFalseVal = data.min;
+                if (data.oidFalseVal === 'false') data.oidFalseVal = false;
+                if (data.oidFalseVal === 'true')  data.oidFalseVal = true;
+                var f = parseFloat(data.oidFalseVal);
+                if (f.toString() == data.oidFalseVal) data.oidFalseVal = f;
+                f = parseFloat(data.oidTrueVal);
+                if (f.toString() == data.oidTrueVal) data.oidTrueVal = f;
+
+                if (!vis.editMode && (data.oid || data.urlFalse || data.urlTrue || data.oidFalse || data.oidTrue)) {
                     if (!data.pushButton) {
                         $main.on('click touchstart', function () {
                             // Protect against two events
@@ -1326,8 +1348,29 @@ vis.binds.hqwidgets = {
 
                             data.value = (data.state == 'normal') ? data.max : data.min;
                             data.ack   = false;
+
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
-                            vis.setValue(data.oid, data.value);
+
+                            if (data.oidTrue) {
+                                if (data.state != 'normal') {
+                                    vis.setValue(data.oidTrue,  data.oidTrueVal);
+                                } else {
+                                    vis.setValue(data.oidFalse, data.oidFalseVal);
+                                }
+                            }
+
+                            if (data.urlTrue) {
+                                if (data.state != 'normal') {
+                                    vis.conn.httpGet(data.urlTrue)
+                                } else {
+                                    vis.conn.httpGet(data.urlFalse);
+                                }
+                            }
+
+                            // show new state
+                            if (!data.oid || data.oid == 'nothing_selected') {
+                                vis.setValue(data.oid, data.value);
+                            }
                         });
                     } else {
                         $main.on('mousedown touchstart', function (e) {
@@ -1339,7 +1382,10 @@ vis.binds.hqwidgets = {
                             data.value = data.max;
                             data.ack   = false;
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
-                            vis.setValue(data.oid, data.value);
+
+                            if (data.oidTrue) vis.setValue(data.oidTrue,  data.oidTrueVal);
+                            if (data.urlTrue) vis.conn.httpGet(data.urlTrue);
+                            if (data.oid)     vis.setValue(data.oid, data.value);
                         });
                         $main.on('mouseup touchend', function (e) {
 
@@ -1349,7 +1395,11 @@ vis.binds.hqwidgets = {
                             data.value = data.min;
                             data.ack   = false;
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
-                            vis.setValue(data.oid, data.value);
+
+                            if (data.oidFalse) vis.setValue(data.oidFalse, data.oidFalseVal);
+                            if (data.urlFalse) vis.conn.httpGet(data.urlFalse);
+                            if (data.oid)      vis.setValue(data.oid, data.value);
+
                             vis.binds.hqwidgets.contextMenu(true);
                         });
                     }

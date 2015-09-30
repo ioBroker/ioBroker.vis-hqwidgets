@@ -7,6 +7,9 @@ hqWidgets - High quality widgets for ioBroker.vis
 
 ## Changelog
 
+### 0.1.6 (2015-09-30)
+* (bluefox) draw widgets first when the view is visible
+
 ### 0.1.5 (2015-09-26)
 * (bluefox) add push-button feature to on/off
 

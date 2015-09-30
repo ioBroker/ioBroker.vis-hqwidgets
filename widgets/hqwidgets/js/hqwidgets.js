@@ -1080,6 +1080,13 @@ vis.binds.hqwidgets = {
             }
         },
         draw: function ($div) {
+            if (!$div.is(':visible')) {
+                setTimeout(function () {
+                    vis.binds.hqwidgets.button.draw($div);
+                }, 500);
+                return;
+            }
+
             var data = $div.data('data');
             data.state = data.state || 'normal';
             var radius = $div.css('borderRadius') || vis.views[data.view].widgets[data.wid].style['border-radius'];
@@ -1149,7 +1156,7 @@ vis.binds.hqwidgets = {
             if (data.offsetAuto) {
                 var $middle = $div.find('.vis-hq-table');
                 $middle.css({
-                    left: ($main.width()  - $middle.width()) / 2,
+                    left: ($main.width()  - $middle.width())  / 2,
                     top:  ($main.height() - $middle.height()) / 2
                 });
                 if (img) {

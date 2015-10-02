@@ -7,6 +7,10 @@ hqWidgets - High quality widgets for ioBroker.vis
 
 ## Changelog
 
+### 0.1.7 (2015-10-02)
+* (bluefox) fix "working" icon
+* (bluefox) fix on/Off button
+
 ### 0.1.6 (2015-09-30)
 * (bluefox) draw widgets first when the view is visible
 

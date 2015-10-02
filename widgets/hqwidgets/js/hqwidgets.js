@@ -349,7 +349,7 @@
         });
     };
 
-    $.fn.popupShow = function ($div, options, callback) {
+    $.fn.popupShow  = function ($div, options, callback) {
 
         if (typeof options == 'function') {
             callback = options;
@@ -387,7 +387,7 @@
             }, (options.speed == '05') ? 550 : parseInt(options.speed, 10) * 1000 + 50);
         });
     };
-    $.fn.popupHide = function ($div, options, callback) {
+    $.fn.popupHide  = function ($div, options, callback) {
         if (typeof $div == 'function') {
             callback = $div;
             $div = null;
@@ -1049,7 +1049,7 @@ vis.binds.hqwidgets = {
 
             vis.binds.hqwidgets.button.showRightInfo($div, value);
 
-            if (!data.ack || (data['oid-working'] && data.working)) {
+            if ((!data.ack && !data['oid-working']) || (data['oid-working'] && data.working)) {
                 $div.find('.vis-hq-working').show();
             } else {
                 $div.find('.vis-hq-working').hide();
@@ -1203,7 +1203,6 @@ vis.binds.hqwidgets = {
                         vis.binds.hqwidgets.button.changeState($div);
                     });
                 }
-
                 if (data['oid-working']) {
                     vis.states.bind(data['oid-working'] + '.val', function (e, newVal, oldVal) {
                         data.working = newVal;
@@ -1344,8 +1343,15 @@ vis.binds.hqwidgets = {
                 if (data.oidFalseVal === 'true')  data.oidFalseVal = true;
                 var f = parseFloat(data.oidFalseVal);
                 if (f.toString() == data.oidFalseVal) data.oidFalseVal = f;
+
                 f = parseFloat(data.oidTrueVal);
                 if (f.toString() == data.oidTrueVal) data.oidTrueVal = f;
+
+                f = parseFloat(data.min);
+                if (f.toString() == data.min) data.min = f;
+
+                f = parseFloat(data.max);
+                if (f.toString() == data.max) data.max = f;
 
                 if (!vis.editMode && (data.oid || data.urlFalse || data.urlTrue || data.oidFalse || data.oidTrue)) {
                     if (!data.pushButton) {
@@ -1375,7 +1381,7 @@ vis.binds.hqwidgets = {
                             }
 
                             // show new state
-                            if (!data.oid || data.oid == 'nothing_selected') {
+                            if (data.oid && data.oid != 'nothing_selected') {
                                 vis.setValue(data.oid, data.value);
                             }
                         });
@@ -1392,7 +1398,7 @@ vis.binds.hqwidgets = {
 
                             if (data.oidTrue) vis.setValue(data.oidTrue,  data.oidTrueVal);
                             if (data.urlTrue) vis.conn.httpGet(data.urlTrue);
-                            if (data.oid)     vis.setValue(data.oid, data.value);
+                            if (data.oid && data.oid != 'nothing_selected') vis.setValue(data.oid, data.value);
                         });
                         $main.on('mouseup touchend', function (e) {
 
@@ -1405,7 +1411,7 @@ vis.binds.hqwidgets = {
 
                             if (data.oidFalse) vis.setValue(data.oidFalse, data.oidFalseVal);
                             if (data.urlFalse) vis.conn.httpGet(data.urlFalse);
-                            if (data.oid)      vis.setValue(data.oid, data.value);
+                            if (data.oid && data.oid != 'nothing_selected') vis.setValue(data.oid, data.value);
 
                             vis.binds.hqwidgets.contextMenu(true);
                         });

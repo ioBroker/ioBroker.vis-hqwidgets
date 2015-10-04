@@ -1,4 +1,4 @@
-![Logo](admin/hqWidgets.png)
+![Logo](admin/hqwidgets.png)
 ioBroker.vis-hqWidgets
 ============
 

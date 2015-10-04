@@ -5,6 +5,9 @@ ioBroker.vis-hqWidgets
 hqWidgets - High quality widgets for ioBroker.vis
 ![Example](img/widgets.png)
 
+For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
+http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
+
 ## Changelog
 
 ### 0.1.8 (2015-10-03)

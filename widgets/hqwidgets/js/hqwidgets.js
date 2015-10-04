@@ -763,7 +763,19 @@ if (vis.editMode) {
         "infoColor":        {"en": "Text color",         "de": "Textfarbe",             "ru": "Цвет текста"},
         "infoBackground":   {"en": "Background",         "de": "Hintergrund",           "ru": "Цвет фона"},
         "midTextColor":     {"en": "Middle text color",  "de": "Textfarbe Mitte",       "ru": "Цвет текста в середине"},
-        "pushButton":       {"en": "Push-Button",        "de": "Taster",                "ru": "Кнопка"}
+        "pushButton":       {"en": "Push-Button",        "de": "Taster",                "ru": "Кнопка"},
+        "big":              {"en": "big",                "de": "groß",                  "ru": "большой"},
+        "small":            {"en": "small",              "de": "klein",                 "ru": "маленький"},
+        "orange":           {"en": "orange",             "de": "orange",                "ru": "оранжевый"},
+        "staticValue":      {"en": "Static value",       "de": "Statisches Wert",       "ru": "Статичное значение"},
+        "staticValue_tooltip": {
+            "en": "Static value used if no Object ID set",
+            "de": "Statisches Wert wird nur dann verwendet,\x0Afalls keine ObjektID gesetzt ist",
+            "ru": "Статичное значение используется если не задан ID объекта"
+        },
+        "checkboxSize":     {"en": "Size",               "de": "Größe",                 "ru": "Размер"},
+        "checkboxColor":    {"en": "Color",              "de": "Farbe",                 "ru": "Цвет"},
+        "group_style":      {"en": "Style",              "de": "Still",                 "ru": "Стиль"}
     });
 }
 

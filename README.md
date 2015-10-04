@@ -7,6 +7,10 @@ hqWidgets - High quality widgets for ioBroker.vis
 
 ## Changelog
 
+### 0.1.8 (2015-10-03)
+* (bluefox) fix On/Off Icon if changed while invisible
+* (bluefox) fix error with style in OutTemp
+
 ### 0.1.7 (2015-10-02)
 * (bluefox) fix "working" icon
 * (bluefox) fix on/Off button

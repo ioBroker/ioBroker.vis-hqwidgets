@@ -955,11 +955,38 @@ vis.binds.hqwidgets = {
                 }
             }
         },
+        centerImage: function ($div, data, $img) {
+            // find the right position for image and caption in the middle
+            var $main = $div.find('.vis-hq-main');
+            if (!$img) $img = $div.find('.vis-hq-icon-img');
+
+            if (data.offsetAuto) {
+                if (!$div.is(':visible')) {
+                    setTimeout(function () {
+                        vis.binds.hqwidgets.button.centerImage($div, data, $img);
+                    }, 1000);
+                } else {
+                    var $middle = $div.find('.vis-hq-table');
+                    $middle.css({
+                        left: ($main.width()  - $middle.width())  / 2,
+                        top:  ($main.height() - $middle.height()) / 2
+                    });
+                    $img.load(function () {
+                        var $middle = $div.find('.vis-hq-table');
+                        $middle.css({
+                            left: ($main.width()  - $middle.width())  / 2,
+                            top:  ($main.height() - $middle.height()) / 2
+                        });
+                    });
+                }
+            }
+        },
         // Calculate state of button
         changeState: function ($div, isInit, isForce, isOwn) {
             var data = $div.data('data');
             if (!data) return;
 
+            debugger;
             var value = (data.tempValue !== undefined) ? data.tempValue : data.value;
 
             if (!isForce && data.oldValue !== undefined && data.oldValue == value && !data.ack) return;
@@ -1025,7 +1052,12 @@ vis.binds.hqwidgets = {
                         .addClass(data.styleNormal);
 
                     if (data.iconName || data.iconOn) {
-                        $div.find('.vis-hq-icon-img').attr('src', (data.iconName || ''));
+                        var $img  = $div.find('.vis-hq-icon-img');
+
+                        if ($img.attr('src') !== (data.iconName || '')) {
+                            $img.attr('src', (data.iconName || ''));
+                            vis.binds.hqwidgets.button.centerImage($div, data, $img);
+                        }
                     }
                     if (data.captionOn) {
                         $div.find('.vis-hq-text-caption').html(data.caption || '');
@@ -1037,7 +1069,12 @@ vis.binds.hqwidgets = {
                         .addClass(data.styleActive);
 
                     if (data.iconName || data.iconOn) {
-                        $div.find('.vis-hq-icon-img').attr('src', (data.iconOn || data.iconName));
+                        var $img  = $div.find('.vis-hq-icon-img');
+
+                        if ($img.attr('src') !== (data.iconOn || data.iconName)) {
+                            $img.attr('src', (data.iconOn || data.iconName));
+                            vis.binds.hqwidgets.button.centerImage($div, data, $img);
+                        }
                     }
                     if (data.captionOn) {
                         $div.find('.vis-hq-text-caption').html(data.captionOn);
@@ -1154,20 +1191,7 @@ vis.binds.hqwidgets = {
 
             // find the right position for image and caption in the middle
             if (data.offsetAuto) {
-                var $middle = $div.find('.vis-hq-table');
-                $middle.css({
-                    left: ($main.width()  - $middle.width())  / 2,
-                    top:  ($main.height() - $middle.height()) / 2
-                });
-                if (img) {
-                    $div.find('.vis-hq-icon-img').load(function () {
-                        var $middle = $div.find('.vis-hq-table');
-                        $middle.css({
-                            left: ($main.width()  - $middle.width()) / 2,
-                            top:  ($main.height() - $middle.height()) / 2
-                        });
-                    });
-                }
+                vis.binds.hqwidgets.button.centerImage($div, data);
             }
 
             // action

@@ -986,7 +986,6 @@ vis.binds.hqwidgets = {
             var data = $div.data('data');
             if (!data) return;
 
-            debugger;
             var value = (data.tempValue !== undefined) ? data.tempValue : data.value;
 
             if (!isForce && data.oldValue !== undefined && data.oldValue == value && !data.ack) return;

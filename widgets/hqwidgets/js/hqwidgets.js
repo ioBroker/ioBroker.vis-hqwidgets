@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "0.1.5"
+    version: "0.1.9"
 
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
@@ -808,7 +808,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "0.1.5",
+    version: "0.1.9",
     contextEnabled: true,
     preventDefault: function (e) {
         e.preventDefault();
@@ -923,19 +923,31 @@ vis.binds.hqwidgets = {
             }
 
         },
-        showCenterInfo: function ($div, isHide) {
+        showCenterInfo: function ($div, isHide, reInit) {
             var data = $div.data('data');
             if (!data) return;
 
-            if (data.humidity !== undefined || data.actual !== undefined) {
+            var $c = $div.find('.vis-hq-centerinfo');
+            if (reInit || data.humidity !== undefined || data.actual !== undefined) {
                 if (isHide) {
-                    $div.find('.vis-hq-centerinfo').hide();
+                    $c.hide();
                     $div.find('.vis-hq-middle').css('opacity', 1);
                 } else {
-                    if (!$div.find('.vis-hq-centerinfo').length) {
+                    if (!$div.is(':visible')) {
+                        if (!data.showCenterInfo) {
+                            data.showCenterInfo = setTimeout(function () {
+                                data.showCenterInfo = null;
+                                vis.binds.hqwidgets.button.showCenterInfo($div, isHide, reInit);
+                            }, 1000);
+                        }
+                        return;
+                    }
+
+                    if (reInit || !$c.length) {
+                        $c.remove();
                         var text = '<table class="vis-hq-centerinfo vis-hq-no-space" style="z-index: 2;position: absolute' +  (data.midTextColor ? ';color: ' + data.midTextColor : '') + '">';
 
-                        if (data.actual !== undefined) {
+                        if (data.actual   !== undefined) {
                             text += '<tr class="vis-hq-actual-style vis-hq-no-space"><td class="vis-hq-no-space"><span class="vis-hq-actual"></span>' + ((data.unit === undefined) ? '' : data.unit) + '</tr>';
                         }
                         if (data.humidity !== undefined) {
@@ -944,27 +956,29 @@ vis.binds.hqwidgets = {
 
                         text += '</table>';
                         $div.find('.vis-hq-main').prepend(text);
+                        $c = $div.find('.vis-hq-centerinfo');
                     } else {
-                        $div.find('.vis-hq-centerinfo').show();
+                        $c.show();
                     }
                     $div.find('.vis-hq-middle').css('opacity', 0.7);
-                    if (data.actual !== undefined) {
-                        $div.find('.vis-hq-actual').html((data.digits !== null) ? data.actual.toFixed(data.digits) : data.actual);
+                    if (data.actual   !== undefined) {
+                        $div.find('.vis-hq-actual').html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
                     }
 
                     if (data.humidity !== undefined) {
-                        $div.find('.vis-hq-humidity').html(Math.round(data.humidity));
+                        $div.find('.vis-hq-humidity').html(Math.round(data.humidity || 0));
                     }
 
-                    var $center = $div.find('.vis-hq-centerinfo');
                     var $main   = $div.find('.vis-hq-main');
-                    if ($center.length) {
-                        $center.css({
-                            'top':  ($main.height() - $center.height()) / 2,
-                            'left': ($main.width()  - $center.width())  / 2
+                    if ($c.length) {
+                        $c.css({
+                            top:  ($main.height() - $c.height()) / 2,
+                            left: ($main.width()  - $c.width())  / 2
                         });
                     }
                 }
+            } else {
+                $c.hide();
             }
         },
         centerImage: function ($div, data, $img) {
@@ -974,9 +988,13 @@ vis.binds.hqwidgets = {
 
             if (data.offsetAuto) {
                 if (!$div.is(':visible')) {
-                    setTimeout(function () {
-                        vis.binds.hqwidgets.button.centerImage($div, data, $img);
-                    }, 1000);
+                    if (!data.centerImage) {
+                        data.centerImage = setTimeout(function () {
+                            data.centerImage = null;
+                            vis.binds.hqwidgets.button.centerImage($div, data, $img);
+                        }, 1000);
+                    }
+                    return;
                 } else {
                     var $middle = $div.find('.vis-hq-table');
                     $middle.css({
@@ -1110,11 +1128,21 @@ vis.binds.hqwidgets = {
             }
 
             if (data['oid-humidity']) {
-                $div.find('.vis-hq-humidity').html(Math.round(data.humidity || 0));
+                var $h = $div.find('.vis-hq-humidity');
+                if (!$h.length) {
+                    vis.binds.hqwidgets.button.showCenterInfo($div, false, true);
+                } else {
+                    $h.html(Math.round(data.humidity || 0));
+                }
             }
 
             if (data['oid-actual']) {
-                $div.find('.vis-hq-actual').html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
+                var $a = $div.find('.vis-hq-actual');
+                if (!$a.length) {
+                    vis.binds.hqwidgets.button.showCenterInfo($div, false, true);
+                } else {
+                    $a.html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
+                }
             }
 
             if (data['oid-drive']) {
@@ -1336,7 +1364,7 @@ vis.binds.hqwidgets = {
                                 vis.binds.hqwidgets.button.showCenterInfo($div, true);
                             }
                         },
-                        onhide:     function (){
+                        onhide:     function () {
                             vis.binds.hqwidgets.button.showCenterInfo($div);
                         },
                         hideNumber: !data.showValue || (data.temperature && data.alwaysShow),

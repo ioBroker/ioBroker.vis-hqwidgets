@@ -10,6 +10,9 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 
 ## Changelog
 
+### 0.1.9 (2015-10-05)
+* (bluefox) fix update of temperature on widgets
+
 ### 0.1.8 (2015-10-03)
 * (bluefox) fix On/Off Icon if changed while invisible
 * (bluefox) fix error with style in OutTemp

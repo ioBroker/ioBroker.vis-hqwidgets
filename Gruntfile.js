@@ -13,7 +13,6 @@ module.exports = function (grunt) {
     var iopackage = grunt.file.readJSON('io-package.json');
     var version   = (pkg && pkg.version) ? pkg.version : iopackage.common.version;
 
-    console.log(srcDir + 'widgets/' + pkg.name.substring('iobroker.vis-'.length) + '/js/' + pkg.name.substring('iobroker.vis-'.length) + '.js');
     // Project configuration.
     grunt.initConfig({
         pkg: pkg,

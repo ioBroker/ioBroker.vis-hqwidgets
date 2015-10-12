@@ -10,6 +10,9 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 
 ## Changelog
 
+### 0.1.10 (2015-10-12)
+* (bluefox) fix door widget
+
 ### 0.1.9 (2015-10-05)
 * (bluefox) fix update of temperature on widgets
 

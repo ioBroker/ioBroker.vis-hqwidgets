@@ -96,8 +96,8 @@
     %></div>
 </script>
 
-<script type="text/ejs"
-        id="tplHqShutter"
+<script id="tplHqShutter"
+        type="text/ejs"
         class="vis-tpl"
         data-vis-set="hqwidgets"
         data-vis-type="ctrl;window;shutter"
@@ -112,8 +112,8 @@
     %></div>
 </script>
 
-<script type="text/ejs"
-        id="tplHqDoor"
+<script id="tplHqDoor"
+        type="text/ejs"
         class="vis-tpl"
         data-vis-beta="true"
         data-vis-set="hqwidgets"
@@ -123,7 +123,7 @@
         data-vis-attrs="oid/id,state/changedButtonId;oid-battery/id,indicator.battery;border_width/slider,0,10,1;invert/checkbox;door_type/select,,left,right;noAnimate/checkbox;"
         data-vis-attrs0="group.leftRight;descriptionLeft;infoLeftFontSize[12]/slider,6,50,1;show_value/checkbox;infoFontRightSize[12]/slider,6,50,1;infoColor/color;infoBackground/color;"
         >
-    <div class="vis-widget hq-blind-base <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px" id="<%= this.data.attr('wid') %>"><%
+    <div class="vis-widget hq-blind-base <%== this.data.attr('class') %>" style="overflow:visible; width: 50px; height: 100px" id="<%= this.data.attr('wid') %>"><%
         vis.binds.hqwidgets.door.init(this.data.wid, this.view, this.data, this.style);
     %></div>
 </script>

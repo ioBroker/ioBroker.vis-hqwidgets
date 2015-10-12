@@ -1959,7 +1959,7 @@ vis.binds.hqwidgets = {
         }
     },
     door: {
-        changeState: function ($div, notUpdateDoor) {
+        changeState: function ($div, notUpdateDoor, isFirst) {
             var data = $div.data('data');
             if (!data) return;
 
@@ -1973,23 +1973,23 @@ vis.binds.hqwidgets = {
 
             if (!notUpdateDoor) {
                 if (value) {
-                    if (data.noAnimate) {
+                    if (data.noAnimate || isFirst) {
                         $div.find('.vis-hq-door-sheet').css({width: '80%'});
-                        $div.find('.vis-hq-door-empty-' + data.door_type).css({width: '20%'});
+                        $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).css({width: '20%'});
                         $div.find('.vis-hq-door-handle').css({left: (data.door_type != 'right') ? '60%': '30%'});
                     } else {
                         $div.find('.vis-hq-door-sheet').animate({width: '80%'}, 500);
-                        $div.find('.vis-hq-door-empty-' + data.door_type).animate({width: '20%'}, 500);
+                        $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).animate({width: '20%'}, 500);
                         $div.find('.vis-hq-door-handle').animate({left: (data.door_type != 'right') ? '60%': '30%'}, 500);
                     }
                 } else {
-                    if (data.noAnimate) {
+                    if (data.noAnimate || isFirst) {
                         $div.find('.vis-hq-door-sheet').css({width: '100%'});
-                        $div.find('.vis-hq-door-empty-' + data.door_type).css({width: 0});
+                        $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).css({width: 0});
                         $div.find('.vis-hq-door-handle').css({left: (data.door_type != 'right') ? '85%': '15%'});
                     } else {
                         $div.find('.vis-hq-door-sheet').animate({width: '100%'}, 500);
-                        $div.find('.vis-hq-door-empty-' + data.door_type).animate({width: 0});
+                        $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).animate({width: 0});
                         $div.find('.vis-hq-door-handle').animate({left: (data.door_type != 'right') ? '85%': '15%'}, 500);
                     }
                 }
@@ -2025,7 +2025,7 @@ vis.binds.hqwidgets = {
                     '</tr></table>\n';
                 $div.append(text);
             }
-            $div.find('.vis-hq-door-empty-' + data.door_type).css({background: data.emptyColor || '#515151'});
+            $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).css({background: data.emptyColor || '#515151'});
             if (data.door_type == 'right') {
                 $div.find('.vis-hq-door-handle').css({left: '15%'});
             } else {
@@ -2127,7 +2127,7 @@ vis.binds.hqwidgets = {
                 });
             }
 
-            vis.binds.hqwidgets.door.changeState($div);
+            vis.binds.hqwidgets.door.changeState($div, false, true);
         }
     },
     circle: {

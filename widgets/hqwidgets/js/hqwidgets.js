@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "0.1.9"
+    version: "0.2.0"
 
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
@@ -808,7 +808,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "0.1.9",
+    version: "0.2.0",
     contextEnabled: true,
     preventDefault: function (e) {
         e.preventDefault();
@@ -961,11 +961,13 @@ vis.binds.hqwidgets = {
                         $c.show();
                     }
                     $div.find('.vis-hq-middle').css('opacity', 0.7);
-                    if (data.actual   !== undefined) {
+                    if (data.actual   !== undefined && data.actual !== null) {
+                        if (typeof data.actual != 'number') data.actual = parseFloat(data.actual) || 0;
                         $div.find('.vis-hq-actual').html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
                     }
 
-                    if (data.humidity !== undefined) {
+                    if (data.humidity !== undefined && data.humidity !== null) {
+                        if (typeof data.humidity != 'number') data.humidity = parseFloat(data.humidity) || 0;
                         $div.find('.vis-hq-humidity').html(Math.round(data.humidity || 0));
                     }
 
@@ -1110,8 +1112,11 @@ vis.binds.hqwidgets = {
                     }
                     break;
             }
-            if (data.digits !== null && value !== null) value = value.toFixed(data.digits);
-            if (data.is_comma && value)                 value = value.toString().replace('.', ',');
+            if (data.digits !== null && value !== null && value !== undefined) {
+                if (typeof value !== 'number') value = parseFloat(value) || 0;
+                value = value.toFixed(data.digits);
+            }
+            if (data.is_comma && value) value = value.toString().replace('.', ',');
 
             vis.binds.hqwidgets.button.showRightInfo($div, value);
 
@@ -1141,6 +1146,7 @@ vis.binds.hqwidgets = {
                 if (!$a.length) {
                     vis.binds.hqwidgets.button.showCenterInfo($div, false, true);
                 } else {
+                    if (typeof data.actual !== 'number') data.actual = parseFloat(data.actual) || 0;
                     $a.html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
                 }
             }
@@ -1256,6 +1262,7 @@ vis.binds.hqwidgets = {
                         vis.binds.hqwidgets.button.changeState($div);
 
                         if (data.wType == 'number') {
+                            if (typeof data.value !== 'number') data.value = parseFloat(data.value) || 0;
                             $main.scala('value', (data.digits !== null) ? data.value.toFixed(data.digits) : data.value);
                         }
                     });
@@ -1325,9 +1332,12 @@ vis.binds.hqwidgets = {
 
                             data.value = parseFloat(value.toString().replace(',', '.'));
 
-                            if (data.digits !== null) data.value = data.value.toFixed(data.digits);
+                            if (data.digits !== null) {
+                                if (typeof data.value !== 'number') data.value = parseFloat(data.value) || 0;
+                                data.value = data.value.toFixed(data.digits);
+                            }
 
-                            data.value     = parseFloat(data.value);
+                            data.value     = parseFloat(data.value) || 0;
                             data.ack       = false;
                             data.tempValue = undefined;
 
@@ -1687,6 +1697,7 @@ vis.binds.hqwidgets = {
             var data = $div.data('data');
             if (!data) return;
 
+
             var $big = $div.find('.hq-blind-big');
             if (data.noAnimate) {
                 //$big.makeSlider('hide');
@@ -1694,12 +1705,16 @@ vis.binds.hqwidgets = {
                     $big.find('.hq-blind-big-slider').makeSlider('hide');
                     $big.hide();
                     $big.data('show', false);
+                    // restore zindex
+                    $div.css('z-index', $div.data('zindex'));
                 }, 200);
             } else {
                 $big.animate({width: $div.width(), height: $div.height(), opacity: 0, top: 0, left: 0}, 500, 'swing', function () {
                     $big.find('.hq-blind-big-slider').makeSlider('hide');
                     $big.hide();
                     $big.data('show', false);
+                    // restore zindex
+                    $div.css('z-index', $div.data('zindex'));
                 });
             }
 
@@ -1707,6 +1722,27 @@ vis.binds.hqwidgets = {
         openPopup: function ($div) {
             var data = $div.data('data');
             if (!data) return;
+
+            // make temporary z-index maximal
+            var zindex = $div.data('zindex');
+            // remember z-index
+            if (zindex === null || zindex === undefined) {
+                zindex = $div.css('z-index');
+                $div.data('zindex', zindex);
+            }
+            // find maximal z-index
+            var zindexMax = $div.data('zindexMax');
+            if (zindexMax === null || zindexMax === undefined) {
+                zindexMax = 0;
+                $('.vis-widget').each(function () {
+                    var z = $(this).css('z-index');
+                    if (z > zindexMax) zindexMax = z;
+                });
+                $div.data('zindexMax', zindexMax);
+            }
+            // set this widget to maximal zindex
+            $div.css('z-index', zindexMax + 1);
+
             var $big = $div.find('.hq-blind-big');
             if (!$big.length) {
                 var text = '<table class="hq-blind-big vis-hq-no-space" style="display:none">' +
@@ -2192,6 +2228,7 @@ vis.binds.hqwidgets = {
                 change:  function (value) {
                 },
                 format:  function (v) {
+                    v = parseFloat(v) || 0;
                     if (settings.digits !== null) v = v.toFixed(settings.digits);
                     if ((settings.is_comma === 'true' || settings.is_comma === true) && v) v = v.toString().replace('.', ',');
                     if (settings.unit) v = v + settings.unit;

@@ -10,6 +10,10 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 
 ## Changelog
 
+### 0.2.0 (2015-10-14)
+(bluefox) fix problem with temperature if it was as string
+(bluefox) make popup window (shutter) with most z-index when showing them
+
 ### 0.1.10 (2015-10-12)
 * (bluefox) fix door widget
 

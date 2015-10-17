@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "0.2.0"
+    version: "0.2.1"
 
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
@@ -808,7 +808,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "0.2.0",
+    version: "0.2.1",
     contextEnabled: true,
     preventDefault: function (e) {
         e.preventDefault();
@@ -1826,6 +1826,16 @@ vis.binds.hqwidgets = {
             }
 
             var text = '<table class="hq-blind vis-hq-no-space" style="width: 100%; height: 100%"><tr>';
+            if (data.descriptionLeft) {
+                text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
+                    (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
+            }
+            if (data.show_value) {
+                text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
+                    (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span>';
+
+                text += '</div>\n';
+            }
             for (var i = 1; i <= data.slide_count; i++) {
                 var options = {
                     slideOid:     data['oid-slide-sensor' + i],
@@ -1863,6 +1873,12 @@ vis.binds.hqwidgets = {
                     $(this).find('.handle-low-battery').css({top: 8});
                 }
             });
+
+            var width = $div.width();
+            var offset = width - 20;
+            if (offset < width / 2) offset = width / 2;
+            $div.find('.vis-hq-leftinfo').css({right: offset + 'px'});
+            $div.find('.vis-hq-rightinfo').css({'padding-left': 5 + (width / 2) + 'px'});
         },
 
         init: function (wid, view, data, style) {
@@ -1990,7 +2006,19 @@ vis.binds.hqwidgets = {
                     } else {
                         $div.find('.hq-blind-position').css({'height': data.shutterPos + '%'});
                     }
+                    $div.find('.vis-hq-rightinfo-text').html(data.shutterPos + '%');
                 });
+            }
+
+            var shutterPos = vis.states[data.oid + '.val'] || 0;
+            if (shutterPos < data.min) shutterPos = data.min;
+            if (shutterPos > data.max) shutterPos = data.max;
+            shutterPos = Math.round(100 * (shutterPos - data.min) / (data.max - data.min));
+            $div.find('.vis-hq-rightinfo-text').html((data.oid ? ((vis.states[data.oid + '.val'] || 0)) : '') + '%');
+
+            if (vis.editMode && vis.activeWidgets.indexOf(wid) != -1) {
+                $div.resizable('destroy');
+                vis.resizable($div);
             }
         }
     },
@@ -2271,6 +2299,11 @@ vis.binds.hqwidgets = {
             if (font != parentFont) $scalaInput.css('font-variant', font);
         }
     },
+    lock: {
+        init: function (wid, view, data) {
+            vis.binds.hqwidgets.showVersion();
+        }
+    },
     checkbox: {
         init: function (wid, view, data) {
             vis.binds.hqwidgets.showVersion();
@@ -2485,6 +2518,7 @@ if (vis.editMode) {
         }
         return widget;
     };
+
     vis.binds.hqwidgets.changedSensorId = function (widgetID, view, newId, attr, isCss) {
         var index = attr.match(/(\d+)$/);
         var bName = (attr === 'oid-slide-handle' + index[1]) ? 'oid-slide-handle-lowbat' : 'oid-slide-sensor-lowbat';
@@ -2547,6 +2581,14 @@ if (vis.editMode) {
             'oid-working':  'indicator.working',
             'oid-signal':   'indicator.signal',
             'oid-humidity': 'value.humidity'
+        });
+    };
+
+    vis.binds.hqwidgets.changedLockId = function (widgetID, view, newId, attr, isCss) {
+        return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
+            'oid-battery':  'indicator.battery',
+            'oid-working':  'indicator.working',
+            'oid-signal':   'indicator.signal'
         });
     };
 

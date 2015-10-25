@@ -1526,15 +1526,6 @@ vis.binds.hqwidgets = {
                     vis.binds.hqwidgets.button.init(wid, view, data, style, wType);
                 }, 100);
                 return;
-            } else {
-                /*var timer = $('#' + wid).data('timer');
-                if (!timer) {
-                    $('#' + wid).data('timer', function () {
-                        vis.binds.hqwidgets.button.init(wid, view, data, style, wType);
-                    });
-                } else {
-                    $('#' + wid).data('timer', null);
-                }*/
             }
             var _data = {wid: wid, view: view, wType: wType};
             for (var a in data) {
@@ -2302,6 +2293,29 @@ vis.binds.hqwidgets = {
     lock: {
         init: function (wid, view, data) {
             vis.binds.hqwidgets.showVersion();
+            var $div = $('#' + wid).addClass('vis-hq-button-base');
+            if (!$div.length) {
+                setTimeout(function () {
+                    vis.binds.hqwidgets.button.init(wid, view, data, style, wType);
+                }, 100);
+                return;
+            }
+            var _data = {wid: wid, view: view, wType: wType};
+            for (var a in data) {
+                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
+                if (a[0] != '_') {
+                    _data[a] = data[a];
+                }
+            }
+            data = _data;
+
+            if (!data.wType) {
+                if (data.min === undefined || data.min === null || data.min === '') data.min = false;
+                if (data.max === undefined || data.max === null || data.max === '') data.max = true;
+            }
+
+            data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
+            data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
         }
     },
     checkbox: {

@@ -2185,6 +2185,98 @@ vis.binds.hqwidgets = {
             vis.binds.hqwidgets.door.changeState($div, false, true);
         }
     },
+    lock: {
+        draw: function ($div, isInit) {
+            var data = $div.data('data');
+            if (!data) return;
+
+            var $img = $div.find('img');
+            if (!$img.length) {
+                if (!$div.is(':visible')) {
+                    return setTimeout(function () {
+                        vis.binds.hqwidgets.lock.draw($div, isInit);
+                    }, 400);
+                }
+
+                $div.html('<img src="" style="width: 100%; height:100%"/><div class="vis-hq-biglock" style="display: none"></div>');
+                $img = $div.find('img');
+                var $big = $div.find('.vis-hq-biglock');
+
+                $big.css({top: ($div.height() - $big.height()) / 2, left: ($div.width()  - $big.width()) / 2});
+
+                if (data.oid && data.oid != 'nothing_selected') {
+                    $img.click(function () {
+                        $div.popupShow($big, {relative: true});
+                        // hide
+                        if (data.showTimeout) {
+                            setTimeout(function () {
+                                $div.popupHide($big, {relative: true});
+                            }, data.showTimeout)
+                        }
+                    });
+                }
+            }
+            if (!data.oid || data.oid == 'nothing_selected' || vis.binds.hqwidgets.lock.isFalse(vis.states.attr(data.oid  + '.val'), data.closeValue, data.openValue)) {
+                $div.removeClass(data.styleActive).addClass(data.styleNormal);
+                $img.attr('src', data.closedIcon || '');
+            } else {
+                $div.removeClass(data.styleNormal).addClass(data.styleActive);
+                $img.attr('src', data.openedIcon || data.closedIcon || '');
+            }
+            console.log('a');
+            // Show change effect
+            if (data.changeEffect && (!isInit || (vis.editMode && data.testActive))) {
+                $div.animateDiv(data.changeEffect, {color: data.waveColor});
+            }
+        },
+        isFalse: function (val, min, max) {
+            if (min !== undefined && min !== null && min !== '') {
+                if (max !== undefined && max !== null && max !== '') {
+                    return val != max;
+                } else {
+                    return val == min;
+                }
+            }
+            if (val === undefined || val === null || val === false || val === 'false' || val === '') return true;
+            if (val === '0' || val === 0) return true;
+            var f = parseFloat(val);
+            if (f.toString() !== 'NaN') return !f;
+            return false;
+        },
+        init: function (wid, view, data, style) {
+            vis.binds.hqwidgets.showVersion();
+            var $div = $('#' + wid).addClass('vis-hq-button-base');
+            if (!$div.length) {
+                setTimeout(function () {
+                    vis.binds.hqwidgets.lock.init(wid, view, data, style);
+                }, 100);
+                return;
+            }
+            var _data = {wid: wid, view: view};
+            for (var a in data) {
+                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
+                if (a[0] != '_') {
+                    _data[a] = data[a];
+                }
+            }
+            data = _data;
+
+            if (data.closeValue === undefined || data.closeValue === null || data.closeValue === '') data.closeValue = false;
+            if (data.openValue  === undefined || data.openValue  === null || data.openValue  === '') data.openValue  = true;
+
+            data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
+            data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
+            $div.data('data', data);
+            if (data.oid) {
+                vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
+                    data.signal = newVal;
+                    vis.binds.hqwidgets.lock.draw($div);
+                });
+            }
+
+            vis.binds.hqwidgets.lock.draw($div, true);
+        }
+    },
     circle: {
         init: function (wid, view, data) {
             vis.binds.hqwidgets.showVersion();
@@ -2288,34 +2380,6 @@ vis.binds.hqwidgets = {
             parentFont = $div.parent().css('font-variant');
             font       = $div.css('font-variant');
             if (font != parentFont) $scalaInput.css('font-variant', font);
-        }
-    },
-    lock: {
-        init: function (wid, view, data) {
-            vis.binds.hqwidgets.showVersion();
-            var $div = $('#' + wid).addClass('vis-hq-button-base');
-            if (!$div.length) {
-                setTimeout(function () {
-                    vis.binds.hqwidgets.button.init(wid, view, data, style, wType);
-                }, 100);
-                return;
-            }
-            var _data = {wid: wid, view: view, wType: wType};
-            for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
-                if (a[0] != '_') {
-                    _data[a] = data[a];
-                }
-            }
-            data = _data;
-
-            if (!data.wType) {
-                if (data.min === undefined || data.min === null || data.min === '') data.min = false;
-                if (data.max === undefined || data.max === null || data.max === '') data.max = true;
-            }
-
-            data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
-            data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
         }
     },
     checkbox: {

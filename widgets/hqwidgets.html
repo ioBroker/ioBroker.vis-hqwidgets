@@ -138,10 +138,11 @@
         data-vis-attrs0="group.image;closedIcon/image;openedIcon/image;"
         data-vis-attrs1="group.popup;closeIcon/image;closeValue;"
         data-vis-attrs2="openIcon/image;openValue;"
-        data-vis-attrs3="openDoorIcon/image;openDoorValue;"
+        data-vis-attrs3="openDoorIcon/image;openDoorValue;showTimeout[5000]/slider,0,30000,100;"
         data-vis-attrs4="group.leftRight;descriptionLeft;infoLeftFontSize[12]/slider,6,50,1;infoFontRightSize[12]/slider,6,50,1;infoColor/color;infoBackground/color;"
+        data-vis-attrs5="group.styles;styleNormal[hq-button-no-background]/style,hqwidgetsButtons glossy,-button,background;styleActive[hq-button-no-background]/style,hqwidgetsButtons glossy,-button,background;usejQueryStyle/checkbox;changeEffect/nselect,,waves,wobble,tada,swing,shake,rubberBand,pulse,flash,bounce;waveColor/color;testActive/checkbox;"
         >
-    <div class="vis-widget hq-lock-base <%== this.data.attr('class') %>" style="overflow:visible; width: 30px; height: 30px" id="<%= this.data.attr('wid') %>"><%
+    <div class="vis-widget vis-hq-lock-base <%== this.data.attr('class') %>" style="overflow:visible; width: 30px; height: 30px" id="<%= this.data.attr('wid') %>"><%
         vis.binds.hqwidgets.lock.init(this.data.wid, this.view, this.data, this.style);
     %></div>
 </script>

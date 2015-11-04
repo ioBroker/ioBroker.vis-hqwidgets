@@ -370,7 +370,7 @@
             var eTop  = options.relative ? 0 : offset.top; //get the offset top of the element
             var eLeft = options.relative ? 0 : offset.left; //get the offset top of the element
 
-            var dh = $div.show().height();
+            var dh = $div.css({opacity: 0}).show().height();
             var dw = $div.width();
             // calculate center
             //var x = $this.width();
@@ -382,7 +382,7 @@
                 $div.addClass('animated' + options.speed + 's ' + options.effect);
             }, 0);
             setTimeout(function () {
-                $div.removeClass('animated' + options.speed + 's ' + options.effect);
+                $div.removeClass('animated' + options.speed + 's ' + options.effect).css({opacity: 1});
                 if (callback) callback();
             }, (options.speed == '05') ? 550 : parseInt(options.speed, 10) * 1000 + 50);
         });
@@ -2198,9 +2198,17 @@ vis.binds.hqwidgets = {
                     }, 400);
                 }
 
-                $div.html('<img src="" style="width: 100%; height:100%"/><div class="vis-hq-biglock" style="display: none"></div>');
-                $img = $div.find('img');
+                $div.html('<img src="" class="vis-hq-lock1" style="width: 100%; height:100%;"/>' +
+                    '<div class="vis-hq-biglock" style="display: none">' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-close '    + data.closeStyle    + '"><img src="' + data.closeIcon    + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-open '     + data.openStyle     + '"><img src="' + data.openIcon     + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-openDoor ' + data.openDoorStyle + '"><img src="' + data.openDoorIcon + '" style="width: 100%; height:100%"/></div>' +
+                    '</div>');
+                $img = $div.find('.vis-hq-lock1');
                 var $big = $div.find('.vis-hq-biglock');
+                data.popupRadius = parseInt(data.popupRadius, 10) || 75;
+                $big.css({borderRadius: data.popupRadius, width: data.popupRadius * 2, height: data.popupRadius * 2});
+                $div.find('.vis-hq-biglock-button').css({borderRadius: parseInt(data.buttonRadius, 10) || 0});
 
                 $big.css({top: ($div.height() - $big.height()) / 2, left: ($div.width()  - $big.width()) / 2});
 

@@ -127,7 +127,7 @@
     %></div>
 </script>
 
-<!--script id="tplHqLock"
+<script id="tplHqLock"
         type="text/ejs"
         class="vis-tpl"
         data-vis-set="hqwidgets"
@@ -145,7 +145,7 @@
     <div class="vis-widget vis-hq-lock-base <%== this.data.attr('class') %>" style="overflow:visible; width: 30px; height: 30px" id="<%= this.data.attr('wid') %>"><%
         vis.binds.hqwidgets.lock.init(this.data.wid, this.view, this.data, this.style);
     %></div>
-</script-->
+</script>
 
 <!--script type="text/ejs" id="tplHqLock" class="vis-tpl" data-vis-set="hqwidgets" data-vis-name="Lock" data-vis-attrs="hm_id;hqoptions" data-vis-render-visible="true" data-hqwidgets-filter="HM-Sec-Key-S">
     <%
@@ -298,7 +298,7 @@
         data-vis-prev='<div id="prev_tplHqCheckbox" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev " style="overflow: visible; width: 108px; height: 35px"><div class="checkbox-small-orange-wrap"><div class="checkbox-small-orange-button"><input type="checkbox" style="display: none;"></div></div></div></div>'
         data-vis-update-style="true"
         data-vis-attrs="oid[nothing_selected]/id;staticValue;"
-        data-vis-attrs0="checkboxSize[big]/select,big,small;checkboxColor[orange]/select,orange;readOnly/checkbox"
+        data-vis-attrs0="checkboxSize[big]/select,big,small;checkboxColor[orange]/select,orange,blue,green;readOnly/checkbox"
     >
     <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 216px; height: 68px" id="<%= this.data.attr('wid') %>"  data-vis-resizable='{"disabled":true, "handles":"e"}'><%
             vis.binds.hqwidgets.checkbox.init(this.data.wid, this.view, this.data, this.style);

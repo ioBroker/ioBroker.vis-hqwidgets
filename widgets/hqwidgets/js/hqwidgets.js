@@ -260,10 +260,15 @@
                 return this.each(function () {
                     var $this = $(this);
                     var f = parseFloat(arg);
+                    var val;
                     if (f.toString() == arg) {
                         $this.prop('checked', f > 0).trigger('change');
                     } else {
-                        $this.prop('checked', arg === 'true' || arg === true).trigger('change');
+                        val = arg === 'true' || arg === true;
+                    }
+                    if (val != $this.prop('checked')) {
+                        $this.data('update', true);
+                        $this.prop('checked', val).trigger('change');
                     }
                 });
             }
@@ -2423,8 +2428,12 @@ vis.binds.hqwidgets = {
                 vis.states.bind(settings.oid + '.val', function (e, newVal, oldVal) {
                     $shineCheckbox.shineCheckbox('value', newVal);
                 });
-                $div.find('input').change(function () {
-                    vis.setValue(settings.oid, $(this).prop('checked'));
+                $div.find('input').change(function (evt) {
+                    if ($(this).data('update')) {
+                        $(this).data('update', false);
+                    } else {
+                        vis.setValue(settings.oid, $(this).prop('checked'));
+                    }
                 });
             } else {
                 $shineCheckbox.shineCheckbox('value', settings.staticValue);

@@ -10,6 +10,9 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 
 ## Changelog
 
+### 0.2.2 (2015-11-10)
+(bluefox) fix checkbox
+
 ### 0.2.1 (2015-10-17)
 (bluefox) enable description for door and shutter
 

@@ -780,7 +780,24 @@ if (vis.editMode) {
         },
         "checkboxSize":     {"en": "Size",               "de": "Größe",                 "ru": "Размер"},
         "checkboxColor":    {"en": "Color",              "de": "Farbe",                 "ru": "Цвет"},
-        "group_style":      {"en": "Style",              "de": "Still",                 "ru": "Стиль"}
+        "group_style":      {"en": "Style",              "de": "Still",                 "ru": "Стиль"},
+        "oid-open":         {"en": "Object ID Open",     "de": "Objekt-ID Aufmachen",   "ru": "Полностью открыть ID"},
+        "group_image":      {"en": "Images",             "de": "Bilder",                "ru": "Кнопки"},
+        "closedIcon":       {"en": "Icon-Closed",        "de": "Bild für Zu",           "ru": "Картинка 'Закрыть'"},
+        "openedIcon":       {"en": "Icon-Opened",        "de": "Bild für Auf",          "ru": "Картинка 'Открыть'"},
+        "group_popup":      {"en": "Popup",              "de": "Popup",                 "ru": "Popup"},
+        "popupRadius":      {"en": "Popup radius",       "de": "Popup-Radius",          "ru": "Popup радиус"},
+        "buttonRadius":     {"en": "Buttons radius",     "de": "Knopfe-Radius",         "ru": "Радиус кнопок"},
+        "closeIcon":        {"en": "Close-Icon",         "de": "Zu-Bild",               "ru": "Закрыть-Картинка"},
+        "closeValue":       {"en": "Close-Value",        "de": "Zu-Wert",               "ru": "Закрыть-Значение"},
+        "closeStyle":       {"en": "Close-Style",        "de": "Zu-Still",              "ru": "Закрыть-Стиль"},
+        "openIcon":         {"en": "Open Lock-Icon",     "de": "Schloss Auf-Bild",      "ru": "Открыть замок-Картинка"},
+        "openValue":        {"en": "Open Lock-Value",    "de": "Schloss Auf-Wert",      "ru": "Открыть замок-Значение"},
+        "openStyle":        {"en": "Open Lock-Style",    "de": "Schloss Auf-Still",     "ru": "Открыть замок-Стиль"},
+        "openDoorIcon":     {"en": "Open Door-Icon",     "de": "Tür Auf-Bild",          "ru": "Открыть дверь-Картинка"},
+        "openDoorValue":    {"en": "Open Door-Value",    "de": "Tür Auf-Wert",          "ru": "Открыть дверь-Значение"},
+        "openDoorStyle":    {"en": "Open Door-Style",    "de": "Tür Auf-Still",         "ru": "Открыть дверь-Стиль"},
+        "showTimeout":      {"en": "Popup timeout",      "de": "Popup-Timeout",         "ru": "Popup таймаут"}
     });
 }
 
@@ -1383,7 +1400,7 @@ vis.binds.hqwidgets = {
                             vis.binds.hqwidgets.button.showCenterInfo($div);
                         },
                         hideNumber: !data.showValue || (data.temperature && data.alwaysShow),
-                        readOnly:   vis.editMode,
+                        readOnly:   vis.editMode || data.readOnly,
                         step:       data.step,
                         digits:     data.digits,
                         isComma:    data.is_comma,
@@ -1431,7 +1448,7 @@ vis.binds.hqwidgets = {
                 f = parseFloat(data.max);
                 if (f.toString() == data.max) data.max = f;
 
-                if (!vis.editMode && (data.oid || data.urlFalse || data.urlTrue || data.oidFalse || data.oidTrue)) {
+                if (!vis.editMode && !data.readOnly && (data.oid || data.urlFalse || data.urlTrue || data.oidFalse || data.oidTrue)) {
                     if (!data.pushButton) {
                         $main.on('click touchstart', function () {
                             // Protect against two events
@@ -1494,10 +1511,12 @@ vis.binds.hqwidgets = {
                             vis.binds.hqwidgets.contextMenu(true);
                         });
                     }
+                } else if (data.readOnly) {
+                    $div.addClass('vis-hq-readonly');
                 }
             }
 
-            //Chart dialog
+            // Chart dialog
             if (data.url/* && !vis.editMode*/) {
                 $div.popupDialog({
                     content: '<iframe src="' + data.url + '" style="width: 100%; height: calc(100% - 5px); border: 0"></iframe>',
@@ -1546,17 +1565,17 @@ vis.binds.hqwidgets = {
                 if (data.max === undefined || data.max === null || data.max === '') data.max = true;
             }
 
-            data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
-            data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
-            data.digits = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
+            data.styleNormal    = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
+            data.styleActive    = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
+            data.digits         = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
             if (typeof data.step == 'string') data.step = data.step.replace(',', '.');
-            data.step = parseFloat(data.step || 1);
-            data.is_comma = (data.is_comma === 'true' || data.is_comma === true);
-            data.readOnly = (data.readOnly === 'true' || data.readOnly === true);
-            data.midTextColor = data.midTextColor || '';
-            data.infoColor = data.infoColor || '';
+            data.step           = parseFloat(data.step || 1);
+            data.is_comma       = (data.is_comma === 'true' || data.is_comma === true);
+            data.readOnly       = (data.readOnly === 'true' || data.readOnly === true);
+            data.midTextColor   = data.midTextColor || '';
+            data.infoColor      = data.infoColor || '';
             data.infoBackground = data.infoBackground || 'rgba(182,182,182,0.6)';
-            data.pushButton = (data.pushButton === 'true' || data.pushButton === true);
+            data.pushButton     = (data.pushButton === 'true' || data.pushButton === true);
 
             if (data.wType == 'number') {
                 data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
@@ -2195,7 +2214,7 @@ vis.binds.hqwidgets = {
             var data = $div.data('data');
             if (!data) return;
 
-            var $img = $div.find('img');
+            var $img = $div.find('img:first');
             if (!$img.length) {
                 if (!$div.is(':visible')) {
                     return setTimeout(function () {
@@ -2205,9 +2224,9 @@ vis.binds.hqwidgets = {
 
                 $div.html('<img src="" class="vis-hq-lock1" style="width: 100%; height:100%;"/>' +
                     '<div class="vis-hq-biglock" style="display: none">' +
-                    '    <div class="vis-hq-biglock-button vis-hq-biglock-close '    + data.closeStyle    + '"><img src="' + data.closeIcon    + '" style="width: 100%; height:100%"/></div>' +
-                    '    <div class="vis-hq-biglock-button vis-hq-biglock-open '     + data.openStyle     + '"><img src="' + data.openIcon     + '" style="width: 100%; height:100%"/></div>' +
-                    '    <div class="vis-hq-biglock-button vis-hq-biglock-openDoor ' + data.openDoorStyle + '"><img src="' + data.openDoorIcon + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-close '    + (data.closeStyle    || '') + '"><img src="' + data.closeIcon    + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-open '     + (data.openStyle     || '') + '"><img src="' + data.openIcon     + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-openDoor ' + (data.openDoorStyle || '') + '"><img src="' + data.openDoorIcon + '" style="width: 100%; height:100%"/></div>' +
                     '</div>');
                 $img = $div.find('.vis-hq-lock1');
                 var $big = $div.find('.vis-hq-biglock');
@@ -2218,15 +2237,70 @@ vis.binds.hqwidgets = {
                 $big.css({top: ($div.height() - $big.height()) / 2, left: ($div.width()  - $big.width()) / 2});
 
                 if (data.oid && data.oid != 'nothing_selected') {
+                    if (data.openValue === undefined || data.openValue === null || data.openValue === '') {
+                        data.openValue = true;
+                    } else {
+                        if (data.openValue === 'true')  data.openValue = true;
+                        if (data.openValue === 'false') data.openValue = false;
+                        if (parseFloat(data.openValue).toString() == data.openValue) data.openValue = parseFloat(data.openValue);
+                    }
+                    if (data.closeValue === undefined || data.closeValue === null || data.closeValue === '') {
+                        data.closeValue = false;
+                    } else {
+                        if (data.closeValue === 'true')  data.closeValue = true;
+                        if (data.closeValue === 'false') data.closeValue = false;
+                        if (parseFloat(data.closeValue).toString() == data.closeValue) data.closeValue = parseFloat(data.closeValue);
+                    }
+
                     $img.click(function () {
                         $div.popupShow($big, {relative: true});
                         // hide
                         if (data.showTimeout) {
-                            setTimeout(function () {
+                            data.timer = setTimeout(function () {
+                                data.timer = null;
                                 $div.popupHide($big, {relative: true});
                             }, data.showTimeout)
                         }
                     });
+                    if (!vis.editMode) {
+                        $div.find('.vis-hq-biglock-close').click(function () {
+                            if (data.timer) {
+                                clearTimeout(data.timer);
+                                data.timer = null;
+                            }
+                            $div.popupHide($big, {relative: true});
+                            vis.setValue(data.oid, data.closeValue);
+                        });
+                        $div.find('.vis-hq-biglock-open').click(function () {
+                            if (data.timer) {
+                                clearTimeout(data.timer);
+                                data.timer = null;
+                            }
+                            $div.popupHide($big, {relative: true});
+                            vis.setValue(data.oid, data.openValue);
+                        });
+                    }
+                }
+                if (!data['oid-open']) {
+                    $div.find('.vis-hq-biglock-openDoor').hide();
+                } else {
+                    if (data.openDoorValue === undefined || data.openDoorValue === null || data.openDoorValue === '') {
+                        data.openDoorValue = true;
+                    } else {
+                        if (data.openDoorValue === 'true')  data.openDoorValue = true;
+                        if (data.openDoorValue === 'false') data.openDoorValue = false;
+                        if (parseFloat(data.openDoorValue).toString() == data.openDoorValue) data.openDoorValue = parseFloat(data.openDoorValue);
+                    }
+                    if (!vis.editMode) {
+                        $div.find('.vis-hq-biglock-openDoor').click(function () {
+                            $div.popupHide($big, {relative: true});
+                            if (data.timer) {
+                                clearTimeout(data.timer);
+                                data.timer = null;
+                            }
+                            vis.setValue(data['oid-open'], data.openDoorValue);
+                        });
+                    }
                 }
             }
             if (!data.oid || data.oid == 'nothing_selected' || vis.binds.hqwidgets.lock.isFalse(vis.states.attr(data.oid  + '.val'), data.closeValue, data.openValue)) {
@@ -2236,7 +2310,7 @@ vis.binds.hqwidgets = {
                 $div.removeClass(data.styleNormal).addClass(data.styleActive);
                 $img.attr('src', data.openedIcon || data.closedIcon || '');
             }
-            console.log('a');
+
             // Show change effect
             if (data.changeEffect && (!isInit || (vis.editMode && data.testActive))) {
                 $div.animateDiv(data.changeEffect, {color: data.waveColor});
@@ -2277,8 +2351,8 @@ vis.binds.hqwidgets = {
             if (data.closeValue === undefined || data.closeValue === null || data.closeValue === '') data.closeValue = false;
             if (data.openValue  === undefined || data.openValue  === null || data.openValue  === '') data.openValue  = true;
 
-            data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
-            data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
+            data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'hq-button-no-background');
+            data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'hq-button-no-background');
             $div.data('data', data);
             if (data.oid) {
                 vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {

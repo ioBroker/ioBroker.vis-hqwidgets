@@ -153,6 +153,18 @@
 .vis-hq-humidity-style {
 	text-align: center;
 }
+.vis-hq-readonly::before {
+	content: 	"";
+	cursor: 	default;
+	display:	block;
+	position:	absolute;
+	top:		-2px;
+	left:		-2px;
+	right:		-2px;
+	bottom:		-2px;
+	z-index:	10;
+}
+
 /* ------------------------ Blind styles ---------------------------*/
 .hq-blind-base { /* Basis */
 	background: #fffeff; /* Old browsers */
@@ -429,6 +441,10 @@
 	right: 16%;
 	bottom: 18%;
 }
+.vis-hq-biglock-button:hover {
+	transform: scale(1.2);
+}
+
 /* ------------- Animation ---------------------------*/
 .animated05s {
 	-webkit-animation-duration: 0.5s;

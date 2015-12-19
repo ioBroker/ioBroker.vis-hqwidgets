@@ -9,6 +9,10 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 0.2.3 (2015-12-19)
+* (bluefox) add green and blue colors to checkbox
+* (bluefox) working on lock
+* (bluefox) add readOnly option to "on/off"
 
 ### 0.2.2 (2015-11-10)
 (bluefox) fix checkbox

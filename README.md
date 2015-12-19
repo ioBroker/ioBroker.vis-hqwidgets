@@ -9,6 +9,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 0.2.4 (2015-12-19)
+* (bluefox) fix height of graphic dialog
+
 ### 0.2.3 (2015-12-19)
 * (bluefox) add green and blue colors to checkbox
 * (bluefox) working on lock

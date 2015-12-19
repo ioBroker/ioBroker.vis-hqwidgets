@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "0.2.3"
+    version: "0.2.4"
 
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
@@ -618,7 +618,7 @@
                 if (options.timeout) {
                     dialogButtons.unshift( {
                         id: 'donthide',
-                        text: '',
+                        text: false,
                         icons: {primary: 'ui-icon-pin-w'},
                         click: function () {
                             $dialog.data('no-timeout', !$dialog.data('no-timeout'));
@@ -642,15 +642,20 @@
                         }
                     });
                 }
-
                 $dialog.dialog({
-                    autoOpen: options.open || false,
+                    autoOpen: options.open   || false,
                     width:    options.width  || 800,
                     height:   options.height || 400,
                     modal:    options.modal === undefined ? true : !!options.modal,
                     title:    options.title  || _('Chart'),
-                    show:     { effect: options.effect, duration: 500 },
+                    show:     {
+                        effect: options.effect,
+                        duration: 500
+                    },
                     open:    function (event, ui) {
+                        $dialog.height(options.height || 400);
+                        $(this).parent().css('top', ($(window).height() - $(this).parent().height()) / 2);
+
                         $(this).parent().find('#donthide').css({width: 37, height: 37});
                         $(this).parent().find("#ok").focus();
                         if (options.effect) {
@@ -830,7 +835,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "0.2.3",
+    version: "0.2.4",
     contextEnabled: true,
     preventDefault: function (e) {
         e.preventDefault();

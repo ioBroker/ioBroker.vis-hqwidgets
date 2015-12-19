@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "0.2.4"
+    version: "0.2.5"
 
     Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
 
@@ -835,7 +835,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "0.2.4",
+    version: "0.2.5",
     contextEnabled: true,
     preventDefault: function (e) {
         e.preventDefault();
@@ -2749,12 +2749,20 @@ if (vis.editMode) {
         return changed.length ? changed : null;
     };
 
-    vis.binds.hqwidgets.changedButtonId = function (widgetID, view, newId, attr, isCss) {
+    vis.binds.hqwidgets.changedTempId = function (widgetID, view, newId, attr, isCss) {
         return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
             'oid-battery':  'indicator.battery',
             'oid-working':  'indicator.working',
             'oid-signal':   'indicator.signal',
             'oid-humidity': 'value.humidity'
+        });
+    };
+
+    vis.binds.hqwidgets.changedButtonId = function (widgetID, view, newId, attr, isCss) {
+        return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
+            'oid-battery':  'indicator.battery',
+            'oid-working':  'indicator.working',
+            'oid-signal':   'indicator.signal'
         });
     };
 

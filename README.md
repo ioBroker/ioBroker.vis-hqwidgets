@@ -9,6 +9,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 0.2.5 (2015-12-19)
+* (bluefox) fix hqWidgets on/off
+
 ### 0.2.4 (2015-12-19)
 * (bluefox) fix height of graphic dialog
 

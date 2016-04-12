@@ -77,5 +77,5 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 - (bluefox) initial checkin
 
 ## License
- Copyright (c) 2013-2015 bluefox https://github.com/GermanBluefox
+ Copyright (c) 2013-2016 bluefox https://github.com/GermanBluefox
  MIT

@@ -2,6 +2,11 @@
 ioBroker.vis-hqWidgets
 ============
 
+[![NPM version](http://img.shields.io/npm/v/iobroker.vis-hqwidgets.svg)](https://www.npmjs.com/package/iobroker.vis-hqwidgets)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.vis-hqwidgets.svg)](https://www.npmjs.com/package/iobroker.vis-hqwidgets)
+
+[![NPM](https://nodei.co/npm/iobroker.vis-hqwidgets.png?downloads=true)](https://nodei.co/npm/iobroker.vis-hqwidgets/)
+
 hqWidgets - High quality widgets for ioBroker.vis
 ![Example](img/widgets.png)
 
@@ -9,6 +14,10 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.0.0 (2016-04-12)
+(bluefox) fix blinds - control z-index of widgets if popup window opened
+(bluefox) add colorOn for checkbox
+
 ### 0.2.5 (2015-12-19)
 * (bluefox) fix hqWidgets on/off
 

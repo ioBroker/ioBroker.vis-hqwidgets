@@ -1,9 +1,9 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "0.2.5"
+    version: "1.0.0"
 
-    Copyright 6'2014-2015 bluefox<dogafox@gmail.com>
+    Copyright 6'2014-2016 bluefox<dogafox@gmail.com>
 
 */
 "use strict";
@@ -262,7 +262,8 @@
                     var f = parseFloat(arg);
                     var val;
                     if (f.toString() == arg) {
-                        $this.prop('checked', f > 0).trigger('change');
+                        val = f > 0;
+                        $this.prop('checked', val).trigger('change');
                     } else {
                         val = arg === 'true' || arg === true;
                     }
@@ -280,9 +281,10 @@
         var settings = {
             backgroundCheckbox: '',//-webkit-linear-gradient(top, #fe9810 0%,#e75400 61%,#e75400 91%,#ea8810 100%)",
             backgroundButton: '',//"-webkit-linear-gradient(top, #efeeee 0%,#bcb9b8 100%);",
-            checkboxSize:  options.checkboxSize || 'big',
-            checkboxColor: options.checkboxColor || 'orange',
-            readOnly: options.readOnly || false
+            checkboxSize:       options.checkboxSize    || 'big',
+            checkboxColor:      options.checkboxColor   || 'grey',
+            checkboxColorOn:    options.checkboxColorOn || options.checkboxColor || 'orange',
+            readOnly:           options.readOnly        || false
         };
 
         return this.each(function () {
@@ -293,16 +295,22 @@
             $this.hide();
             var checkboxStyle = 'background: ' + settings.backgroundCheckbox;
             var buttonStyle   = 'background: ' + settings.backgroundButton;
+            var color = $this.prop('checked') ? settings.checkboxColorOn : settings.checkboxColor;
 
-            $this.wrap('<div class="checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-wrap" style="' + checkboxStyle + '"><div class="checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-button" style="' + buttonStyle + '"></div></div>');
+            $this.wrap('<div class="checkbox-' + settings.checkboxSize + '-' + color + '-wrap" style="' + checkboxStyle + '"><div class="checkbox-' + settings.checkboxSize + '-' + color + '-button" style="' + buttonStyle + '"></div></div>');
             $this.change(function () {
-                //console.log('change ' + $this.prop('checked'));
+                console.log('change ' + $this.prop('checked'));
+                var color;
                 if ($this.prop('checked')) {
+                    color = settings.checkboxColorOn;
                     setTimeout(function () {
-                        $this.parent().addClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-button-active');
+                        $this.parent().addClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColorOn + '-button-active');
+                        $this.parent().parent().removeClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-wrap').addClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColorOn + '-wrap');
                     }, 100);
                 } else {
-                    $this.parent().removeClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-button-active');
+                    color = settings.checkboxColor;
+                    $this.parent().removeClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColorOn + '-button-active');
+                    $this.parent().parent().removeClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColorOn + '-wrap').addClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-wrap');
                 }
             });
 
@@ -313,7 +321,7 @@
                 });
             }
 
-            if ($this.prop('checked')) $this.parent().addClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-button-active');
+            if ($this.prop('checked')) $this.parent().addClass('checkbox-' + settings.checkboxSize + '-' + color + '-button-active');
         });
     };
 
@@ -364,6 +372,7 @@
         options.effect   = options.effect || 'zoomIn';
         options.speed    = options.speed  || '05';
         options.relative = options.relative || false;
+
         return this.each(function () {
             // Do something to each element here.
             var $this = $(this);
@@ -777,6 +786,9 @@ if (vis.editMode) {
         "big":              {"en": "big",                "de": "groß",                  "ru": "большой"},
         "small":            {"en": "small",              "de": "klein",                 "ru": "маленький"},
         "orange":           {"en": "orange",             "de": "orange",                "ru": "оранжевый"},
+        "blue":             {"en": "blue",               "de": "blau",                  "ru": "синий"},
+        "green":            {"en": "green",              "de": "grün",                  "ru": "зелёный"},
+        "grey":             {"en": "grey",               "de": "grau",                  "ru": "серый"},
         "staticValue":      {"en": "Static value",       "de": "Statisches Wert",       "ru": "Статичное значение"},
         "staticValue_tooltip": {
             "en": "Static value used if no Object ID set",
@@ -784,7 +796,8 @@ if (vis.editMode) {
             "ru": "Статичное значение используется если не задан ID объекта"
         },
         "checkboxSize":     {"en": "Size",               "de": "Größe",                 "ru": "Размер"},
-        "checkboxColor":    {"en": "Color",              "de": "Farbe",                 "ru": "Цвет"},
+        "checkboxColor":    {"en": "Color by OFF",       "de": "Farbe bei AUS",         "ru": "Цвет при 0"},
+        "checkboxColorOn":  {"en": "Color by ON",        "de": "Farbe bei ON",          "ru": "Цвет при 1"},
         "group_style":      {"en": "Style",              "de": "Still",                 "ru": "Стиль"},
         "oid-open":         {"en": "Object ID Open",     "de": "Objekt-ID Aufmachen",   "ru": "Полностью открыть ID"},
         "group_image":      {"en": "Images",             "de": "Bilder",                "ru": "Кнопки"},
@@ -835,8 +848,9 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "0.2.5",
+    version: "1.0.0",
     contextEnabled: true,
+    zindex: [],
     preventDefault: function (e) {
         e.preventDefault();
     },
@@ -1717,6 +1731,12 @@ vis.binds.hqwidgets = {
             var data = $div.data('data');
             if (!data) return;
 
+            for (var z = 0; z < vis.binds.hqwidgets.zindex.length; z++) {
+                if (vis.binds.hqwidgets.zindex[z] === $div.css('z-index')) {
+                    vis.binds.hqwidgets.zindex.splice(z, 1);
+                    break;
+                }
+            }
 
             var $big = $div.find('.hq-blind-big');
             if (data.noAnimate) {
@@ -1751,17 +1771,19 @@ vis.binds.hqwidgets = {
                 $div.data('zindex', zindex);
             }
             // find maximal z-index
-            var zindexMax = $div.data('zindexMax');
-            if (zindexMax === null || zindexMax === undefined) {
-                zindexMax = 0;
-                $('.vis-widget').each(function () {
-                    var z = $(this).css('z-index');
-                    if (z > zindexMax) zindexMax = z;
-                });
-                $div.data('zindexMax', zindexMax);
+            var zindexMax = 900;
+            /*$('.vis-widget').each(function () {
+                var z = $(this).css('z-index');
+                if (z > zindexMax) zindexMax = z;
+            });*/
+            for (var z = 0; z < vis.binds.hqwidgets.zindex.length; z++) {
+                if (vis.binds.hqwidgets.zindex[z] > zindexMax) zindexMax = vis.binds.hqwidgets.zindex[z];
             }
+            zindexMax++;
+
             // set this widget to maximal zindex
-            $div.css('z-index', zindexMax + 1);
+            $div.css('z-index', zindexMax);
+            vis.binds.hqwidgets.zindex.push($div.css('z-index'));
 
             var $big = $div.find('.hq-blind-big');
             if (!$big.length) {
@@ -2475,6 +2497,9 @@ vis.binds.hqwidgets = {
         }
     },
     checkbox: {
+        styles: [
+            'orange', 'blue', 'green', 'grey'
+        ],
         init: function (wid, view, data) {
             vis.binds.hqwidgets.showVersion();
 
@@ -2487,11 +2512,12 @@ vis.binds.hqwidgets = {
             }
 
             var settings = {
-                oid:           data.oid           || null,
-                staticValue:   data.staticValue,
-                checkboxSize:  data.checkboxSize  || 'big',
-                checkboxColor: data.checkboxColor || 'orange',
-                readOnly:      vis.editMode       || data.readOnly || false
+                oid:             data.oid             || null,
+                staticValue:     data.staticValue,
+                checkboxSize:    data.checkboxSize    || 'big',
+                checkboxColor:   data.checkboxColor   || 'grey',
+                checkboxColorOn: data.checkboxColorOn || data.checkboxColor || 'orange',
+                readOnly:        vis.editMode         || data.readOnly || false
             };
             if (settings.checkboxSize == 'small') {
                 $div.css({width: '108px', height: '34px'});
@@ -2503,10 +2529,11 @@ vis.binds.hqwidgets = {
             var $shineCheckbox = $input.shineCheckbox(settings);
             if (settings.oid && settings.oid != 'nothing_selected') {
                 $shineCheckbox.shineCheckbox('value', vis.states.attr(settings.oid + '.val'));
-
+                console.log('A');
                 vis.states.bind(settings.oid + '.val', function (e, newVal, oldVal) {
                     $shineCheckbox.shineCheckbox('value', newVal);
                 });
+
                 $div.find('input').change(function (evt) {
                     if ($(this).data('update')) {
                         $(this).data('update', false);

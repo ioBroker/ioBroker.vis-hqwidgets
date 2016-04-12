@@ -83,19 +83,7 @@ module.exports = function (grunt) {
                     url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/tasks/jshint.js'
                 },
                 dest: 'tasks/jshint.js'
-            },/*
-            get_gruntfile: {
-                options: {
-                    url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.build/master/adapters/Gruntfile.js'
-                },
-                dest: 'Gruntfile.js'
             },
-            get_utilsfile: {
-                options: {
-                    url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.build/master/adapters/utils.js'
-                },
-                dest: 'lib/utils.js'
-            },*/
             get_jscsRules: {
                 options: {
                     url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/tasks/jscsRules.js'
@@ -138,14 +126,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-http');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-exec');
-    grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('default', [
         'http',
-        'clean',
         'replace',
         'updateReadme',
         'jshint',

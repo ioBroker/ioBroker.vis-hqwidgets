@@ -1,7 +1,7 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "0.2.5",
+        "version": "1.0.0",
         "title":                    "ioBroker Visualisation - hqwidgets style Widgets",
         "desc": {
             "en":                   "High quality Widgets for ioBroker.vis",
@@ -25,7 +25,8 @@
         "onlyWWW":                  true,
         "singleton":                true,
         "type":                     "vis",
-		"restartAdapters":          ["vis"]
+		"restartAdapters":          ["vis"],
+		"noConfig":                 true
     },
     "native": {
     },

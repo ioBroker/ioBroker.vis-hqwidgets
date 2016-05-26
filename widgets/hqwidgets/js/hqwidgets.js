@@ -2529,7 +2529,6 @@ vis.binds.hqwidgets = {
             var $shineCheckbox = $input.shineCheckbox(settings);
             if (settings.oid && settings.oid != 'nothing_selected') {
                 $shineCheckbox.shineCheckbox('value', vis.states.attr(settings.oid + '.val'));
-                console.log('A');
                 vis.states.bind(settings.oid + '.val', function (e, newVal, oldVal) {
                     $shineCheckbox.shineCheckbox('value', newVal);
                 });
@@ -2544,6 +2543,67 @@ vis.binds.hqwidgets = {
             } else {
                 $shineCheckbox.shineCheckbox('value', settings.staticValue);
             }
+        }
+    },
+    odometer: function (view, data) {
+        vis.binds.hqwidgets.showVersion();
+
+        var $div = $('#' + data.wid);
+        if (!$div.length) {
+            setTimeout(function () {
+                vis.binds.hqwidgets.odometer(view, data);
+            }, 100);
+            return;
+        }
+
+        Odometer.prototype.watchForMutations = function() {};
+        
+        var oid    = data.oid;
+        var format = data.format || '(.ddd),dd';
+        var factor = parseFloat(data.factor) || 1;
+        var max = 0;
+        var $od = $div.find('.odometer');
+        if ($od.length) {
+            $od.innerHTML = '';
+            $od.remove();
+        }
+        $div.append('<div class="odometer"></div>');
+        $od = $div.find('.odometer');
+        
+        if (data.leadingZeros) {
+            var m = format.match(/\([,.\s]?(d+)\)/);
+            if (m && m[1]) {
+                max = m[1].length;
+                max = Math.pow(10, max);
+            }
+            m = format.match(/(\(+\))?[,.](d+)/);
+            if (m && m[2]) {
+                format += 'd';
+                max += Math.pow(0.1, m[2].length + 1);
+            } else {
+                max *= 10;
+                format = format.replace('d', 'dd');
+                factor *= 10;
+            }
+            $od.parent().addClass('odometer-leading');
+        }
+
+        var od = new Odometer({
+            el:         $od[0],
+            value:      (vis.states[oid + '.val'] || 0) * factor + max,
+            duration:   parseInt(data.duration, 10) || 3000,
+            theme:      data.style || 'car',
+            format:     format
+        });
+
+
+        if (oid && oid !== 'nothing_selected') {
+            vis.states.bind(oid + '.val', function (e, newVal) {
+                od.update(parseFloat(newVal) * factor + max);
+            });
+            od.update(parseFloat(vis.states[oid + '.val']) * factor + max);
+        } else {
+            od.update(max);
         }
     }
 };

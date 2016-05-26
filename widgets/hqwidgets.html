@@ -10,8 +10,25 @@
 <link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/hqwidgetsButtons.css"/>
 <link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/checkbox.css" />
 <link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/glossy.css" />
+<link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/odometer-theme-car.css" />
+<link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/odometer-theme-default.css" />
+<link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/odometer-theme-digital.css" />
+<link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/odometer-theme-minimal.css" />
+<link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/odometer-theme-plaza.css" />
+<link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/odometer-theme-slot-machine.css" />
+<link rel="stylesheet" type="text/css" href="widgets/hqwidgets/css/odometer-theme-train-station.css" />
+
 <script type="text/javascript" src="widgets/hqwidgets/js/jquery.knob.js"></script>
+<script type="text/javascript" src="widgets/hqwidgets/js/odometer.min.js"></script>
 <script type="text/javascript" src="widgets/hqwidgets/js/hqwidgets.js"></script>
+
+<style>
+        .odometer-leading .odometer-inside .odometer-digit:first-child,
+        /*, .odometer-leading .odometer-inside .odometer-formatting-mark:nth-child(2),*/
+        .odometer-leading .odometer-inside .odometer-digit:last-child {
+                display: none
+        }
+</style>
 
 <script id="tplHqButton"
         type="text/ejs"
@@ -306,9 +323,21 @@
         data-vis-attrs2="group.arc;angleOffset/slider,0,360,1;angleArc/slider,0,360,1;displayPrevious[true]/checkbox;"
         data-vis-attrs3="group.style;cursor/slider,1,350,1;thickness/slider,0.05,1,0.05;color/color;bgcolor/color;linecap/checkbox;anticlockwise/checkbox"
         >
-    <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px" id="<%= this.data.attr('wid') %>">
-        <%
+    <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 64px; height: 64px" id="<%= this.data.attr('wid') %>"><%
         vis.binds.hqwidgets.circle.init(this.data.wid, this.view, this.data);
-        %>
-    <input type="text" style="display:none"/></div>
+        %><input type="text" style="display: none"/></div>
+</script>
+<script id="tplHqOdometer"
+        type="text/ejs"
+        class="vis-tpl"
+        data-vis-set="hqwidgets"
+        data-vis-name="Odometer"
+        data-vis-beta="true"
+        data-vis-update-style="true"
+        data-vis-type="val,number"
+        data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_hqOdometer.png"></img>'
+        data-vis-attrs="oid;style[car]/nselect,car,default,digital,minimal,plaza,slot-machine,train-station;group.extended;format[(ddd),dd];factor[1];leadingZeros[true]/checkbox"
+        >
+    <div class="vis-widget <%== this.data.attr('class') %>" style="width: 125px; height: 42px; font-size: 24px" id="<%= this.data.attr('wid') %>"></div>
+    <% vis.binds.hqwidgets.odometer(this.view, this.data) %>
 </script>

@@ -14,9 +14,12 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.0.1 (2016-05-26)
+* (bluefox) add odometer widget
+
 ### 1.0.0 (2016-04-12)
-(bluefox) fix blinds - control z-index of widgets if popup window opened
-(bluefox) add colorOn for checkbox
+* (bluefox) fix blinds - control z-index of widgets if popup window opened
+* (bluefox) add colorOn for checkbox
 
 ### 0.2.5 (2015-12-19)
 * (bluefox) fix hqWidgets on/off

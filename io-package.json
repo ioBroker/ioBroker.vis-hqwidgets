@@ -1,7 +1,14 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "1.0.0",
+        "version": "1.0.1",
+		"news": {
+			"1.0.1": {
+				"en": "add odometer widget",
+				"de": "add odometer widget",
+				"ru": "add odometer widget"
+			}
+        },
         "title":                    "ioBroker Visualisation - hqwidgets style Widgets",
         "desc": {
             "en":                   "High quality Widgets for ioBroker.vis",

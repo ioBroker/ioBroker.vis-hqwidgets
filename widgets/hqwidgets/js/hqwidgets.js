@@ -871,15 +871,17 @@ vis.binds.hqwidgets = {
         }
     },
     getTimeInterval: function (oldTime, hoursToShow) {
+        // if less than 2000.01.01 00:00:00
+        if (oldTime < 946681200000) oldTime = oldTime * 1000;
         var result = '';
 
         var newTime = new Date ();
 
         if (!oldTime) return '';
-        if (typeof oldTime == 'string') {
+        if (typeof oldTime === 'string') {
             oldTime = new Date(oldTime);
         } else {
-            if (typeof oldTime == 'number') oldTime = new Date(oldTime * 1000);
+            if (typeof oldTime === 'number') oldTime = new Date(oldTime);
         }
 
         var seconds = (newTime.getTime() - oldTime.getTime ()) / 1000;
@@ -898,7 +900,7 @@ vis.binds.hqwidgets = {
         if (seconds > 3600 * 24 && seconds <= 3600 * 48)
             result = _('yesterday');
         else
-        if (seconds > 3600*48) {
+        if (seconds > 3600 * 48) {
             result = _('for&nbsp;%s&nbsp;hours', Math.floor (seconds / 3600));
         }
 

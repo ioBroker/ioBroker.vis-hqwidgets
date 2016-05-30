@@ -14,6 +14,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.0.2 (2016-05-30)
+* (bluefox) change "last changed" to ms
+
 ### 1.0.1 (2016-05-26)
 * (bluefox) add odometer widget
 

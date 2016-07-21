@@ -1,8 +1,13 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "1.0.2",
+        "version": "1.0.3",
 		"news": {
+			"1.0.3": {
+				"en": "fix initial value of shutter if inverted",
+				"de": "fix initial value of shutter if inverted",
+				"ru": "fix initial value of shutter if inverted"
+			},
 			"1.0.2": {
 				"en": "change [last changed] to ms",
 				"de": "change [last changed] to ms",

@@ -5,36 +5,33 @@
 /*jslint node: true */
 "use strict";
 
+function getAppName() {
+    var parts = __dirname.replace(/\\/g, '/').split('/');
+    return parts[parts.length - 1].split('.')[0].toLowerCase();
+}
+
 module.exports = function (grunt) {
 
     var srcDir    = __dirname + '/';
-    var dstDir    = srcDir + '.build/';
     var pkg       = grunt.file.readJSON('package.json');
     var iopackage = grunt.file.readJSON('io-package.json');
     var version   = (pkg && pkg.version) ? pkg.version : iopackage.common.version;
+    var appName   = getAppName();
 
     // Project configuration.
     grunt.initConfig({
         pkg: pkg,
-        clean: {
-            all: ['tmp/*.json', 'tmp/*.zip', 'tmp/*.jpg', 'tmp/*.jpeg', 'tmp/*.png',
-                  dstDir + '*.json', dstDir + '*.zip', dstDir + '*.jpg', dstDir + '*.jpeg', dstDir + '*.png']
-        },
         replace: {
             core: {
                 options: {
                     patterns: [
                         {
-                            match: /version: *"[\.0-9]*"/g,
-                            replacement: 'version: "' + version + '"'
+                            match: /var version = *'[\.0-9]*';/g,
+                            replacement: "var version = '" + version + "';"
                         },
                         {
-                            match: /"version":\s*"[\.0-9]*",/g,
+                            match: /"version"\: *"[\.0-9]*",/g,
                             replacement: '"version": "' + version + '",'
-                        },
-                        {
-                            match: /version: *"[\.0-9]*",/g,
-                            replacement: 'version: "' + version + '",'
                         }
                     ]
                 },
@@ -43,8 +40,30 @@ module.exports = function (grunt) {
                         expand:  true,
                         flatten: true,
                         src:     [
-                            srcDir + 'package.json',
-                            srcDir + 'io-package.json'
+                                srcDir + 'controller.js',
+                                srcDir + 'package.json',
+                                srcDir + 'io-package.json'
+                        ],
+                        dest:    srcDir
+                    }
+                ]
+            },
+            name: {
+                options: {
+                    patterns: [
+                        {
+                            match:       /iobroker/gi,
+                            replacement: appName
+                        }
+                    ]
+                },
+                files: [
+                    {
+                        expand:  true,
+                        flatten: true,
+                        src:     [
+                            srcDir + '*.*',
+                            srcDir + '.travis.yml'
                         ],
                         dest:    srcDir
                     },
@@ -52,17 +71,34 @@ module.exports = function (grunt) {
                         expand:  true,
                         flatten: true,
                         src:     [
-                            srcDir + 'widgets/' + pkg.name.substring('iobroker.vis-'.length) + '.html'
+                            srcDir + 'admin/*.*',
+                            '!' + srcDir + 'admin/*.png'
                         ],
-                        dest:    srcDir + 'widgets'
+                        dest:    srcDir + 'admin'
                     },
                     {
                         expand:  true,
                         flatten: true,
                         src:     [
-                            srcDir + 'widgets/' + pkg.name.substring('iobroker.vis-'.length) + '/js/' + pkg.name.substring('iobroker.vis-'.length) + '.js'
+                            srcDir + 'lib/*.*'
                         ],
-                        dest:    srcDir + 'widgets/' + pkg.name.substring('iobroker.vis-'.length) + '/js/'
+                        dest:    srcDir + 'lib'
+                    },
+                    {
+                        expand:  true,
+                        flatten: true,
+                        src:     [
+                            srcDir + 'example/*.*'
+                        ],
+                        dest:    srcDir + 'example'
+                    },
+                    {
+                        expand:  true,
+                        flatten: true,
+                        src:     [
+                            srcDir + 'www/*.*'
+                        ],
+                        dest:    srcDir + 'www'
                     }
                 ]
             }
@@ -74,19 +110,31 @@ module.exports = function (grunt) {
         http: {
             get_hjscs: {
                 options: {
-                    url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/tasks/jscs.js'
+                    url: 'https://raw.githubusercontent.com/' + appName + '/' + appName + '.js-controller/master/tasks/jscs.js'
                 },
                 dest: 'tasks/jscs.js'
             },
             get_jshint: {
                 options: {
-                    url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/tasks/jshint.js'
+                    url: 'https://raw.githubusercontent.com/' + appName + '/' + appName + '.js-controller/master/tasks/jshint.js'
                 },
                 dest: 'tasks/jshint.js'
             },
+            get_gruntfile: {
+                options: {
+                    url: 'https://raw.githubusercontent.com/' + appName + '/' + appName + '.build/master/adapters/Gruntfile.js'
+                },
+                dest: 'Gruntfile.js'
+            },
+            get_utilsfile: {
+                options: {
+                    url: 'https://raw.githubusercontent.com/' + appName + '/' + appName + '.build/master/adapters/utils.js'
+                },
+                dest: 'lib/utils.js'
+            },
             get_jscsRules: {
                 options: {
-                    url: 'https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/tasks/jscsRules.js'
+                    url: 'https://raw.githubusercontent.com/' + appName + '/' + appName + '.js-controller/master/tasks/jscsRules.js'
                 },
                 dest: 'tasks/jscsRules.js'
             }
@@ -103,8 +151,8 @@ module.exports = function (grunt) {
             if (readme.indexOf(version) == -1) {
                 var timestamp = new Date();
                 var date = timestamp.getFullYear() + '-' +
-                    ("0" + (timestamp.getMonth() + 1).toString(10)).slice(-2) + '-' +
-                    ("0" + (timestamp.getDate()).toString(10)).slice(-2);
+                    ('0' + (timestamp.getMonth() + 1).toString(10)).slice(-2) + '-' +
+                    ('0' + (timestamp.getDate()).toString(10)).slice(-2);
 
                 var news = "";
                 if (iopackage.common.whatsNew) {
@@ -129,15 +177,17 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'http',
-        'replace',
+        'replace:core',
         'updateReadme',
         'jshint',
         'jscs'
     ]);
-    grunt.registerTask('prepublish', [
-        'http',
-        'replace',
-        'updateReadme',
+
+    grunt.registerTask('p', [
+        'replace:core',
+        'updateReadme'
     ]);
-	grunt.registerTask('p', ['prepublish']);
+    grunt.registerTask('rename', [
+        'replace:name'
+    ]);
 };

@@ -789,6 +789,7 @@ if (vis.editMode) {
         "blue":             {"en": "blue",               "de": "blau",                  "ru": "синий"},
         "green":            {"en": "green",              "de": "grün",                  "ru": "зелёный"},
         "grey":             {"en": "grey",               "de": "grau",                  "ru": "серый"},
+        "show_value":       {"en": "Show value",         "de": "Wert anzeigen",         "ru": "Показывать значение"},
         "staticValue":      {"en": "Static value",       "de": "Statisches Wert",       "ru": "Статичное значение"},
         "staticValue_tooltip": {
             "en": "Static value used if no Object ID set",
@@ -2053,14 +2054,15 @@ vis.binds.hqwidgets = {
                     $div.find('.vis-hq-rightinfo-text').html(data.shutterPos + '%');
                 });
             }
-
+            
             var shutterPos = vis.states[data.oid + '.val'] || 0;
             if (shutterPos < data.min) shutterPos = data.min;
             if (shutterPos > data.max) shutterPos = data.max;
             shutterPos = Math.round(100 * (shutterPos - data.min) / (data.max - data.min));
-            $div.find('.vis-hq-rightinfo-text').html((data.oid ? ((vis.states[data.oid + '.val'] || 0)) : '') + '%');
+            if (data.invert) shutterPos = 100 - shutterPos;
+            $div.find('.vis-hq-rightinfo-text').html(shutterPos + '%');
 
-            if (vis.editMode && vis.activeWidgets.indexOf(wid) != -1) {
+            if (vis.editMode && vis.activeWidgets.indexOf(wid) !== -1) {
                 $div.resizable('destroy');
                 vis.resizable($div);
             }

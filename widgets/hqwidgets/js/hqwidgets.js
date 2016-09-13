@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.0.0"
+    version: "1.0.4"
 
     Copyright 6'2014-2016 bluefox<dogafox@gmail.com>
 
@@ -849,7 +849,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.0.0",
+    version: "1.0.4",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -858,11 +858,11 @@ vis.binds.hqwidgets = {
     contextMenu: function (isEnable) {
         if (isEnable && !vis.binds.hqwidgets.contextEnabled) {
             vis.binds.hqwidgets.contextEnabled = true;
-            document.removeEventListener("contextmenu", vis.binds.hqwidgets.preventDefault, false);
+            document.removeEventListener('contextmenu', vis.binds.hqwidgets.preventDefault, false);
         }
         if (!isEnable && vis.binds.hqwidgets.contextEnabled) {
             vis.binds.hqwidgets.contextEnabled = false;
-            document.addEventListener("contextmenu", vis.binds.hqwidgets.preventDefault, false);
+            document.addEventListener('contextmenu', vis.binds.hqwidgets.preventDefault, false);
         }
     },
     showVersion: function () {

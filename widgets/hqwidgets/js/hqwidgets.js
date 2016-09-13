@@ -6,14 +6,14 @@
     Copyright 6'2014-2016 bluefox<dogafox@gmail.com>
 
 */
-"use strict";
+'use strict';
 
 
 (function ( $ ) {
     $.fn.scala = function (options, arg) {
-        if (typeof options == 'string') {
-            if (options == 'value') {
-                if (arg === null || arg === undefined) arg = "0";
+        if (typeof options === 'string') {
+            if (options === 'value') {
+                if (arg === null || arg === undefined) arg = '0';
                 return this.each(function () {
                     var $this = $(this);
                     var $input = $this.find('.scalaInput');
@@ -34,11 +34,11 @@
                 parseInt(h.substring(4,6), 16)
             ];
 
-            return "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + a + ")";
+            return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a + ')';
         }
 
         var settings = $.extend({
-            bgColor:    "#EEEEEE",
+            bgColor:    '#EEEEEE',
             value:      0,
             width:      0,
             thickness:  null,
@@ -85,7 +85,7 @@
             var $scalaInput   = $this.find('.scalaInput');
             var $scalaWrapped = $this.find('.scalaWrapped');
 
-            var $knobDiv = $scalaInput.knob({
+            var $knobDiv = $scalaInput.knobHQ({
                 release: function (v, noAck) {
                     $knobDiv._mouseDown = false;
 
@@ -102,7 +102,7 @@
                     } else {
                         // remove unit
                         var val = $scalaInput.val();
-                        if (settings.unit !== null && val.substring(val.length - settings.unit.length, val.length) == settings.unit) {
+                        if (settings.unit !== null && val.substring(val.length - settings.unit.length, val.length) === settings.unit) {
                             val = val.substring(0, val.length - settings.unit.length);
                         }
                         if (settings.change && $knobDiv._oldValue != val) settings.change(val, noAck);
@@ -255,8 +255,8 @@
     };
 
     $.fn.shineCheckbox = function (options, arg) {
-        if (typeof options == 'string') {
-            if (options == 'value') {
+        if (typeof options === 'string') {
+            if (options === 'value') {
                 return this.each(function () {
                     var $this = $(this);
                     var f = parseFloat(arg);
@@ -299,7 +299,7 @@
 
             $this.wrap('<div class="checkbox-' + settings.checkboxSize + '-' + color + '-wrap" style="' + checkboxStyle + '"><div class="checkbox-' + settings.checkboxSize + '-' + color + '-button" style="' + buttonStyle + '"></div></div>');
             $this.change(function () {
-                console.log('change ' + $this.prop('checked'));
+                //console.log('change ' + $this.prop('checked'));
                 var color;
                 if ($this.prop('checked')) {
                     color = settings.checkboxColorOn;
@@ -335,7 +335,7 @@
 
             if (options.speed != 1 && options.speed != 2 && options.speed != 2) options.speed = 1;
 
-            if (effect == 'waves') {
+            if (effect === 'waves') {
                 var borderThickness = (options.tickness || 3) - 1;
                 var border = ';border: ' + borderThickness + 'px ' + (options.style || 'solid') +' ' + (options.color || 'grey');
 
@@ -364,7 +364,7 @@
 
     $.fn.popupShow  = function ($div, options, callback) {
 
-        if (typeof options == 'function') {
+        if (typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -390,7 +390,7 @@
             //var x = $this.width();
             //var y = $this.height();
             var zindex = $div.css('z-index');
-            zindex = options.zindex || ((zindex == 'auto') ? 1 : (zindex || 0) + 1);
+            zindex = options.zindex || ((zindex === 'auto') ? 1 : (zindex || 0) + 1);
             $div.css({position: 'absolute', left: eLeft + ($this.width() - dw) / 2, top: eTop + ($this.height() - dh) / 2, 'z-index': zindex});
             setTimeout(function () {
                 $div.addClass('animated' + options.speed + 's ' + options.effect);
@@ -402,11 +402,11 @@
         });
     };
     $.fn.popupHide  = function ($div, options, callback) {
-        if (typeof $div == 'function') {
+        if (typeof $div === 'function') {
             callback = $div;
             $div = null;
         }
-        if (typeof options == 'function') {
+        if (typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -431,7 +431,7 @@
     };
 
     $.fn.makeSlider = function (options, onChange, onIdle) {
-        if (options == 'hide') {
+        if (options === 'hide') {
             return this.each(function () {
                 var $this = $(this);
                 var timer = $this.data('hideTimer');
@@ -439,7 +439,7 @@
                 $this.data('hideTimer', null);
                 $this.hide();
             });
-        } else if (options == 'show') {
+        } else if (options === 'show') {
             return this.each(function () {
                 var $this     = $(this).show();
                 var hideTimer = $this.data('hideTimer');
@@ -461,8 +461,8 @@
                 }
             });
         }
-        if (typeof options == 'string') {
-            if (options == 'restart') {
+        if (typeof options === 'string') {
+            if (options === 'restart') {
                 return this.each(function () {
                     var $this = $(this);
                     var options = $this.data('options');
@@ -476,7 +476,7 @@
             return;
         }
 
-        if (typeof options == 'function') {
+        if (typeof options === 'function') {
             onIdle   = onChange;
             onChange = options;
             options  = null;
@@ -549,8 +549,8 @@
     };
 
     $.fn.batteryIndicator = function (options, args) {
-        if (typeof options == 'string') {
-            if (options == 'show') {
+        if (typeof options === 'string') {
+            if (options === 'show') {
                 return this.each(function () {
                     var $this = $(this);
                     if (args === undefined) args = true;
@@ -562,7 +562,7 @@
                     }
                 });
             } else
-            if (options == 'hide') {
+            if (options === 'hide') {
                 return this.each(function () {
                     $(this).find('.vis-hq-battery').hide();
                 });
@@ -601,7 +601,7 @@
 
             var dialog = $this.data('dialog');
             if (!dialog) {
-                if (typeof options == 'string') {
+                if (typeof options === 'string') {
                     console.log('Show prior init');
                     return;
                 }
@@ -698,7 +698,7 @@
             }
             var data = $dialog.data('data');
 
-            if (typeof options == 'string') {
+            if (typeof options === 'string') {
                 switch (options) {
                     case 'show':
                         $dialog.dialog('open');
@@ -951,7 +951,7 @@ vis.binds.hqwidgets = {
 
             // Set number value
             var text = null;
-            if (data.wType == 'number' && data.oid) {
+            if (data.wType === 'number' && data.oid) {
                 var html = ((value === undefined || value === null) ? data.min : value) + ((data.unit === undefined) ? '' : data.unit);
                 if (data.drive !== undefined) {
                     html += '<br><span class="vis-hq-drive">' + data.drive + '</span>%';
@@ -1006,12 +1006,12 @@ vis.binds.hqwidgets = {
                     }
                     $div.find('.vis-hq-middle').css('opacity', 0.7);
                     if (data.actual   !== undefined && data.actual !== null) {
-                        if (typeof data.actual != 'number') data.actual = parseFloat(data.actual) || 0;
+                        if (typeof data.actual !== 'number') data.actual = parseFloat(data.actual) || 0;
                         $div.find('.vis-hq-actual').html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
                     }
 
                     if (data.humidity !== undefined && data.humidity !== null) {
-                        if (typeof data.humidity != 'number') data.humidity = parseFloat(data.humidity) || 0;
+                        if (typeof data.humidity !== 'number') data.humidity = parseFloat(data.humidity) || 0;
                         $div.find('.vis-hq-humidity').html(Math.round(data.humidity || 0));
                     }
 
@@ -1066,7 +1066,7 @@ vis.binds.hqwidgets = {
 
             if (!isForce && data.oldValue !== undefined && data.oldValue == value && !data.ack) return;
 
-            if (data.wType == 'number') {
+            if (data.wType === 'number') {
                 value = parseFloat((value || 0).toString().replace(',', '.'));
             }
             data.oldValue = value;
@@ -1085,7 +1085,7 @@ vis.binds.hqwidgets = {
                  value === false))  {
                 data.state = 'normal';
             } else {
-                if (data.wType == 'number') {
+                if (data.wType === 'number') {
                     if (data.max) {
                         if (value > data.min) {
                             data.state = 'active';
@@ -1113,7 +1113,7 @@ vis.binds.hqwidgets = {
             }
 
             if (vis.editMode && data.testActive) {
-                data.state = (data.state == 'normal') ? 'active' : 'normal';
+                data.state = (data.state === 'normal') ? 'active' : 'normal';
             }
 
             if (value !== null && value !== undefined) {
@@ -1224,12 +1224,12 @@ vis.binds.hqwidgets = {
                     text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
                         (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
                 }
-                if (data.infoRight || data.wType == 'number' || data.hoursLastAction) {
+                if (data.infoRight || data.wType === 'number' || data.hoursLastAction) {
                     text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
                         (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span>';
 
                     if (data.hoursLastAction) {
-                        if (data.infoRight || data.wType == 'number') text += '<br>';
+                        if (data.infoRight || data.wType === 'number') text += '<br>';
                         text += '<span class="vis-hq-time"></span>';
                     }
 
@@ -1266,7 +1266,7 @@ vis.binds.hqwidgets = {
             // Place icon
             var img = null;
             if (data.iconName || data.iconOn) {
-                img = (data.state == 'normal') ? (data.iconName || ''): (data.iconOn || '');
+                img = (data.state === 'normal') ? (data.iconName || ''): (data.iconOn || '');
                 $div.find('.vis-hq-icon').html('<img class="vis-hq-icon-img" style="height: ' + data.btIconWidth + 'px; width: auto;" src="' + img + '"/>')
             } else {
                 $div.find('.vis-hq-icon').html('');
@@ -1290,7 +1290,7 @@ vis.binds.hqwidgets = {
                     $div.append('<div class="vis-hq-nodata"><span class="ui-icon ui-icon-cancel"></span></div>');
 
                     vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
-                        if (data.wType == 'number') {
+                        if (data.wType === 'number') {
                             data.value = parseFloat(newVal || 0);
                         } else {
                             data.value = newVal;
@@ -1298,14 +1298,15 @@ vis.binds.hqwidgets = {
                         data.ack   = vis.states[data.oid + '.ack'];
                         data.lc    = vis.states[data.oid + '.lc'];
 
-                        if (data.wType == 'number') {
+                        if (data.wType === 'number') {
                             if (newVal === false || newVal === 'false') data.value = data.min;
                             if (newVal === true  || newVal === 'true')  data.value = data.max;
                         }
+                        data.tempValue = undefined;
 
                         vis.binds.hqwidgets.button.changeState($div);
 
-                        if (data.wType == 'number') {
+                        if (data.wType === 'number') {
                             if (typeof data.value !== 'number') data.value = parseFloat(data.value) || 0;
                             $main.scala('value', (data.digits !== null) ? data.value.toFixed(data.digits) : data.value);
                         }
@@ -1364,7 +1365,7 @@ vis.binds.hqwidgets = {
             vis.binds.hqwidgets.button.changeState($div, true);
 
             // If dimmer or number
-            if (data.wType == 'number') {
+            if (data.wType === 'number') {
                 var scalaOptions;
                 if (data.oid) {
                     scalaOptions = {
@@ -1430,7 +1431,6 @@ vis.binds.hqwidgets = {
                     };
                 }
 
-
                 // show for temperature color depends on value
                 if (data.temperature) {
                     vis.binds.hqwidgets.button.showCenterInfo($div);
@@ -1476,13 +1476,13 @@ vis.binds.hqwidgets = {
                             // Protect against two events
                             if (vis.detectBounce(this)) return;
 
-                            data.value = (data.state == 'normal') ? data.max : data.min;
+                            data.value = (data.state === 'normal') ? data.max : data.min;
                             data.ack   = false;
 
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
 
                             if (data.oidTrue) {
-                                if (data.state != 'normal') {
+                                if (data.state !== 'normal') {
                                     vis.setValue(data.oidTrue,  data.oidTrueVal);
                                 } else {
                                     vis.setValue(data.oidFalse, data.oidFalseVal);
@@ -1490,7 +1490,7 @@ vis.binds.hqwidgets = {
                             }
 
                             if (data.urlTrue) {
-                                if (data.state != 'normal') {
+                                if (data.state !== 'normal') {
                                     vis.conn.httpGet(data.urlTrue)
                                 } else {
                                     vis.conn.httpGet(data.urlFalse);
@@ -1498,7 +1498,7 @@ vis.binds.hqwidgets = {
                             }
 
                             // show new state
-                            if (data.oid && data.oid != 'nothing_selected') {
+                            if (data.oid && data.oid !== 'nothing_selected') {
                                 vis.setValue(data.oid, data.value);
                             }
                         });
@@ -1515,7 +1515,7 @@ vis.binds.hqwidgets = {
 
                             if (data.oidTrue) vis.setValue(data.oidTrue,  data.oidTrueVal);
                             if (data.urlTrue) vis.conn.httpGet(data.urlTrue);
-                            if (data.oid && data.oid != 'nothing_selected') vis.setValue(data.oid, data.value);
+                            if (data.oid && data.oid !== 'nothing_selected') vis.setValue(data.oid, data.value);
                         });
                         $main.on('mouseup touchend', function (e) {
 
@@ -1528,7 +1528,7 @@ vis.binds.hqwidgets = {
 
                             if (data.oidFalse) vis.setValue(data.oidFalse, data.oidFalseVal);
                             if (data.urlFalse) vis.conn.httpGet(data.urlFalse);
-                            if (data.oid && data.oid != 'nothing_selected') vis.setValue(data.oid, data.value);
+                            if (data.oid && data.oid !== 'nothing_selected') vis.setValue(data.oid, data.value);
 
                             vis.binds.hqwidgets.contextMenu(true);
                         });
@@ -1575,8 +1575,8 @@ vis.binds.hqwidgets = {
             }
             var _data = {wid: wid, view: view, wType: wType};
             for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
-                if (a[0] != '_') {
+                if (!data.hasOwnProperty(a) || typeof data[a] === 'function') continue;
+                if (a[0] !== '_') {
                     _data[a] = data[a];
                 }
             }
@@ -1590,7 +1590,7 @@ vis.binds.hqwidgets = {
             data.styleNormal    = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
             data.styleActive    = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
             data.digits         = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
-            if (typeof data.step == 'string') data.step = data.step.replace(',', '.');
+            if (typeof data.step === 'string') data.step = data.step.replace(',', '.');
             data.step           = parseFloat(data.step || 1);
             data.is_comma       = (data.is_comma === 'true' || data.is_comma === true);
             data.readOnly       = (data.readOnly === 'true' || data.readOnly === true);
@@ -1599,7 +1599,7 @@ vis.binds.hqwidgets = {
             data.infoBackground = data.infoBackground || 'rgba(182,182,182,0.6)';
             data.pushButton     = (data.pushButton === 'true' || data.pushButton === true);
 
-            if (data.wType == 'number') {
+            if (data.wType === 'number') {
                 data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
                 data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : ((data.max !== undefined) ? parseFloat(data.max) : 100));
             } else {
@@ -1683,14 +1683,14 @@ vis.binds.hqwidgets = {
                 var bbWidth = Math.round(bWidth / 3);
                 if (bbWidth < 1) bbWidth = 1;
                 div5 += '" style="border-width: ' + bbWidth + 'px;';
-                if (options.type == 'left' || options.type == 'right') {
+                if (options.type === 'left' || options.type === 'right') {
                     div5 += 'top: 50%;	width: ' + bWidth + 'px; height: 15%;'
-                } else if (options.type == 'top' || options.type == 'bottom') {
+                } else if (options.type === 'top' || options.type === 'bottom') {
                     div5 += 'left: 50%; height: ' + bWidth + 'px; width: 15%;'
                 }
-                if (options.type == 'left') {
+                if (options.type === 'left') {
                     div5 += 'left: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
-                } else if (options.type == 'bottom') {
+                } else if (options.type === 'bottom') {
                     div5 += 'top: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);'
                 }
 
@@ -1708,7 +1708,7 @@ vis.binds.hqwidgets = {
                         'transform: rotate(DDDdeg);';
 
                     var w = Math.round(bbWidth + bWidth / 2);
-                    if (options.type == 'right' || options.type == 'bottom') {
+                    if (options.type === 'right' || options.type === 'bottom') {
                         if (hanldePos == 1 || hanldePos === true || hanldePos === 'true' || hanldePos === 'open' || hanldePos === 'opened') {
                             div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '-90');
                         } else
@@ -1938,8 +1938,8 @@ vis.binds.hqwidgets = {
             }
             var _data = {wid: wid, view: view};
             for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
-                if (a[0] != '_') _data[a] = data[a];
+                if (!data.hasOwnProperty(a) || typeof data[a] === 'function') continue;
+                if (a[0] !== '_') _data[a] = data[a];
             }
             data = _data;
 
@@ -1949,7 +1949,7 @@ vis.binds.hqwidgets = {
             data.digits       = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
             data.noAnimate    = (data.noAnimate === 'true' || data.noAnimate === true || data.noAnimate == 1);
 
-            if (!data.border_width && data.border_width != '0') data.border_width = 3;
+            if (!data.border_width && data.border_width !== '0') data.border_width = 3;
             data.border_width = parseInt(data.border_width, 10);
 
             $div.data('data',  data);
@@ -2086,21 +2086,21 @@ vis.binds.hqwidgets = {
                     if (data.noAnimate || isFirst) {
                         $div.find('.vis-hq-door-sheet').css({width: '80%'});
                         $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).css({width: '20%'});
-                        $div.find('.vis-hq-door-handle').css({left: (data.door_type != 'right') ? '60%': '30%'});
+                        $div.find('.vis-hq-door-handle').css({left: (data.door_type !== 'right') ? '60%': '30%'});
                     } else {
                         $div.find('.vis-hq-door-sheet').animate({width: '80%'}, 500);
                         $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).animate({width: '20%'}, 500);
-                        $div.find('.vis-hq-door-handle').animate({left: (data.door_type != 'right') ? '60%': '30%'}, 500);
+                        $div.find('.vis-hq-door-handle').animate({left: (data.door_type !== 'right') ? '60%': '30%'}, 500);
                     }
                 } else {
                     if (data.noAnimate || isFirst) {
                         $div.find('.vis-hq-door-sheet').css({width: '100%'});
                         $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).css({width: 0});
-                        $div.find('.vis-hq-door-handle').css({left: (data.door_type != 'right') ? '85%': '15%'});
+                        $div.find('.vis-hq-door-handle').css({left: (data.door_type !== 'right') ? '85%': '15%'});
                     } else {
                         $div.find('.vis-hq-door-sheet').animate({width: '100%'}, 500);
                         $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).animate({width: 0});
-                        $div.find('.vis-hq-door-handle').animate({left: (data.door_type != 'right') ? '85%': '15%'}, 500);
+                        $div.find('.vis-hq-door-handle').animate({left: (data.door_type !== 'right') ? '85%': '15%'}, 500);
                     }
                 }
             }
@@ -2116,12 +2116,12 @@ vis.binds.hqwidgets = {
                     text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
                         (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
                 }
-                if (data.infoRight || data.wType == 'number' || data.hoursLastAction) {
+                if (data.infoRight || data.wType === 'number' || data.hoursLastAction) {
                     text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
                         (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span>';
 
                     if (data.hoursLastAction) {
-                        if (data.infoRight || data.wType == 'number') text += '<br>';
+                        if (data.infoRight || data.wType === 'number') text += '<br>';
                         text += '<span class="vis-hq-time"></span>';
                     }
 
@@ -2136,7 +2136,7 @@ vis.binds.hqwidgets = {
                 $div.append(text);
             }
             $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).css({background: data.emptyColor || '#515151'});
-            if (data.door_type == 'right') {
+            if (data.door_type === 'right') {
                 $div.find('.vis-hq-door-handle').css({left: '15%'});
             } else {
                 $div.find('.vis-hq-door-handle').css({left: '85%'});
@@ -2161,12 +2161,12 @@ vis.binds.hqwidgets = {
             }
             var _data = {wid: wid, view: view};
             for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
-                if (a[0] != '_') _data[a] = data[a];
+                if (!data.hasOwnProperty(a) || typeof data[a] === 'function') continue;
+                if (a[0] !== '_') _data[a] = data[a];
             }
             data = _data;
 
-            if (!data.border_width && data.border_width != '0') data.border_width = 3;
+            if (!data.border_width && data.border_width !== '0') data.border_width = 3;
             data.border_width = parseInt(data.border_width, 10);
             if (data['oid-battery'])  data.battery  = vis.states.attr(data['oid-battery']  + '.val');
             if (data['oid-signal'])   data.signal   = vis.states.attr(data['oid-signal']   + '.val');
@@ -2267,7 +2267,7 @@ vis.binds.hqwidgets = {
 
                 $big.css({top: ($div.height() - $big.height()) / 2, left: ($div.width()  - $big.width()) / 2});
 
-                if (data.oid && data.oid != 'nothing_selected') {
+                if (data.oid && data.oid !== 'nothing_selected') {
                     if (data.openValue === undefined || data.openValue === null || data.openValue === '') {
                         data.openValue = true;
                     } else {
@@ -2334,7 +2334,7 @@ vis.binds.hqwidgets = {
                     }
                 }
             }
-            if (!data.oid || data.oid == 'nothing_selected' || vis.binds.hqwidgets.lock.isFalse(vis.states.attr(data.oid  + '.val'), data.closeValue, data.openValue)) {
+            if (!data.oid || data.oid === 'nothing_selected' || vis.binds.hqwidgets.lock.isFalse(vis.states.attr(data.oid  + '.val'), data.closeValue, data.openValue)) {
                 $div.removeClass(data.styleActive).addClass(data.styleNormal);
                 $img.attr('src', data.closedIcon || '');
             } else {
@@ -2372,8 +2372,8 @@ vis.binds.hqwidgets = {
             }
             var _data = {wid: wid, view: view};
             for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] == 'function') continue;
-                if (a[0] != '_') {
+                if (!data.hasOwnProperty(a) || typeof data[a] === 'function') continue;
+                if (a[0] !== '_') {
                     _data[a] = data[a];
                 }
             }
@@ -2434,7 +2434,7 @@ vis.binds.hqwidgets = {
             $scalaInput.attr('data-linecap',     (settings.linecap === 'true' || settings.linecap === true) ? 'round' : 'butt');
             $scalaInput.show();
 
-            $scalaInput.knob({
+            $scalaInput.knobHQ({
                 width:   parseInt($div.width(),  10),
                 height:  parseInt($div.height(), 10),
                 release: function () {
@@ -2523,7 +2523,7 @@ vis.binds.hqwidgets = {
                 checkboxColorOn: data.checkboxColorOn || data.checkboxColor || 'orange',
                 readOnly:        vis.editMode         || data.readOnly || false
             };
-            if (settings.checkboxSize == 'small') {
+            if (settings.checkboxSize === 'small') {
                 $div.css({width: '108px', height: '34px'});
             }
 
@@ -2531,7 +2531,7 @@ vis.binds.hqwidgets = {
             var $input = $div.find('input');
 
             var $shineCheckbox = $input.shineCheckbox(settings);
-            if (settings.oid && settings.oid != 'nothing_selected') {
+            if (settings.oid && settings.oid !== 'nothing_selected') {
                 $shineCheckbox.shineCheckbox('value', vis.states.attr(settings.oid + '.val'));
                 vis.states.bind(settings.oid + '.val', function (e, newVal, oldVal) {
                     $shineCheckbox.shineCheckbox('value', newVal);
@@ -2719,44 +2719,44 @@ if (vis.editMode) {
                 widget.style.height = 45;
                 widget.style.width  = 45;
                 for (var opt in hqoptions) {
-                    if (opt == 'width') {
+                    if (opt === 'width') {
                         widget.style.width = hqoptions.width || 45;
-                    } else if (opt == 'height') {
+                    } else if (opt === 'height') {
                         widget.style.height = hqoptions.height || 45;
-                    } else if (opt == 'radius') {
+                    } else if (opt === 'radius') {
                         widget.style['border-radius'] = hqoptions.radius + 'px';
-                    } else if (opt == 'zindex') {
+                    } else if (opt === 'zindex') {
                         widget.style['z-index'] = hqoptions.zindex;
-                    } else if (opt == 'iconName') {
+                    } else if (opt === 'iconName') {
                         widget.data.btIconWidth = 32;
-                        if (hqoptions.iconName == 'Temperature.png') {
+                        if (hqoptions.iconName === 'Temperature.png') {
                             widget.data.iconName = 'img/Heating.png'
                         } else
-                        if (hqoptions.iconName == 'Lamp.png') {
+                        if (hqoptions.iconName === 'Lamp.png') {
                             widget.data.iconName = 'img/Lamp.png'
                         } else
-                        if (hqoptions.iconName && hqoptions.iconName.indexOf('http://') == -1 && hqoptions.iconName[0] != '/') {
+                        if (hqoptions.iconName && hqoptions.iconName.indexOf('http://') == -1 && hqoptions.iconName[0] !== '/') {
                             widget.data.iconName = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconName;
                         } else {
                             widget.data.iconName = hqoptions.iconName;
                         }
-                    } else if (opt == 'iconOn') {
-                        if (hqoptions.iconOn == 'Temperature.png') {
+                    } else if (opt === 'iconOn') {
+                        if (hqoptions.iconOn === 'Temperature.png') {
                             widget.data.iconOn = 'img/Heating.png'
                         } else
-                        if (hqoptions.iconOn == 'Lamp.png') {
+                        if (hqoptions.iconOn === 'Lamp.png') {
                             widget.data.iconOn = 'img/Lamp.png'
                         } else
-                        if (hqoptions.iconOn && hqoptions.iconOn.indexOf('http://') == -1 && hqoptions.iconOn[0] != '/') {
+                        if (hqoptions.iconOn && hqoptions.iconOn.indexOf('http://') == -1 && hqoptions.iconOn[0] !== '/') {
                             widget.data.iconOn = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconOn;
                         } else {
                             widget.data.iconOn = hqoptions.iconOn;
                         }
-                    } else if (opt == 'title') {
+                    } else if (opt === 'title') {
                         widget.data.descriptionLeft = hqoptions.title;
-                    } else if (opt == 'room') {
+                    } else if (opt === 'room') {
                         widget.data.descriptionLeft += '<br>' + hqoptions.room;
-                    } else if (opt == 'windowConfig') {
+                    } else if (opt === 'windowConfig') {
                         var parts = hqoptions.windowConfig.split(',');
                         widget.data.slide_count = parts.length || 1;
                         for (var p = 0; p < parts.length; p++) {
@@ -2807,11 +2807,12 @@ if (vis.editMode) {
         var obj = vis.objects[newId];
         var changed = [];
         // If it is real object and SETPOINT
-        if (obj && obj.common && obj.type == 'state') {
+        if (obj && obj.common && obj.type === 'state') {
             var roles = [];
 
             // If some attributes are not set
             for (var field in fields) {
+                if (!fields.hasOwnProperty(field)) continue;
                 if (!vis.views[view].widgets[widgetID].data[field]) roles.push(fields[field]);
             }
 
@@ -2820,8 +2821,10 @@ if (vis.editMode) {
                 if (result) {
                     var name;
                     for (var r in result) {
+                        if (!result.hasOwnProperty(r)) continue;
                         name = null;
                         for (field in fields) {
+                            if (!fields.hasOwnProperty(field)) continue;
                             if (fields[field] == r) {
                                 name = field;
                                 break;

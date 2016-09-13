@@ -8,6 +8,8 @@
  * Copyright (c) 2012 Anthony Terrien
  * Under MIT License (http://www.opensource.org/licenses/mit-license.php)
  *
+ * small modifications by bluefox in this version
+ *
  * Thanks to vor, eskimoblood, spiffistan, FabrizioC
  */
 (function (factory) {
@@ -804,7 +806,7 @@
         };
     };
 
-    $.fn.dial = $.fn.knob = function (o) {
+    $.fn.dial = $.fn.knobHQ = function (o) {
         return this.each(
             function () {
                 var d = new k.Dial();

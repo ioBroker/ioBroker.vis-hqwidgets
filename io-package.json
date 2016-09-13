@@ -1,8 +1,13 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "1.0.3",
+        "version": "1.0.4",
 		"news": {
+			"1.0.4": {
+				"en": "fix problem in inner temperature if knob widget set installed",
+				"de": "Korregiere das Problem in inner temp, falls Knob ist auch installiert",
+				"ru": "Исправлена совместная работа inner temp виджета и knob виджетов"
+			},
 			"1.0.3": {
 				"en": "fix initial value of shutter if inverted",
 				"de": "fix initial value of shutter if inverted",

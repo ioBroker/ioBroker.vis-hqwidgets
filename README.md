@@ -14,6 +14,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.0.4 (2016-09-13)
+* (bluefox) fix problem in inner temperature if knob widget set installed
+
 ### 1.0.3 (2016-05-30)
 * (bluefox) fix initial value of shutter if inverted
 

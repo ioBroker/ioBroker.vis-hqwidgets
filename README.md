@@ -16,6 +16,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 ## Changelog
 ### 1.0.4 (2016-09-13)
 * (bluefox) fix problem in inner temperature if knob widget set installed
+* (Jens Maus) removed all special IE5/6 CSS hacky statements with prepending asterisk (*) characters which are just producing CSS warnings on browsers like Safari.
 
 ### 1.0.3 (2016-05-30)
 * (bluefox) fix initial value of shutter if inverted

@@ -14,6 +14,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.0.5 (2016-09-14)
+* (bluefox) show "last action" fixed
+
 ### 1.0.4 (2016-09-13)
 * (bluefox) fix problem in inner temperature if knob widget set installed
 * (Jens Maus) removed all special IE5/6 CSS hacky statements with prepending asterisk (*) characters which are just producing CSS warnings on browsers like Safari.

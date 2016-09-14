@@ -1,8 +1,13 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "1.0.4",
+        "version": "1.0.5",
 		"news": {
+			"1.0.5": {
+				"en": "show last action fixed",
+				"de": "Korregiere letze Änderungszeit",
+				"ru": "Исправлена ошибка в инфо о последнем изменении"
+			},
 			"1.0.4": {
 				"en": "fix problem in inner temperature if knob widget set installed",
 				"de": "Korregiere das Problem in inner temp, falls Knob ist auch installiert",

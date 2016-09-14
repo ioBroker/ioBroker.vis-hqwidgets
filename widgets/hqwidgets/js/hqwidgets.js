@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.0.4"
+    version: "1.0.5"
 
     Copyright 6'2014-2016 bluefox<dogafox@gmail.com>
 
@@ -105,7 +105,7 @@
                         if (settings.unit !== null && val.substring(val.length - settings.unit.length, val.length) === settings.unit) {
                             val = val.substring(0, val.length - settings.unit.length);
                         }
-                        if (settings.change && $knobDiv._oldValue != val) settings.change(val, noAck);
+                        if (settings.change/* && $knobDiv._oldValue != val*/) settings.change(val, noAck);
                     }
                 },
                 cancel:  function () {
@@ -849,7 +849,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.0.4",
+    version: "1.0.5",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -938,7 +938,7 @@ vis.binds.hqwidgets = {
 
                 } else {
                     // Show static date
-                    time = vis.binds.basic.formatDate(data.lc, true, data.format_date);
+                    time = vis.binds.basic.formatDate(data.lc, data.format_date);
                     $div.find('.vis-hq-time').html(time);
                 }
             }
@@ -1373,7 +1373,7 @@ vis.binds.hqwidgets = {
                             //console.log(data.wid + ' filtered out:' + value + '(' + notAck + ')');
                             if (!notAck) return;
 
-                            if (data.readOnly || (data.value || 0).toString() == value.toString()) return;
+                            if (data.readOnly || (data.value || 0).toString() === value.toString()) return;
 
                             data.value = parseFloat(value.toString().replace(',', '.'));
 

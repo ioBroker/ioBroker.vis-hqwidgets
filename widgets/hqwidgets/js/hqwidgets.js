@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.0.5"
+    version: "1.0.6"
 
     Copyright 6'2014-2016 bluefox<dogafox@gmail.com>
 
@@ -263,7 +263,6 @@
                     var val;
                     if (f.toString() == arg) {
                         val = f > 0;
-                        $this.prop('checked', val).trigger('change');
                     } else {
                         val = arg === 'true' || arg === true;
                     }
@@ -816,7 +815,9 @@ if (vis.editMode) {
         "openDoorIcon":     {"en": "Open Door-Icon",     "de": "Tür Auf-Bild",          "ru": "Открыть дверь-Картинка"},
         "openDoorValue":    {"en": "Open Door-Value",    "de": "Tür Auf-Wert",          "ru": "Открыть дверь-Значение"},
         "openDoorStyle":    {"en": "Open Door-Style",    "de": "Tür Auf-Still",         "ru": "Открыть дверь-Стиль"},
-        "showTimeout":      {"en": "Popup timeout",      "de": "Popup-Timeout",         "ru": "Popup таймаут"}
+        "showTimeout":      {"en": "Popup timeout",      "de": "Popup-Timeout",         "ru": "Popup таймаут"},
+        "val_false":        {"en": "Off value",          "de": "Aus-Wert",              "ru": "Выкл.-Значение"},
+        "val_true":         {"en": "On value",           "de": "An-Wert",               "ru": "Вкл.-Значение"}
     });
 }
 
@@ -849,7 +850,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.0.5",
+    version: "1.0.6",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -2470,10 +2471,10 @@ vis.binds.hqwidgets = {
                 fgColor:          settings.color,
                 inputColor:       settings.color,
                 colorize:         settings.colorize ? settings.colorize : undefined,
-                min:              settings.min,
-                max:              settings.max,
+                min:              parseFloat(settings.min),
+                max:              parseFloat(settings.max),
                 step:             settings.step,
-               cursor:           settings.cursor,
+                cursor:           settings.cursor,
                 rotation:         settings.anticlockwise ? 'anticlockwise' : 'clockwise'
 
             });
@@ -2504,6 +2505,16 @@ vis.binds.hqwidgets = {
         styles: [
             'orange', 'blue', 'green', 'grey'
         ],
+        isTrue: function (value, max) {
+            if (value === 'true')  value = true;
+            if (value === 'false') value = false;
+            if (value == parseFloat(value)) value = parseFloat(value);
+            if (max === true && typeof value === 'number') {
+                value = value > 0;
+            }
+
+            return value == max;
+         },
         init: function (wid, view, data) {
             vis.binds.hqwidgets.showVersion();
 
@@ -2514,6 +2525,13 @@ vis.binds.hqwidgets = {
                 }, 100);
                 return;
             }
+            if (data.val_false === undefined || data.val_false === 'false') data.val_false = false;
+            if (data.val_false === 'true') data.val_false = true;
+            if (data.val_false == parseFloat(data.val_false)) data.val_false = parseFloat(data.val_false);
+
+            if (data.val_true === undefined || data.val_true === 'true') data.val_true = true;
+            if (data.val_true === 'false')   data.val_true = false;
+            if (data.val_true == parseFloat(data.val_true)) data.val_true = parseFloat(data.val_true);
 
             var settings = {
                 oid:             data.oid             || null,
@@ -2521,10 +2539,12 @@ vis.binds.hqwidgets = {
                 checkboxSize:    data.checkboxSize    || 'big',
                 checkboxColor:   data.checkboxColor   || 'grey',
                 checkboxColorOn: data.checkboxColorOn || data.checkboxColor || 'orange',
-                readOnly:        vis.editMode         || data.readOnly || false
+                readOnly:        vis.editMode         || data.readOnly || false,
+                min:             data.val_false,
+                max:             data.val_true
             };
             if (settings.checkboxSize === 'small') {
-                $div.css({width: '108px', height: '34px'});
+                $div.css({width: 108, height: 34});
             }
 
             if (!$div.find('input').length) $div.append('<input type="checkbox"/>');
@@ -2532,20 +2552,20 @@ vis.binds.hqwidgets = {
 
             var $shineCheckbox = $input.shineCheckbox(settings);
             if (settings.oid && settings.oid !== 'nothing_selected') {
-                $shineCheckbox.shineCheckbox('value', vis.states.attr(settings.oid + '.val'));
+                $shineCheckbox.shineCheckbox('value', vis.binds.hqwidgets.checkbox.isTrue(vis.states.attr(settings.oid + '.val'), settings.max));
+                $shineCheckbox.data('update', false);
                 vis.states.bind(settings.oid + '.val', function (e, newVal, oldVal) {
-                    $shineCheckbox.shineCheckbox('value', newVal);
+                    $shineCheckbox.shineCheckbox('value', vis.binds.hqwidgets.checkbox.isTrue(newVal, settings.max));
                 });
-
                 $div.find('input').change(function (evt) {
                     if ($(this).data('update')) {
                         $(this).data('update', false);
                     } else {
-                        vis.setValue(settings.oid, $(this).prop('checked'));
+                        vis.setValue(settings.oid, $(this).prop('checked') ? settings.max : settings.min);
                     }
                 });
             } else {
-                $shineCheckbox.shineCheckbox('value', settings.staticValue);
+                $shineCheckbox.shineCheckbox('value', vis.binds.hqwidgets.checkbox.isTrue(settings.staticValue, settings.max));
             }
         }
     },

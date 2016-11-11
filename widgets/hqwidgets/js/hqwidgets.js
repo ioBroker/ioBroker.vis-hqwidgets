@@ -17,7 +17,7 @@
                 return this.each(function () {
                     var $this = $(this);
                     var $input = $this.find('.scalaInput');
-                    if ($input.val().toString() != arg.toString()) {
+                    if ($input.val().toString() !== arg.toString()) {
                         $this.find('.scalaInput').val(arg).trigger('change');
                     }
                 });
@@ -330,7 +330,7 @@
             // Do something to each element here.
             var $this = $(this);
             options = options || {};
-            effect = effect || 'waves';
+            effect  = effect || 'waves';
 
             if (options.speed != 1 && options.speed != 2 && options.speed != 2) options.speed = 1;
 
@@ -397,7 +397,7 @@
             setTimeout(function () {
                 $div.removeClass('animated' + options.speed + 's ' + options.effect).css({opacity: 1});
                 if (callback) callback();
-            }, (options.speed == '05') ? 550 : parseInt(options.speed, 10) * 1000 + 50);
+            }, (options.speed === '05') ? 550 : parseInt(options.speed, 10) * 1000 + 50);
         });
     };
     $.fn.popupHide  = function ($div, options, callback) {
@@ -425,7 +425,7 @@
                 $div.removeClass('animated' + options.speed + 's ' + options.effect);
                 $div.hide();
                 if (callback) callback();
-            }, (options.speed == '05') ? 550 : parseInt(options.speed, 10) * 1000 + 50);
+            }, (options.speed === '05') ? 550 : parseInt(options.speed, 10) * 1000 + 50);
         });
     };
 
@@ -447,7 +447,7 @@
 
                 if (onChange !== undefined) {
                     if (options.invert) onChange = options.max - onChange + options.min;
-                    $this.slider("value", onChange);
+                    $this.slider('value', onChange);
                 }
 
                 if (hideTimer) clearTimeout(hideTimer);
@@ -817,7 +817,13 @@ if (vis.editMode) {
         "openDoorStyle":    {"en": "Open Door-Style",    "de": "Tür Auf-Still",         "ru": "Открыть дверь-Стиль"},
         "showTimeout":      {"en": "Popup timeout",      "de": "Popup-Timeout",         "ru": "Popup таймаут"},
         "val_false":        {"en": "Off value",          "de": "Aus-Wert",              "ru": "Выкл.-Значение"},
-        "val_true":         {"en": "On value",           "de": "An-Wert",               "ru": "Вкл.-Значение"}
+        "val_true":         {"en": "On value",           "de": "An-Wert",               "ru": "Вкл.-Значение"},
+        "invert":           {"en": "Invert",             "de": "Invertieren",           "ru": "Инвертировать"},
+        "infoLeftPaddingLeft":   {"en": "Left padding (left)",   "de": "Linker Abstand (Links)", "ru": "Отступ слева (левый текст)"},
+        "infoLeftPaddingRight":  {"en": "Right padding (left",  "de": "Rechter Abstand (Links)", "ru": "Отступ справа (левый текст)"},
+        "infoRightPaddingLeft":  {"en": "Left padding (right)",  "de": "Linker Abstand (Rechts)", "ru": "Отступ слева (правый текст)"},
+        "infoRightPaddingRight": {"en": "Right padding (right)", "de": "Rechter Abstand (Rechts)", "ru": "Отступ справа (правый текст)"},
+        "valveBinary":      {"en": "Valve only On/Off",  "de": "Ventil nur An/Aus",     "ru": "Вентиль только Откр/Закр"}
     });
 }
 
@@ -831,7 +837,9 @@ $.extend(true, systemDictionary, {
     },
     "yesterday":              {"en": "yesterday", "de": "gestern", "ru": "вчера"},
     "for&nbsp;%s&nbsp;hours": {"en": "for&nbsp;%s&nbsp;hours", "de": "vor&nbsp;%s&nbsp;Stunden", "ru": "%s&nbsp;часов назад"},
-    "Chart":                  {"en": "Chart",     "de": "Grafik",  "ru": "График"}
+    "Chart":                  {"en": "Chart",     "de": "Grafik",  "ru": "График"},
+    "opened":                 {"en": "opened",      "de": "auf",     "ru": "откр."},
+    "closed":                 {"en": "closed",    "de": "zu",      "ru": "закр."}
 });
 // widget can has following parts:
 // left info (descriptionLeft)
@@ -850,7 +858,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.0.6",
+    version: "1.0.7",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -955,7 +963,8 @@ vis.binds.hqwidgets = {
             if (data.wType === 'number' && data.oid) {
                 var html = ((value === undefined || value === null) ? data.min : value) + ((data.unit === undefined) ? '' : data.unit);
                 if (data.drive !== undefined) {
-                    html += '<br><span class="vis-hq-drive">' + data.drive + '</span>%';
+                    html += '<br><span class="vis-hq-drive">' + data.drive + '</span>';
+                    if (!data.valveBinary) html += '%';
                 }
                 text = $div.find('.vis-hq-rightinfo-text').html(html);
             }
@@ -1216,17 +1225,27 @@ vis.binds.hqwidgets = {
 
             var data = $div.data('data');
             data.state = data.state || 'normal';
-            var radius = $div.css('borderRadius') || vis.views[data.view].widgets[data.wid].style['border-radius'];
+            var radius = $div.css('borderTopLeftRadius') || vis.views[data.view].widgets[data.wid].style['border-radius'];
 
             // place left-info, right-info, caption and image
             if (!$div.find('.vis-hq-main').length) {
                 var text = '';
                 if (data.descriptionLeft) {
-                    text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
+                    if (data.infoLeftPaddingLeft  === undefined || data.infoLeftPaddingLeft  === null) data.infoLeftPaddingLeft = '15px';
+                    if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null) data.infoLeftPaddingRight = '50px';
+                    if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/))  data.infoLeftPaddingLeft  = data.infoLeftPaddingLeft  + 'px';
+                    if (!data.infoLeftPaddingRight.match(/px$|rem$|em$/)) data.infoLeftPaddingRight = data.infoLeftPaddingRight + 'px';
+
+                    text += '<div class="vis-hq-leftinfo" style="padding-left: ' + data.infoLeftPaddingLeft + '; padding-right: ' + data.infoLeftPaddingRight + '; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
                         (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
                 }
+                console.log('a');
                 if (data.infoRight || data.wType === 'number' || data.hoursLastAction) {
-                    text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
+                    if (data.infoRightPaddingLeft  === undefined || data.infoRightPaddingLeft  === null) data.infoRightPaddingLeft = 0;
+                    if (data.infoRightPaddingRight === undefined || data.infoRightPaddingRight === null) data.infoRightPaddingRight = '15px';
+                    if (!data.infoRightPaddingRight.match(/px$|rem$|em$/)) data.infoRightPaddingRight = data.infoRightPaddingRight + 'px';
+
+                    text += '<div class="vis-hq-rightinfo" style="padding-right: ' + data.infoRightPaddingRight + '; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
                         (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span>';
 
                     if (data.hoursLastAction) {
@@ -1255,14 +1274,14 @@ vis.binds.hqwidgets = {
 
             // Get the border radius from parent
             var $main = $div.find('.vis-hq-main');
-            $main.css({borderRadius: radius});
+            $main.css({'border-radius': radius});
             $div.find('.vis-hq-text-caption').html(data.caption || '');
 
             var width = $div.width();
             var offset = width - 20 - parseInt(radius, 10);
             if (offset < width / 2) offset = width / 2;
             $div.find('.vis-hq-leftinfo').css({right: offset + 'px'});
-            $div.find('.vis-hq-rightinfo').css({'padding-left': 5 + (width / 2) + 'px'});
+            $div.find('.vis-hq-rightinfo').css({'padding-left': (5 + (width / 2) + (parseInt(data.infoRightPaddingLeft, 10) || 0)) + 'px'});
 
             // Place icon
             var img = null;
@@ -1284,82 +1303,109 @@ vis.binds.hqwidgets = {
                 vis.binds.hqwidgets.button.centerImage($div, data);
             }
 
+            function onChange(e, newVal, oldVal) {
+                if (e.type === data.oid + '.val') {
+                    if (data.wType === 'number') {
+                        data.value = parseFloat(newVal || 0);
+                    } else {
+                        data.value = newVal;
+                    }
+                    data.ack   = vis.states[data.oid + '.ack'];
+                    data.lc    = vis.states[data.oid + '.lc'];
+
+                    if (data.wType === 'number') {
+                        if (newVal === false || newVal === 'false') data.value = data.min;
+                        if (newVal === true  || newVal === 'true')  data.value = data.max;
+                    }
+                        data.tempValue = undefined;
+
+                    vis.binds.hqwidgets.button.changeState($div);
+
+                    if (data.wType === 'number') {
+                        if (typeof data.value !== 'number') data.value = parseFloat(data.value) || 0;
+                        $main.scala('value', (data.digits !== null) ? data.value.toFixed(data.digits) : data.value);
+                    }
+                    return;
+                } else if (e.type === data.oid + '.ack') {
+                    data.ack   = vis.states[data.oid + '.ack'];
+                    data.lc    = vis.states[data.oid + '.lc'];
+
+                    vis.binds.hqwidgets.button.changeState($div);
+                    return;
+                } else if (e.type === data['oid-working'] + '.val') {
+                    data.working = newVal;
+                } else if (e.type === data['oid-battery'] + '.val') {
+                    data.battery = newVal;
+                } else if (e.type === data['oid-signal'] + '.val') {
+                    data.signal = newVal;
+                } else if (e.type === data['oid-humidity'] + '.val') {
+                    data.humidity = newVal;
+                } else if (e.type === data['oid-actual'] + '.val') {
+                    data.actual = newVal;
+                } else if (e.type === data['oid-drive'] + '.val') {
+                    if (data.valveBinary === 'true' || data.valveBinary === true) {
+                        if (newVal === null || newVal === undefined) newVal = 0;
+                        if (newVal === 'true') {
+                            newVal = true;
+                        } else if (parseFloat(newVal).toString() === newVal.toString()) {
+                            newVal = !!parseFloat(newVal);
+                        } else if (newVal === 'false') {
+                            newVal = false;
+                        }
+                        newVal = newVal ? _('opened') : _('closed');
+                    }
+
+                    data.drive = newVal;
+                }
+                vis.binds.hqwidgets.button.changeState($div, false, true);
+            }
+
             // action
             if (1 || !vis.editMode) {
+
+                var bound = [];
                 if (data.oid) {
 
                     $div.append('<div class="vis-hq-nodata"><span class="ui-icon ui-icon-cancel"></span></div>');
 
-                    vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
-                        if (data.wType === 'number') {
-                            data.value = parseFloat(newVal || 0);
-                        } else {
-                            data.value = newVal;
-                        }
-                        data.ack   = vis.states[data.oid + '.ack'];
-                        data.lc    = vis.states[data.oid + '.lc'];
-
-                        if (data.wType === 'number') {
-                            if (newVal === false || newVal === 'false') data.value = data.min;
-                            if (newVal === true  || newVal === 'true')  data.value = data.max;
-                        }
-                        data.tempValue = undefined;
-
-                        vis.binds.hqwidgets.button.changeState($div);
-
-                        if (data.wType === 'number') {
-                            if (typeof data.value !== 'number') data.value = parseFloat(data.value) || 0;
-                            $main.scala('value', (data.digits !== null) ? data.value.toFixed(data.digits) : data.value);
-                        }
-                    });
-                    vis.states.bind(data.oid + '.ack', function (e, newVal, oldVal) {
-                        data.ack   = vis.states[data.oid + '.ack'];
-                        data.lc    = vis.states[data.oid + '.lc'];
-
-                        vis.binds.hqwidgets.button.changeState($div);
-                    });
+                    vis.states.bind(data.oid + '.val', onChange);
+                    vis.states.bind(data.oid + '.ack', onChange);
+                    bound.push(data.oid + '.val');
+                    bound.push(data.oid + '.ack');
                 }
                 if (data['oid-working']) {
-                    vis.states.bind(data['oid-working'] + '.val', function (e, newVal, oldVal) {
-                        data.working = newVal;
-                        vis.binds.hqwidgets.button.changeState($div, false, true);
-                    });
+                    vis.states.bind(data['oid-working'] + '.val', onChange);
+                    bound.push(data['oid-working'] + '.val');
                 }
 
                 if (data['oid-battery']) {
-                    vis.states.bind(data['oid-battery'] + '.val', function (e, newVal, oldVal) {
-                        data.battery = newVal;
-                        vis.binds.hqwidgets.button.changeState($div, false, true);
-                    });
+                    vis.states.bind(data['oid-battery'] + '.val', onChange);
+                    bound.push(data['oid-battery'] + '.val');
                 }
 
                 if (data['oid-signal']) {
-                    vis.states.bind(data['oid-signal'] + '.val', function (e, newVal, oldVal) {
-                        data.signal = newVal;
-                        vis.binds.hqwidgets.button.changeState($div, false, true);
-                    });
+                    vis.states.bind(data['oid-signal'] + '.val', onChange);
+                    bound.push(data['oid-signal'] + '.val');
                 }
 
                 if (data['oid-humidity']) {
-                    vis.states.bind(data['oid-humidity'] + '.val', function (e, newVal, oldVal) {
-                        data.humidity = newVal;
-                        vis.binds.hqwidgets.button.changeState($div, false, true);
-                    });
+                    vis.states.bind(data['oid-humidity'] + '.val', onChange);
+                    bound.push(data['oid-humidity'] + '.val');
                 }
 
                 if (data['oid-actual']) {
-                    vis.states.bind(data['oid-actual'] + '.val', function (e, newVal, oldVal) {
-                        data.actual = newVal;
-                        vis.binds.hqwidgets.button.changeState($div, false, true);
-                    });
+                    vis.states.bind(data['oid-actual'] + '.val', onChange);
+                    bound.push(data['oid-actual'] + '.val');
                 }
 
                 if (data['oid-drive']) {
-                    vis.states.bind(data['oid-drive'] + '.val', function (e, newVal, oldVal) {
-                        data.drive = newVal;
-                        vis.binds.hqwidgets.button.changeState($div, false, true);
-                    });
+                    vis.states.bind(data['oid-drive'] + '.val', onChange);
+                    bound.push(data['oid-drive'] + '.val');
                 }
+                // remember all ids, that bound
+                $div.data('bound', bound);
+                // remember bind handler
+                $div.data('bindHandler', onChange);
             }
 
             // initiate state
@@ -1621,7 +1667,21 @@ vis.binds.hqwidgets = {
             if (data['oid-signal'])   data.signal   = vis.states.attr(data['oid-signal']   + '.val');
             if (data['oid-humidity']) data.humidity = vis.states.attr(data['oid-humidity'] + '.val');
             if (data['oid-actual'])   data.actual   = vis.states.attr(data['oid-actual']   + '.val');
-            if (data['oid-drive'])    data.drive    = vis.states.attr(data['oid-drive']    + '.val');
+            if (data['oid-drive'])    {
+                var val = vis.states.attr(data['oid-drive'] + '.val');
+                if (val === null || val === undefined) val = 0;
+                if (data.valveBinary === 'true' || data.valveBinary === true) {
+                    if (val === 'true') {
+                        val = true;
+                    } else if (parseFloat(val).toString() === val.toString()) {
+                        val = !!parseFloat(val);
+                    } else if (val === 'false') {
+                        val = false;
+                    }
+                    val = val ? _('opened') : _('closed');
+                }
+                data.drive = val;
+            }
 
             vis.binds.hqwidgets.button.draw($div);
         }
@@ -1853,7 +1913,12 @@ vis.binds.hqwidgets = {
             var data = $div.data('data');
             if (!data) return;
 
-            $div.css({'padding-top': data.border_width, 'padding-bottom' : data.border_width - 1, 'padding-right': data.border_width + 1, 'padding-left': data.border_width + 1});
+            $div.css({
+                'padding-top':    data.border_width,
+                'padding-bottom': data.border_width - 1,
+                'padding-right':  data.border_width + 1,
+                'padding-left':   data.border_width + 1
+            });
 
             // get position
             data.shutterPos = 0;
@@ -1871,13 +1936,22 @@ vis.binds.hqwidgets = {
                 if (data.invert) data.shutterPos = 100 - data.shutterPos;
             }
 
-            var text = '<table class="hq-blind vis-hq-no-space" style="width: 100%; height: 100%"><tr>';
+            var text = '<table class="hq-blind vis-hq-no-space" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"><tr>';
             if (data.descriptionLeft) {
-                text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
+                if (data.infoLeftPaddingLeft  === undefined || data.infoLeftPaddingLeft  === null) data.infoLeftPaddingLeft = '15px';
+                if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null) data.infoLeftPaddingRight = '50px';
+                if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/))  data.infoLeftPaddingLeft  = data.infoLeftPaddingLeft  + 'px';
+                if (!data.infoLeftPaddingRight.match(/px$|rem$|em$/)) data.infoLeftPaddingRight = data.infoLeftPaddingRight + 'px';
+
+                text += '<div class="vis-hq-leftinfo" style="padding-left: ' + data.infoLeftPaddingLeft + '; padding-right: ' + data.infoLeftPaddingRight + '; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
                     (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
             }
             if (data.show_value) {
-                text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
+                if (data.infoRightPaddingLeft  === undefined || data.infoRightPaddingLeft  === null) data.infoRightPaddingLeft = '15px';
+                if (data.infoRightPaddingRight === undefined || data.infoRightPaddingRight === null) data.infoRightPaddingRight = '15px';
+                if (!data.infoRightPaddingRight.match(/px$|rem$|em$/)) data.infoRightPaddingRight = data.infoRightPaddingRight + 'px';
+
+                text += '<div class="vis-hq-rightinfo" style="padding-right: ' + data.infoRightPaddingRight + '; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
                     (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span>';
 
                 text += '</div>\n';
@@ -1924,9 +1998,8 @@ vis.binds.hqwidgets = {
             var offset = width - 20;
             if (offset < width / 2) offset = width / 2;
             $div.find('.vis-hq-leftinfo').css({right: offset + 'px'});
-            $div.find('.vis-hq-rightinfo').css({'padding-left': 5 + (width / 2) + 'px'});
+            $div.find('.vis-hq-rightinfo').css({'padding-left': (5 + (width / 2) + (parseInt(data.infoRightPaddingLeft, 10) || 0)) + 'px'});
         },
-
         init: function (wid, view, data, style) {
             vis.binds.hqwidgets.showVersion();
 
@@ -1970,70 +2043,8 @@ vis.binds.hqwidgets = {
 
             vis.binds.hqwidgets.window.draw($div);
 
-            for (var i = 1; i <= data.slide_count; i++) {
-                if (data['oid-slide-sensor' + i]) {
-                    vis.states.bind(data['oid-slide-sensor' + i] + '.val', function () {
-                        vis.binds.hqwidgets.window.draw($div);
-                    });
-                }
-                if (data['oid-slide-handle' + i]) {
-                    vis.states.bind(data['oid-slide-handle' + i] + '.val', function () {
-                        vis.binds.hqwidgets.window.draw($div);
-                    });
-                }
-                if (data['oid-slide-sensor-lowbat' + i]) {
-                    vis.states.bind(data['oid-slide-sensor-lowbat' + i] + '.val', function (e, newVal, oldVal) {
-                        for (var id = 1; id <= data.slide_count; id++) {
-                            if (data['oid-slide-sensor-lowbat' + id]) {
-                                data['oid-slide-sensor-lowbat'][id] = vis.states[data['oid-slide-sensor-lowbat' + id] + '.val'];
-                            }
-                        }
-
-                        $div.find('.slide-low-battery').each(function (id) {
-                            id++;
-                            if (data['oid-slide-sensor-lowbat' + id]) {
-                                if (data.oid-slide-sensor-lowbat[id]) {
-                                    $(this).show();
-                                } else {
-                                    $(this).hide();
-                                }
-                            }
-                        });
-                    });
-                }
-                if (data['oid-slide-handle-lowbat' + i]) {
-                    vis.states.bind(data['oid-slide-handle-lowbat' + i] + '.val', function () {
-                        for (var id = 1; id <= data.slide_count; id++) {
-                            if (data['oid-slide-handle-lowbat' + id]) {
-                                data['oid-slide-handle-lowbat'][id] = vis.states[data['oid-slide-handle-lowbat' + id] + '.val'];
-                            }
-                        }
-                        $div.find('.handle-low-battery').each(function (id) {
-                            id++;
-                            if (data['oid-slide-handle-lowbat' + id]) {
-                                if (data['oid-slide-handle-lowbat'][id]) {
-                                    $(this).show();
-                                } else {
-                                    $(this).hide();
-                                }
-                            }
-                        });
-                    });
-                }
-            }
-
-            if (data.oid) {
-                if (!vis.editMode) {
-                    // prepare big window
-                    $div.click(function () {
-                        var $big = $div.find('.hq-blind-big');
-                        if (!$big.length || !$big.data('show')) {
-                            vis.binds.hqwidgets.window.openPopup($div);
-                        }
-                    });
-                }
-
-                vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
+            function onChange(e, newVal, oldVal) {
+                if (e.type === data.oid + '.val') {
                     var shutterPos = newVal;
                     data.value = shutterPos;
                     if (shutterPos === undefined || shutterPos === null) {
@@ -2053,9 +2064,87 @@ vis.binds.hqwidgets = {
                         $div.find('.hq-blind-position').css({'height': data.shutterPos + '%'});
                     }
                     $div.find('.vis-hq-rightinfo-text').html(data.shutterPos + '%');
-                });
+                } else if (e.type.indexOf('oid-slide-sensor') !== -1 || e.type.indexOf('oid-slide-handle') !== -1) {
+                    vis.binds.hqwidgets.window.draw($div);
+                } else if (e.type.indexOf('oid-slide-sensor-lowbat') !== -1) {
+                    for (var id = 1; id <= data.slide_count; id++) {
+                        if (data['oid-slide-sensor-lowbat' + id]) {
+                            data['oid-slide-sensor-lowbat'][id] = vis.states[data['oid-slide-sensor-lowbat' + id] + '.val'];
+                        }
+                    }
+
+                    $div.find('.slide-low-battery').each(function (id) {
+                        id++;
+                        if (data['oid-slide-sensor-lowbat' + id]) {
+                            if (data.oid-slide-sensor-lowbat[id]) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        }
+                    });
+                } else if (e.type.indexOf('oid-slide-handle-lowbat') !== -1) {
+                    for (var id = 1; id <= data.slide_count; id++) {
+                        if (data['oid-slide-handle-lowbat' + id]) {
+                            data['oid-slide-handle-lowbat'][id] = vis.states[data['oid-slide-handle-lowbat' + id] + '.val'];
+                        }
+                    }
+                    $div.find('.handle-low-battery').each(function (id) {
+                        id++;
+                        if (data['oid-slide-handle-lowbat' + id]) {
+                            if (data['oid-slide-handle-lowbat'][id]) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        }
+                    });
+                }
             }
-            
+
+            var bound = [];
+
+            for (var i = 1; i <= data.slide_count; i++) {
+                if (data['oid-slide-sensor' + i]) {
+                    vis.states.bind(data['oid-slide-sensor' + i] + '.val', onChange);
+                    bound.push(data['oid-slide-sensor' + i] + '.val');
+                }
+                if (data['oid-slide-handle' + i]) {
+                    vis.states.bind(data['oid-slide-handle' + i] + '.val', onChange);
+                    bound.push(data['oid-slide-handle' + i] + '.val');
+                }
+                if (data['oid-slide-sensor-lowbat' + i]) {
+                    vis.states.bind(data['oid-slide-sensor-lowbat' + i] + '.val', onChange);
+                    bound.push(data['oid-slide-sensor-lowbat' + i] + '.val');
+                }
+                if (data['oid-slide-handle-lowbat' + i]) {
+                    vis.states.bind(data['oid-slide-handle-lowbat' + i] + '.val', onChange);
+                    bound.push(data['oid-slide-handle-lowbat' + i] + '.val');
+                }
+            }
+
+            if (data.oid) {
+                if (!vis.editMode) {
+                    // prepare big window
+                    $div.click(function () {
+                        var $big = $div.find('.hq-blind-big');
+                        if (!$big.length || !$big.data('show')) {
+                            vis.binds.hqwidgets.window.openPopup($div);
+                        }
+                    });
+                }
+
+                vis.states.bind(data.oid + '.val', onChange);
+                bound.push(data.oid + '.val');
+            }
+
+            if (bound.length) {
+                // remember all ids, that bound
+                $div.data('bound', bound);
+                // remember bind handler
+                $div.data('bindHandler', onChange);
+            }
+
             var shutterPos = vis.states[data.oid + '.val'] || 0;
             if (shutterPos < data.min) shutterPos = data.min;
             if (shutterPos > data.max) shutterPos = data.max;
@@ -2114,11 +2203,20 @@ vis.binds.hqwidgets = {
             if (!$div.find('.vis-hq-main').length) {
                 var text = '';
                 if (data.descriptionLeft) {
-                    text += '<div class="vis-hq-leftinfo" style="padding-left: 15px; padding-right:50px; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
+                    if (data.infoLeftPaddingLeft  === undefined || data.infoLeftPaddingLeft  === null) data.infoLeftPaddingLeft = '15px';
+                    if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null) data.infoLeftPaddingRight = '50px';
+                    if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/))  data.infoLeftPaddingLeft  = data.infoLeftPaddingLeft  + 'px';
+                    if (!data.infoLeftPaddingRight.match(/px$|rem$|em$/)) data.infoLeftPaddingRight = data.infoLeftPaddingRight + 'px';
+
+                    text += '<div class="vis-hq-leftinfo" style="padding-left: ' + data.infoLeftPaddingLeft + '; padding-right: ' + data.infoLeftPaddingRight + '; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
                         (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
                 }
                 if (data.infoRight || data.wType === 'number' || data.hoursLastAction) {
-                    text += '<div class="vis-hq-rightinfo" style="padding-right: 15px; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
+                    if (data.infoRightPaddingLeft  === undefined || data.infoRightPaddingLeft  === null) data.infoRightPaddingLeft = '15px';
+                    if (data.infoRightPaddingRight === undefined || data.infoRightPaddingRight === null) data.infoRightPaddingRight = '15px';
+                    if (!data.infoRightPaddingRight.match(/px$|rem$|em$/)) data.infoRightPaddingRight = data.infoRightPaddingRight + 'px';
+
+                    text += '<div class="vis-hq-rightinfo" style="padding-right: ' + data.infoRightPaddingRight + '; font-size: ' + (data.infoFontRightSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-rightinfo-text">' +
                         (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span>';
 
                     if (data.hoursLastAction) {
@@ -2128,7 +2226,7 @@ vis.binds.hqwidgets = {
 
                     text += '</div>\n';
                 }
-                text += '<table class="vis-hq-main vis-hq-door vis-hq-no-space" style="z-index: 1">' +
+                text += '<table class="vis-hq-main vis-hq-door vis-hq-no-space" style="z-index: 1; position: absolute; top: 0; right: 0;">' +
                     '<tr class="vis-hq-no-space">' +
                         '<td class="vis-hq-no-space vis-hq-door-empty-right"></td>' +
                         '<td class="vis-hq-no-space vis-hq-door-sheet"><div class="vis-hq-door-handle"></div></td>' +
@@ -2149,6 +2247,11 @@ vis.binds.hqwidgets = {
                 'padding-right':   data.border_width + 1,
                 'padding-left':    data.border_width + 1
             });
+
+            var width = $div.width();
+            var offset = width - 20;
+            if (offset < width / 2) offset = width / 2;
+            $div.find('.vis-hq-leftinfo').css({right: offset + 'px'});
         },
         init: function (wid, view, data, style) {
             vis.binds.hqwidgets.showVersion();
@@ -2177,18 +2280,8 @@ vis.binds.hqwidgets = {
 
             vis.binds.hqwidgets.door.draw($div);
 
-            if (data.oid) {
-                if (!vis.editMode) {
-                    // prepare big window
-                    $div.click(function () {
-                        var $big = $div.find('.hq-blind-big');
-                        if (!$big.length || !$big.data('show')) {
-                            //vis.binds.hqwidgets.window.openPopup($div);
-                        }
-                    });
-                }
-
-                vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
+            function onChange(e, newVal) {
+                if (e.type === data.oid + '.val') {
                     var doorState = newVal;
                     if (newVal === 'true' || newVal === true)  {
                         doorState = true;
@@ -2204,9 +2297,29 @@ vis.binds.hqwidgets = {
                     data.value = doorState;
 
                     vis.binds.hqwidgets.door.changeState($div);
-                });
+                } else if (e.type === data['oid-signal'] + '.val') {
+                    data.signal = newVal;
+                    vis.binds.hqwidgets.door.changeState($div, true);
+                } else if (e.type === data['oid-battery'] + '.val') {
+                    data.battery = newVal;
+                    vis.binds.hqwidgets.door.changeState($div, true);
+                }
+            }
+            var bound = [];
 
+            if (data.oid) {
+                if (!vis.editMode) {
+                    // prepare big window
+                    $div.click(function () {
+                        var $big = $div.find('.hq-blind-big');
+                        if (!$big.length || !$big.data('show')) {
+                            //vis.binds.hqwidgets.window.openPopup($div);
+                        }
+                    });
+                }
 
+                vis.states.bind(data.oid + '.val', onChange);
+                bound.push(data.oid + '.val');
                 var newVal = vis.states.attr(data.oid + '.val');
                 var doorState;
 
@@ -2225,19 +2338,20 @@ vis.binds.hqwidgets = {
             }
             if (data['oid-battery']) {
                 $div.batteryIndicator();
-                vis.states.bind(data['oid-battery'] + '.val', function (e, newVal, oldVal) {
-                    data.battery = newVal;
-                    vis.binds.hqwidgets.door.changeState($div, true);
-                });
+                vis.states.bind(data['oid-battery'] + '.val', onChange);
+                bound.push(data['oid-battery'] + '.val');
             }
 
             if (data['oid-signal']) {
-                vis.states.bind(data['oid-signal'] + '.val', function (e, newVal, oldVal) {
-                    data.signal = newVal;
-                    vis.binds.hqwidgets.door.changeState($div, true);
-                });
+                vis.states.bind(data['oid-signal'] + '.val', onChange);
+                bound.push(data['oid-signal'] + '.val');
             }
-
+            if (bound.length) {
+                // remember all ids, that bound
+                $div.data('bound', bound);
+                // remember bind handler
+                $div.data('bindHandler', onChange);
+            }
             vis.binds.hqwidgets.door.changeState($div, false, true);
         }
     },
@@ -2263,7 +2377,7 @@ vis.binds.hqwidgets = {
                 $img = $div.find('.vis-hq-lock1');
                 var $big = $div.find('.vis-hq-biglock');
                 data.popupRadius = parseInt(data.popupRadius, 10) || 75;
-                $big.css({borderRadius: data.popupRadius, width: data.popupRadius * 2, height: data.popupRadius * 2});
+                $big.css({'border-radius': data.popupRadius, width: data.popupRadius * 2, height: data.popupRadius * 2});
                 $div.find('.vis-hq-biglock-button').css({borderRadius: parseInt(data.buttonRadius, 10) || 0});
 
                 $big.css({top: ($div.height() - $big.height()) / 2, left: ($div.width()  - $big.width()) / 2});
@@ -2386,11 +2500,17 @@ vis.binds.hqwidgets = {
             data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'hq-button-no-background');
             data.styleActive = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'hq-button-no-background');
             $div.data('data', data);
+            function onChange(e, newVal, oldVal) {
+                data.signal = newVal;
+                vis.binds.hqwidgets.lock.draw($div);
+            }
+
             if (data.oid) {
-                vis.states.bind(data.oid + '.val', function (e, newVal, oldVal) {
-                    data.signal = newVal;
-                    vis.binds.hqwidgets.lock.draw($div);
-                });
+                vis.states.bind(data.oid + '.val', onChange);
+                // remember all ids, that bound
+                $div.data('bound', [data.oid + '.val']);
+                // remember bind handler
+                $div.data('bindHandler', onChange);
             }
 
             vis.binds.hqwidgets.lock.draw($div, true);
@@ -2412,13 +2532,19 @@ vis.binds.hqwidgets = {
             var $scalaInput = $div.find('input');
             $div.addClass('vis-hq-button-base');
 
+            function onChange(e, newVal, oldVal) {
+                settings.value = newVal;
+                $scalaInput.val(settings.value).trigger('change');
+            }
+
             if (settings.oid) {
                 $scalaInput.val(vis.states.attr(settings.oid + '.val'));
                 if (1 || !vis.editMode) {
-                    vis.states.bind(settings.oid + '.val', function (e, newVal, oldVal) {
-                        settings.value = newVal;
-                        $scalaInput.val(settings.value).trigger('change');
-                    });
+                    vis.states.bind(settings.oid + '.val', onChange);
+                    // remember all ids, that bound
+                    $div.data('bound', [settings.oid + '.val']);
+                    // remember bind handler
+                    $div.data('bindHandler', onChange);
                 }
             } else {
                 $scalaInput.val(settings.min);
@@ -2444,7 +2570,7 @@ vis.binds.hqwidgets = {
                     var oldValue = $scalaInput.data('oldValue');
                     var val = $scalaInput.val();
 
-                    if ((settings.unit || settings.unit === 0) && val.substring(val.length - settings.unit.length, val.length) == settings.unit) {
+                    if ((settings.unit || settings.unit === 0) && val.substring(val.length - settings.unit.length, val.length) === settings.unit) {
                         val = val.substring(0, val.length - settings.unit.length);
                     }
                     if (oldValue != val && !vis.editMode && settings.oid) {
@@ -2486,19 +2612,19 @@ vis.binds.hqwidgets = {
             $scalaInput.prop('readonly', true);
             var parentFont = $div.parent().css('font-size');
             var font       = $div.css('font-size');
-            if (font != parentFont) $scalaInput.css('font-size', font);
+            if (font !== parentFont) $scalaInput.css('font-size', font);
 
             parentFont = $div.parent().css('font-weight');
             font       = $div.css('font-weight');
-            if (font != parentFont) $scalaInput.css('font-weight', font);
+            if (font !== parentFont) $scalaInput.css('font-weight', font);
 
             parentFont = $div.parent().css('font-style');
             font       = $div.css('font-style');
-            if (font != parentFont) $scalaInput.css('font-style', font);
+            if (font !== parentFont) $scalaInput.css('font-style', font);
 
             parentFont = $div.parent().css('font-variant');
             font       = $div.css('font-variant');
-            if (font != parentFont) $scalaInput.css('font-variant', font);
+            if (font !== parentFont) $scalaInput.css('font-variant', font);
         }
     },
     checkbox: {
@@ -2551,12 +2677,19 @@ vis.binds.hqwidgets = {
             var $input = $div.find('input');
 
             var $shineCheckbox = $input.shineCheckbox(settings);
+            function onChange(e, newVal, oldVal) {
+                $shineCheckbox.shineCheckbox('value', vis.binds.hqwidgets.checkbox.isTrue(newVal, settings.max));
+            }
+
             if (settings.oid && settings.oid !== 'nothing_selected') {
                 $shineCheckbox.shineCheckbox('value', vis.binds.hqwidgets.checkbox.isTrue(vis.states.attr(settings.oid + '.val'), settings.max));
                 $shineCheckbox.data('update', false);
-                vis.states.bind(settings.oid + '.val', function (e, newVal, oldVal) {
-                    $shineCheckbox.shineCheckbox('value', vis.binds.hqwidgets.checkbox.isTrue(newVal, settings.max));
-                });
+                vis.states.bind(settings.oid + '.val', onChange);
+                // remember all ids, that bound
+                $div.data('bound', [settings.oid + '.val']);
+                // remember bind handler
+                $div.data('bindHandler', onChange);
+
                 $div.find('input').change(function (evt) {
                     if ($(this).data('update')) {
                         $(this).data('update', false);
@@ -2755,7 +2888,7 @@ if (vis.editMode) {
                         if (hqoptions.iconName === 'Lamp.png') {
                             widget.data.iconName = 'img/Lamp.png'
                         } else
-                        if (hqoptions.iconName && hqoptions.iconName.indexOf('http://') == -1 && hqoptions.iconName[0] !== '/') {
+                        if (hqoptions.iconName && hqoptions.iconName.indexOf('http://') === -1 && hqoptions.iconName[0] !== '/') {
                             widget.data.iconName = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconName;
                         } else {
                             widget.data.iconName = hqoptions.iconName;
@@ -2767,7 +2900,7 @@ if (vis.editMode) {
                         if (hqoptions.iconOn === 'Lamp.png') {
                             widget.data.iconOn = 'img/Lamp.png'
                         } else
-                        if (hqoptions.iconOn && hqoptions.iconOn.indexOf('http://') == -1 && hqoptions.iconOn[0] !== '/') {
+                        if (hqoptions.iconOn && hqoptions.iconOn.indexOf('http://') === -1 && hqoptions.iconOn[0] !== '/') {
                             widget.data.iconOn = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconOn;
                         } else {
                             widget.data.iconOn = hqoptions.iconOn;
@@ -2780,13 +2913,13 @@ if (vis.editMode) {
                         var parts = hqoptions.windowConfig.split(',');
                         widget.data.slide_count = parts.length || 1;
                         for (var p = 0; p < parts.length; p++) {
-                            if (parts[p] == "0") {
+                            if (parts[p] === '0') {
                                 widget.data['slide_type' + (p + 1)] = '';
-                            } else if (parts[p] == "1") {
+                            } else if (parts[p] === '1') {
                                 widget.data['slide_type' + (p + 1)] = 'left';
-                            } else if (parts[p] == "2") {
+                            } else if (parts[p] === '2') {
                                 widget.data['slide_type' + (p + 1)] = 'right';
-                            } else if (parts[p] == "3") {
+                            } else if (parts[p] === '3') {
                                 widget.data['slide_type' + (p + 1)] = 'top';
                             }
                         }

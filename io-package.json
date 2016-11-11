@@ -1,8 +1,13 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "1.0.6",
+        "version": "1.0.7",
 		"news": {
+			"1.0.7": {
+				"en": "Allow set of padding for description",
+				"de": "Erlaube das Setzen von Abständen für Beschreibung",
+				"ru": "Можно выставлять отступы для описания"
+			},
 			"1.0.6": {
 				"en": "Fix circle Knob if negative limits\nfix first switch by checkbox",
 				"de": "Korregiere Circle-Knob bei negativen Werten\nKorrigiere ertse Schlatung bei Checkbox",

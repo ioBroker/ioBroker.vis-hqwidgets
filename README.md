@@ -14,6 +14,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.0.7 (2016-11-11)
+* (bluefox) Allow set of padding for description
+
 ### 1.0.6 (2016-10-11)
 * (bluefox) Fix circle Knob if negative limits
 * (bluefox) Fix first switch by checkbox

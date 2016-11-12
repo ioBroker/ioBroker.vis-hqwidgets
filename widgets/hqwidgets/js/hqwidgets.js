@@ -1239,7 +1239,6 @@ vis.binds.hqwidgets = {
                     text += '<div class="vis-hq-leftinfo" style="padding-left: ' + data.infoLeftPaddingLeft + '; padding-right: ' + data.infoLeftPaddingRight + '; font-size: ' + (data.infoLeftFontSize || 12) + 'px' + (data.infoColor ? ';color: ' + data.infoColor : '') + (data.infoBackground ? ';background: ' + data.infoBackground : '') + '"><span class="vis-hq-leftinfo-text">' +
                         (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') + '</span></div>\n';
                 }
-                console.log('a');
                 if (data.infoRight || data.wType === 'number' || data.hoursLastAction) {
                     if (data.infoRightPaddingLeft  === undefined || data.infoRightPaddingLeft  === null) data.infoRightPaddingLeft = 0;
                     if (data.infoRightPaddingRight === undefined || data.infoRightPaddingRight === null) data.infoRightPaddingRight = '15px';
@@ -2990,6 +2989,10 @@ if (vis.editMode) {
                         }
                     }
                 }
+            }
+
+            if (!vis.views[view].widgets[widgetID].data.descriptionLeft && obj.common.name) {
+                vis.views[view].widgets[widgetID].data.descriptionLeft = obj.common.name;
             }
         }
 

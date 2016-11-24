@@ -14,6 +14,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.0.8 (2016-11-24)
+* (bluefox) Reduce render interval
+
 ### 1.0.7 (2016-11-11)
 * (bluefox) Allow set of padding for description
 

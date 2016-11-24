@@ -1,8 +1,13 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "1.0.7",
+        "version": "1.0.8",
 		"news": {
+			"1.0.8": {
+				"en": "Reduce render interval",
+				"de": "Verkleinere Renderwartezeit",
+				"ru": "Уменьшено время рендеринга"
+			},
 			"1.0.7": {
 				"en": "Allow set of padding for description",
 				"de": "Erlaube das Setzen von Abständen für Beschreibung",

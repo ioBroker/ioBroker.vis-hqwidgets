@@ -1219,11 +1219,11 @@ vis.binds.hqwidgets = {
             if (!$div.is(':visible')) {
                 setTimeout(function () {
                     vis.binds.hqwidgets.button.draw($div);
-                }, 500);
+                }, 100);
                 return;
             }
 
-            var data = $div.data('data');
+            var data   = $div.data('data');
             data.state = data.state || 'normal';
             var radius = $div.css('borderTopLeftRadius') || vis.views[data.view].widgets[data.wid].style['border-radius'];
 

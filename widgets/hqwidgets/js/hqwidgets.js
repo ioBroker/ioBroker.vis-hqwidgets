@@ -2936,7 +2936,7 @@ if (vis.editMode) {
         return widget;
     };
 
-    vis.binds.hqwidgets.changedSensorId = function (widgetID, view, newId, attr, isCss) {
+    vis.binds.hqwidgets.changedSensorId = function (widgetID, view, newId, attr, isCss, oldValue) {
         var index = attr.match(/(\d+)$/);
         var bName = (attr === 'oid-slide-handle' + index[1]) ? 'oid-slide-handle-lowbat' : 'oid-slide-sensor-lowbat';
         bName += index[1];
@@ -2946,7 +2946,8 @@ if (vis.editMode) {
         return vis.binds.hqwidgets.changedId (widgetID, view, newId, fields);
     };
 
-    vis.binds.hqwidgets.changedWindowId = function (widgetID, view, newId, attr, isCss) {
+    vis.binds.hqwidgets.changedWindowId = function (widgetID, view, newId, attr, isCss, oldValue) {
+        if (oldValue && oldValue !== 'nothing_selected') return;
         return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
             'oid-battery':  'indicator.battery',
             'oid-working':  'indicator.working',
@@ -2999,7 +3000,8 @@ if (vis.editMode) {
         return changed.length ? changed : null;
     };
 
-    vis.binds.hqwidgets.changedTempId = function (widgetID, view, newId, attr, isCss) {
+    vis.binds.hqwidgets.changedTempId = function (widgetID, view, newId, attr, isCss, oldValue) {
+        if (oldValue && oldValue !== 'nothing_selected') return;
         return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
             'oid-battery':  'indicator.battery',
             'oid-working':  'indicator.working',
@@ -3008,7 +3010,8 @@ if (vis.editMode) {
         });
     };
 
-    vis.binds.hqwidgets.changedButtonId = function (widgetID, view, newId, attr, isCss) {
+    vis.binds.hqwidgets.changedButtonId = function (widgetID, view, newId, attr, isCss, oldValue) {
+        if (oldValue && oldValue !== 'nothing_selected') return;
         return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
             'oid-battery':  'indicator.battery',
             'oid-working':  'indicator.working',
@@ -3016,7 +3019,8 @@ if (vis.editMode) {
         });
     };
 
-    vis.binds.hqwidgets.changedLockId = function (widgetID, view, newId, attr, isCss) {
+    vis.binds.hqwidgets.changedLockId = function (widgetID, view, newId, attr, isCss, oldValue) {
+        if (oldValue && oldValue !== 'nothing_selected') return;
         return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
             'oid-battery':  'indicator.battery',
             'oid-working':  'indicator.working',
@@ -3024,7 +3028,8 @@ if (vis.editMode) {
         });
     };
 
-    vis.binds.hqwidgets.changedTemperatureId = function (widgetID, view, newId, attr, isCss) {
+    vis.binds.hqwidgets.changedTemperatureId = function (widgetID, view, newId, attr, isCss, oldValue) {
+        if (oldValue && oldValue !== 'nothing_selected') return;
         return vis.binds.hqwidgets.changedId (widgetID, view, newId, {
             'oid-humidity': 'value.humidity'
         });

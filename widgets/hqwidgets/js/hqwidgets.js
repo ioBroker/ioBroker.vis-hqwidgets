@@ -85,6 +85,10 @@
             var $scalaInput   = $this.find('.scalaInput');
             var $scalaWrapped = $this.find('.scalaWrapped');
 
+            if (typeof settings.step === 'string') {
+                settings.step = parseFloat(settings.step.replace(',', '.') || 1);
+            }
+
             var $knobDiv = $scalaInput.knobHQ({
                 release: function (v, noAck) {
                     $knobDiv._mouseDown = false;

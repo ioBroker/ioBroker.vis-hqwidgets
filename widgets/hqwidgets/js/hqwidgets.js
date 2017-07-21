@@ -1054,7 +1054,6 @@ vis.binds.hqwidgets = {
                             vis.binds.hqwidgets.button.centerImage($div, data, $img);
                         }, 1000);
                     }
-                    return;
                 } else {
                     var $middle = $div.find('.vis-hq-table');
                     $middle.css({
@@ -1289,8 +1288,8 @@ vis.binds.hqwidgets = {
             // Place icon
             var img = null;
             if (data.iconName || data.iconOn) {
-                img = (data.state === 'normal') ? (data.iconName || ''): (data.iconOn || '');
-                $div.find('.vis-hq-icon').html('<img class="vis-hq-icon-img" style="height: ' + data.btIconWidth + 'px; width: auto;" src="' + img + '"/>')
+                img = (data.state === 'normal') ? (data.iconName || '') : (data.iconOn || '');
+                $div.find('.vis-hq-icon').html('<img class="vis-hq-icon-img" style="height: ' + data.btIconWidth + 'px; width: auto;" src="' + (img || '') + '"/>').css('opacity', img ? 1 : 0);
             } else {
                 $div.find('.vis-hq-icon').html('');
             }
@@ -1591,7 +1590,7 @@ vis.binds.hqwidgets = {
             // Chart dialog
             if (data.url/* && !vis.editMode*/) {
                 $div.popupDialog({
-                    content: '<iframe src="' + data.url + '" style="width: 100%; height: calc(100% - 5px); border: 0"></iframe>',
+                    content: '<iframe src="' + (data.url || '') + '" style="width: 100%; height: calc(100% - 5px); border: 0"></iframe>',
                     width:   data.dialog_width,
                     height:  data.dialog_height,
                     effect:  data.dialog_effect,
@@ -2373,9 +2372,9 @@ vis.binds.hqwidgets = {
 
                 $div.html('<img src="" class="vis-hq-lock1" style="width: 100%; height:100%;"/>' +
                     '<div class="vis-hq-biglock" style="display: none">' +
-                    '    <div class="vis-hq-biglock-button vis-hq-biglock-close '    + (data.closeStyle    || '') + '"><img src="' + data.closeIcon    + '" style="width: 100%; height:100%"/></div>' +
-                    '    <div class="vis-hq-biglock-button vis-hq-biglock-open '     + (data.openStyle     || '') + '"><img src="' + data.openIcon     + '" style="width: 100%; height:100%"/></div>' +
-                    '    <div class="vis-hq-biglock-button vis-hq-biglock-openDoor ' + (data.openDoorStyle || '') + '"><img src="' + data.openDoorIcon + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-close '    + (data.closeStyle    || '') + '"><img src="' + (data.closeIcon || '')   + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-open '     + (data.openStyle     || '') + '"><img src="' + (data.openIcon || '')    + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-openDoor ' + (data.openDoorStyle || '') + '"><img src="' + (data.openDoorIcon  || '') + '" style="width: 100%; height:100%"/></div>' +
                     '</div>');
                 $img = $div.find('.vis-hq-lock1');
                 var $big = $div.find('.vis-hq-biglock');

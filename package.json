@@ -1,7 +1,7 @@
 {
   "name": "iobroker.vis-hqwidgets",
   "description": "hqwidgets Widgets for ioBroker.vis",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": {
     "name": "bluefox",
     "email": "dogafox@gmail.com"

@@ -14,6 +14,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.0.10 (2017-08-12)
+* (bluefox) Fix the window handle update
+
 ### 1.0.9 (2017-07-22)
 * (bluefox) Small fixes for empty images
 

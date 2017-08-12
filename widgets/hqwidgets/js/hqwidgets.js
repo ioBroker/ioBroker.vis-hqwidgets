@@ -2041,11 +2041,13 @@ vis.binds.hqwidgets = {
             data['oid-slide-sensor-lowbat'] = [];
             data['oid-slide-handle-lowbat'] = [];
 
-            if (data['oid-working'])  data.working  = vis.states.attr(data['oid-working']  + '.val');
+            if (data['oid-working']) {
+                data.working = vis.states.attr(data['oid-working']  + '.val');
+            }
 
             vis.binds.hqwidgets.window.draw($div);
 
-            function onChange(e, newVal, oldVal) {
+            function onChange(e, newVal /* , oldVal */) {
                 if (e.type === data.oid + '.val') {
                     var shutterPos = newVal;
                     data.value = shutterPos;
@@ -2066,41 +2068,37 @@ vis.binds.hqwidgets = {
                         $div.find('.hq-blind-position').css({'height': data.shutterPos + '%'});
                     }
                     $div.find('.vis-hq-rightinfo-text').html(data.shutterPos + '%');
-                } else if (e.type.indexOf('oid-slide-sensor') !== -1 || e.type.indexOf('oid-slide-handle') !== -1) {
-                    vis.binds.hqwidgets.window.draw($div);
-                } else if (e.type.indexOf('oid-slide-sensor-lowbat') !== -1) {
-                    for (var id = 1; id <= data.slide_count; id++) {
-                        if (data['oid-slide-sensor-lowbat' + id]) {
-                            data['oid-slide-sensor-lowbat'][id] = vis.states[data['oid-slide-sensor-lowbat' + id] + '.val'];
+                } else {
+                    for (var t = 1; t <= data.slide_count; t++) {
+                        if (e.type === data['oid-slide-sensor' + t] + '.val' || e.type === data['oid-slide-handle' + t] + '.val') {
+                            vis.binds.hqwidgets.window.draw($div);
+                            break;
+                        } else if (e.type === data['oid-slide-sensor-lowbat' + t] + '.val') {
+                            data['oid-slide-sensor-lowbat'][t] = vis.states[data['oid-slide-sensor-lowbat' + t] + '.val'];
+                            $div.find('.slide-low-battery').each(function (id) {
+                                id++;
+                                if (data['oid-slide-sensor-lowbat' + id]) {
+                                    if (data['oid-slide-sensor-lowbat'][id]) {
+                                        $(this).show();
+                                    } else {
+                                        $(this).hide();
+                                    }
+                                }
+                            });
+                        } else if (e.type === data['oid-slide-handle-lowbat' + t] + '.val') {
+                            data['oid-slide-handle-lowbat'][t] = vis.states[data['oid-slide-handle-lowbat' + t] + '.val'];
+                            $div.find('.handle-low-battery').each(function (id) {
+                                id++;
+                                if (data['oid-slide-handle-lowbat' + id]) {
+                                    if (data['oid-slide-handle-lowbat'][id]) {
+                                        $(this).show();
+                                    } else {
+                                        $(this).hide();
+                                    }
+                                }
+                            });
                         }
                     }
-
-                    $div.find('.slide-low-battery').each(function (id) {
-                        id++;
-                        if (data['oid-slide-sensor-lowbat' + id]) {
-                            if (data.oid-slide-sensor-lowbat[id]) {
-                                $(this).show();
-                            } else {
-                                $(this).hide();
-                            }
-                        }
-                    });
-                } else if (e.type.indexOf('oid-slide-handle-lowbat') !== -1) {
-                    for (var id = 1; id <= data.slide_count; id++) {
-                        if (data['oid-slide-handle-lowbat' + id]) {
-                            data['oid-slide-handle-lowbat'][id] = vis.states[data['oid-slide-handle-lowbat' + id] + '.val'];
-                        }
-                    }
-                    $div.find('.handle-low-battery').each(function (id) {
-                        id++;
-                        if (data['oid-slide-handle-lowbat' + id]) {
-                            if (data['oid-slide-handle-lowbat'][id]) {
-                                $(this).show();
-                            } else {
-                                $(this).hide();
-                            }
-                        }
-                    });
                 }
             }
 
@@ -2372,8 +2370,8 @@ vis.binds.hqwidgets = {
 
                 $div.html('<img src="" class="vis-hq-lock1" style="width: 100%; height:100%;"/>' +
                     '<div class="vis-hq-biglock" style="display: none">' +
-                    '    <div class="vis-hq-biglock-button vis-hq-biglock-close '    + (data.closeStyle    || '') + '"><img src="' + (data.closeIcon || '')   + '" style="width: 100%; height:100%"/></div>' +
-                    '    <div class="vis-hq-biglock-button vis-hq-biglock-open '     + (data.openStyle     || '') + '"><img src="' + (data.openIcon || '')    + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-close '    + (data.closeStyle    || '') + '"><img src="' + (data.closeIcon     || '') + '" style="width: 100%; height:100%"/></div>' +
+                    '    <div class="vis-hq-biglock-button vis-hq-biglock-open '     + (data.openStyle     || '') + '"><img src="' + (data.openIcon      || '') + '" style="width: 100%; height:100%"/></div>' +
                     '    <div class="vis-hq-biglock-button vis-hq-biglock-openDoor ' + (data.openDoorStyle || '') + '"><img src="' + (data.openDoorIcon  || '') + '" style="width: 100%; height:100%"/></div>' +
                     '</div>');
                 $img = $div.find('.vis-hq-lock1');

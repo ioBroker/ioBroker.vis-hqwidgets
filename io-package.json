@@ -1,8 +1,13 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "1.0.9",
+        "version": "1.0.10",
 		"news": {
+			"1.0.10": {
+				"en": "Fix the window handle update",
+				"de": "Korrigiert den Update von Fenstergriff",
+				"ru": "Исправлено обновление ручки и положения окна"
+			},
 			"1.0.9": {
 				"en": "Small fixes for empty images",
 				"de": "Kleine Verbesserungen, falls kein Bild",

@@ -1900,19 +1900,19 @@ vis.binds.hqwidgets = {
                 var popUpHorPos = Math.round((h - data.bigHeight) / 2);
                 var popUpVerPos = Math.round((w - data.bigWidth) / 2);
                 
-                if ( data.popupVerticalPos == "left" ) {
+                if ( data.popupVerticalPos === "left" ) {
                 	  popUpVerPos = Math.round(w - data.bigWidth);
                 }
-                else if ( data.popupVerticalPos == "right" ) {
+                else if ( data.popupVerticalPos === "right" ) {
                 	  popUpVerPos = 0;
                 }
                 data.bigLeft   = popUpVerPos;
 
 
-                if ( data.popupHorizontalPos == "top" ) {
+                if ( data.popupHorizontalPos === "top" ) {
                     popUpHorPos = Math.round(h - data.bigHeight);
                 }
-                else if ( data.popupHorizontalPos == "bottom" ) {
+                else if ( data.popupHorizontalPos === "bottom" ) {
                 	  popUpHorPos = 0;
                 }
                 data.bigTop = popUpHorPos;

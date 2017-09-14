@@ -782,6 +782,8 @@ if (vis.editMode) {
         "oid-slide-handle-lowbat":  {"en": "Slide handle lowbat",   "de": "Griff-Sensor lowbat",    "ru": "Сенсор на ручке (lowbat)"},
         "door_type":        {"en": "Door swing",         "de": "Türtyp",                "ru": "Тип двери"},
         "noAnimate":        {"en": "No animation",       "de": "Keine Animation",       "ru": "Не анимировать"},
+        "popupHorizontalPos":        {"en": "Horizontal popup position",       "de": "Horizontale PopUp Position",       "ru": "Горизонтальное положение"},
+        "popupVerticalPos":        {"en": "Vertical popup position",       "de": "Vertikale PopUp Position",       "ru": "Вертикальное положение"},
         "infoColor":        {"en": "Text color",         "de": "Textfarbe",             "ru": "Цвет текста"},
         "infoBackground":   {"en": "Background",         "de": "Hintergrund",           "ru": "Цвет фона"},
         "midTextColor":     {"en": "Middle text color",  "de": "Textfarbe Mitte",       "ru": "Цвет текста в середине"},
@@ -1893,8 +1895,28 @@ vis.binds.hqwidgets = {
 
                 data.bigWidth  = $big.width();
                 data.bigHeight = $big.height();
-                data.bigLeft   = Math.round((w - data.bigWidth) / 2);
-                data.bigTop    = Math.round((h - data.bigHeight) / 2);
+
+                //default will still be center
+                var popUpHorPos = Math.round((h - data.bigHeight) / 2);
+                var popUpVerPos = Math.round((w - data.bigWidth) / 2);
+                
+                if ( data.popupVerticalPos === "left" ) {
+                	  popUpVerPos = Math.round(w - data.bigWidth);
+                }
+                else if ( data.popupVerticalPos === "right" ) {
+                	  popUpVerPos = 0;
+                }
+                data.bigLeft   = popUpVerPos;
+
+
+                if ( data.popupHorizontalPos === "top" ) {
+                    popUpHorPos = Math.round(h - data.bigHeight);
+                }
+                else if ( data.popupHorizontalPos === "bottom" ) {
+                	  popUpHorPos = 0;
+                }
+                data.bigTop = popUpHorPos;
+                
 
                 if (pos.top  + data.bigTop < 0)  data.bigTop  = -pos.top;
                 if (pos.left + data.bigLeft < 0) data.bigLeft = -pos.left;

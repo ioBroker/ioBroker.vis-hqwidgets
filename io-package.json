@@ -1,8 +1,13 @@
 {
     "common": {
         "name":                     "vis-hqwidgets",
-        "version": "1.0.10",
+        "version": "1.0.11",
 		"news": {
+			"1.0.11": {
+				"en": "Hide left description\nadded feature to select shutter popup window position",
+				"de": "Deaktiviere linke Beschreibung\nhinzugefügt Feature, um Shutter Popup-Fenster Position zu wählen",
+				"ru": "Можно деактивировать подпись слева\nдобавлена возможность выбора положения всплывающего окна"
+			},
 			"1.0.10": {
 				"en": "Fix the window handle update",
 				"de": "Korrigiert den Update von Fenstergriff",

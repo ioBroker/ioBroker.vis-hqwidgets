@@ -736,6 +736,7 @@ if (vis.editMode) {
         "hoursLastAction":  {"en": "Hide last action after(hrs)", "de": "Ausblenden letze Anderungszeit nach(Std)", "ru": "Скрыть последнее изменение(часов)"},
         "timeAsInterval":   {"en": "Time as interval",  "de": "Zeit als Intervall",     "ru": "Время, как интервал"},
         "descriptionLeft":  {"en": "Description (left)", "de": "Beschreibung (links)",  "ru": "Подпись (слева)"},
+        "descriptionLeftDisabled":   {"en": "No description (left)",   "de": "Keine Beschreibung (links)", "ru": "Без подписи (слева)"},
         "infoLeftFontSize": {"en": "Left font size",    "de": "Schriftgrosse links",    "ru": "Размер шрифта слева"},
         "infoRight":        {"en": "Description (right)", "de": "Beschreibung (rechts)", "ru": "Подпись (справа)"},
         "infoFontRightSize": {"en": "Right font size",  "de": "Schriftgrosse rechts",   "ru": "Размер шрифта справа"},
@@ -1235,7 +1236,7 @@ vis.binds.hqwidgets = {
             // place left-info, right-info, caption and image
             if (!$div.find('.vis-hq-main').length) {
                 var text = '';
-                if (data.descriptionLeft) {
+                if (!data.descriptionLeftDisabled && data.descriptionLeft) {
                     if (data.infoLeftPaddingLeft  === undefined || data.infoLeftPaddingLeft  === null) data.infoLeftPaddingLeft = '15px';
                     if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null) data.infoLeftPaddingRight = '50px';
                     if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/))  data.infoLeftPaddingLeft  = data.infoLeftPaddingLeft  + 'px';
@@ -1961,7 +1962,7 @@ vis.binds.hqwidgets = {
             }
 
             var text = '<table class="hq-blind vis-hq-no-space" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"><tr>';
-            if (data.descriptionLeft) {
+            if (!data.descriptionLeftDisabled && data.descriptionLeft) {
                 if (data.infoLeftPaddingLeft  === undefined || data.infoLeftPaddingLeft  === null) data.infoLeftPaddingLeft = '15px';
                 if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null) data.infoLeftPaddingRight = '50px';
                 if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/))  data.infoLeftPaddingLeft  = data.infoLeftPaddingLeft  + 'px';
@@ -2224,7 +2225,7 @@ vis.binds.hqwidgets = {
             // place left-info, right-info, caption and image
             if (!$div.find('.vis-hq-main').length) {
                 var text = '';
-                if (data.descriptionLeft) {
+                if (!data.descriptionLeftDisabled && data.descriptionLeft) {
                     if (data.infoLeftPaddingLeft  === undefined || data.infoLeftPaddingLeft  === null) data.infoLeftPaddingLeft = '15px';
                     if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null) data.infoLeftPaddingRight = '50px';
                     if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/))  data.infoLeftPaddingLeft  = data.infoLeftPaddingLeft  + 'px';

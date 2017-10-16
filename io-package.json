@@ -1,92 +1,100 @@
 {
     "common": {
-        "name":                     "vis-hqwidgets",
+        "name": "vis-hqwidgets",
         "version": "1.0.11",
-		"news": {
-			"1.0.11": {
-				"en": "Hide left description\nadded feature to select shutter popup window position",
-				"de": "Deaktiviere linke Beschreibung\nhinzugefügt Feature, um Shutter Popup-Fenster Position zu wählen",
-				"ru": "Можно деактивировать подпись слева\nдобавлена возможность выбора положения всплывающего окна"
-			},
-			"1.0.10": {
-				"en": "Fix the window handle update",
-				"de": "Korrigiert den Update von Fenstergriff",
-				"ru": "Исправлено обновление ручки и положения окна"
-			},
-			"1.0.9": {
-				"en": "Small fixes for empty images",
-				"de": "Kleine Verbesserungen, falls kein Bild",
-				"ru": "Маленькое улучшение для виджета без картинки"
-			},
-			"1.0.8": {
-				"en": "Reduce render interval",
-				"de": "Verkleinere Renderwartezeit",
-				"ru": "Уменьшено время рендеринга"
-			},
-			"1.0.7": {
-				"en": "Allow set of padding for description",
-				"de": "Erlaube das Setzen von Abständen für Beschreibung",
-				"ru": "Можно выставлять отступы для описания"
-			},
-			"1.0.6": {
-				"en": "Fix circle Knob if negative limits\nfix first switch by checkbox",
-				"de": "Korregiere Circle-Knob bei negativen Werten\nKorrigiere ertse Schlatung bei Checkbox",
-				"ru": "Исправлена ошибка в Circle-Knob при отрицательных границах\nИсправлена ошибка в Checkbox при первом переключении"
-			},
-			"1.0.5": {
-				"en": "show last action fixed",
-				"de": "Korregiere letze Änderungszeit",
-				"ru": "Исправлена ошибка в инфо о последнем изменении"
-			},
-			"1.0.4": {
-				"en": "fix problem in inner temperature if knob widget set installed",
-				"de": "Korregiere das Problem in inner temp, falls Knob ist auch installiert",
-				"ru": "Исправлена совместная работа inner temp виджета и knob виджетов"
-			},
-			"1.0.3": {
-				"en": "fix initial value of shutter if inverted",
-				"de": "fix initial value of shutter if inverted",
-				"ru": "fix initial value of shutter if inverted"
-			},
-			"1.0.2": {
-				"en": "change [last changed] to ms",
-				"de": "change [last changed] to ms",
-				"ru": "change [last changed] to ms"
-			},
-			"1.0.1": {
-				"en": "add odometer widget",
-				"de": "add odometer widget",
-				"ru": "add odometer widget"
-			}
+        "news": {
+            "1.0.11": {
+                "en": "Hide left description\nadded feature to select shutter popup window position",
+                "de": "Deaktiviere linke Beschreibung\nhinzugefügt Feature, um Shutter Popup-Fenster Position zu wählen",
+                "ru": "Можно деактивировать подпись слева\nдобавлена возможность выбора положения всплывающего окна"
+            },
+            "1.0.10": {
+                "en": "Fix the window handle update",
+                "de": "Korrigiert den Update von Fenstergriff",
+                "ru": "Исправлено обновление ручки и положения окна"
+            },
+            "1.0.9": {
+                "en": "Small fixes for empty images",
+                "de": "Kleine Verbesserungen, falls kein Bild",
+                "ru": "Маленькое улучшение для виджета без картинки"
+            },
+            "1.0.8": {
+                "en": "Reduce render interval",
+                "de": "Verkleinere Renderwartezeit",
+                "ru": "Уменьшено время рендеринга"
+            },
+            "1.0.7": {
+                "en": "Allow set of padding for description",
+                "de": "Erlaube das Setzen von Abständen für Beschreibung",
+                "ru": "Можно выставлять отступы для описания"
+            },
+            "1.0.6": {
+                "en": "Fix circle Knob if negative limits\nfix first switch by checkbox",
+                "de": "Korregiere Circle-Knob bei negativen Werten\nKorrigiere ertse Schlatung bei Checkbox",
+                "ru": "Исправлена ошибка в Circle-Knob при отрицательных границах\nИсправлена ошибка в Checkbox при первом переключении"
+            },
+            "1.0.5": {
+                "en": "show last action fixed",
+                "de": "Korregiere letze Änderungszeit",
+                "ru": "Исправлена ошибка в инфо о последнем изменении"
+            },
+            "1.0.4": {
+                "en": "fix problem in inner temperature if knob widget set installed",
+                "de": "Korregiere das Problem in inner temp, falls Knob ist auch installiert",
+                "ru": "Исправлена совместная работа inner temp виджета и knob виджетов"
+            },
+            "1.0.3": {
+                "en": "fix initial value of shutter if inverted",
+                "de": "fix initial value of shutter if inverted",
+                "ru": "fix initial value of shutter if inverted"
+            },
+            "1.0.2": {
+                "en": "change [last changed] to ms",
+                "de": "change [last changed] to ms",
+                "ru": "change [last changed] to ms"
+            },
+            "1.0.1": {
+                "en": "add odometer widget",
+                "de": "add odometer widget",
+                "ru": "add odometer widget"
+            }
         },
-        "title":                    "ioBroker Visualisation - hqwidgets style Widgets",
+        "title": "ioBroker Visualisation - hqwidgets style Widgets",
         "desc": {
-            "en":                   "High quality Widgets for ioBroker.vis",
-            "de":                   "High quality Widgets für ioBroker.vis",
-            "ru":                   "High quality Widgets для ioBroker.vis"
+            "en": "High quality Widgets for ioBroker.vis",
+            "de": "High quality Widgets für ioBroker.vis",
+            "ru": "High quality Widgets для ioBroker.vis"
         },
-        "platform":                 "Javascript/Node.js",
-        "loglevel":                 "info",
-        "icon":                     "hqwidgets.png",
-        "enabled":                  true,
-        "mode":                     "once",
-        "extIcon":                  "https://raw.githubusercontent.com/ioBroker/ioBroker.vis-hqwidgets/master/admin/hqwidgets.png",
-        "keywords":                 ["hqwidgets", "vis", "GUI", "graphical", "scada"],
-        "readme":                   "https://github.com/ioBroker/ioBroker.vis-hqwidgets/blob/master/README.md",
+        "platform": "Javascript/Node.js",
+        "loglevel": "info",
+        "icon": "hqwidgets.png",
+        "enabled": true,
+        "mode": "once",
+        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.vis-hqwidgets/master/admin/hqwidgets.png",
+        "keywords": [
+            "hqwidgets",
+            "vis",
+            "GUI",
+            "graphical",
+            "scada"
+        ],
+        "readme": "https://github.com/ioBroker/ioBroker.vis-hqwidgets/blob/master/README.md",
         "authors": [
             "bluefox <dogafox@gmail.com>"
         ],
-        "localLink":                "%web_protocol%://%ip%:%web_port%/vis/edit.html",
-        "license":                  "MIT",
-        "dependencies":             ["vis"],
-        "onlyWWW":                  true,
-        "singleton":                true,
-        "type":                     "vis",
-		"restartAdapters":          ["vis"],
-		"noConfig":                 true
+        "localLink": "%web_protocol%://%ip%:%web_port%/vis/edit.html",
+        "license": "MIT",
+        "dependencies": [
+            "vis"
+        ],
+        "onlyWWW": true,
+        "singleton": true,
+        "type": "visualization-widgets",
+        "restartAdapters": [
+            "vis"
+        ],
+        "noConfig": true
     },
-    "native": {
-    },
-    "instanceObjects": [
-    ]
+    "native": {},
+    "instanceObjects": []
 }

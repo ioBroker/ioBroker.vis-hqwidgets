@@ -14,6 +14,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.1.0 (2017-10-17)
+* (bluefox) moment.js
+
 ### 1.0.11 (2017-09-18)
 * (bluefox) Hide left description
 * (Sebastian Rosenberg) added feature to select shutter popup window position.
@@ -113,5 +116,5 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 - (bluefox) initial checkin
 
 ## License
- Copyright (c) 2013-2016 bluefox https://github.com/GermanBluefox
+ Copyright (c) 2013-2017 bluefox https://github.com/GermanBluefox
  MIT

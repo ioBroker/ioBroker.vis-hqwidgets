@@ -1,9 +1,9 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.0.6"
+    version: "1.1.0"
 
-    Copyright 6'2014-2016 bluefox<dogafox@gmail.com>
+    Copyright 6'2014-2017 bluefox<dogafox@gmail.com>
 
 */
 'use strict';
@@ -835,18 +835,31 @@ if (vis.editMode) {
 }
 
 $.extend(true, systemDictionary, {
-    "just&nbsp;now":  {"en": "just&nbsp;now", "de": "gerade&nbsp;jetzt", "ru": "только&nbsp;что"},
-    "for&nbsp;%s&nbsp;min.":  {"en": "for&nbsp;%s&nbsp;min.", "de": "vor&nbsp;%s&nbsp;Min.", "ru": "%s&nbsp;мин. назад"},
-    "for&nbsp;%s&nbsp;hr.&nbsp;and&nbsp;%s&nbsp;min.": {
+    "just&nbsp;now":            {"en": "just&nbsp;now", "de": "gerade&nbsp;jetzt", "ru": "только&nbsp;что"},
+    "for&nbsp;%s&nbsp;min.":    {"en": "for&nbsp;%s&nbsp;min.", "de": "vor&nbsp;%s&nbsp;Min.", "ru": "%s&nbsp;мин.&nbsp;назад"},
+    // plural hours
+    "forHours": {
+        "en": "for&nbsp;%s&nbsp;hrs.&nbsp;and&nbsp;%s&nbsp;min.",
+        "de": "vor&nbsp;%s&nbsp;St.&nbsp;und&nbsp;%s&nbsp;Min.",
+        "ru": "%s&nbsp;часов&nbsp;и&nbsp;%s&nbsp;мин.&nbsp;назад"
+    },
+    // singular hour
+    "for1Hour": {
         "en": "for&nbsp;%s&nbsp;hr.&nbsp;and&nbsp;%s&nbsp;min.",
         "de": "vor&nbsp;%s&nbsp;St.&nbsp;und&nbsp;%s&nbsp;Min.",
-        "ru": "%s&nbsp;часов&nbsp;и&nbsp;%s&nbsp;мин. назад"
+        "ru": "%s&nbsp;час&nbsp;и&nbsp;%s&nbsp;мин.&nbsp;назад"
     },
-    "yesterday":              {"en": "yesterday", "de": "gestern", "ru": "вчера"},
-    "for&nbsp;%s&nbsp;hours": {"en": "for&nbsp;%s&nbsp;hours", "de": "vor&nbsp;%s&nbsp;Stunden", "ru": "%s&nbsp;часов назад"},
-    "Chart":                  {"en": "Chart",     "de": "Grafik",  "ru": "График"},
-    "opened":                 {"en": "opened",      "de": "auf",     "ru": "откр."},
-    "closed":                 {"en": "closed",    "de": "zu",      "ru": "закр."}
+    // 2-4 hour
+    "for2-4Hours": {
+        "en": "for&nbsp;%s&nbsp;hr.&nbsp;and&nbsp;%s&nbsp;min.",
+        "de": "vor&nbsp;%s&nbsp;St.&nbsp;und&nbsp;%s&nbsp;Min.",
+        "ru": "%s&nbsp;часа&nbsp;и&nbsp;%s&nbsp;мин.&nbsp;назад"
+    },
+    "yesterday":                {"en": "yesterday", "de": "gestern", "ru": "вчера"},
+    "for&nbsp;%s&nbsp;hours":   {"en": "for&nbsp;%s&nbsp;hours", "de": "vor&nbsp;%s&nbsp;Stunden", "ru": "%s&nbsp;ч. назад"},
+    "Chart":                    {"en": "Chart",     "de": "Grafik",  "ru": "График"},
+    "opened":                   {"en": "opened",    "de": "auf",     "ru": "откр."},
+    "closed":                   {"en": "closed",    "de": "zu",      "ru": "закр."}
 });
 // widget can has following parts:
 // left info (descriptionLeft)
@@ -865,7 +878,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.0.7",
+    version: "1.1.0",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -890,6 +903,11 @@ vis.binds.hqwidgets = {
     getTimeInterval: function (oldTime, hoursToShow) {
         // if less than 2000.01.01 00:00:00
         if (oldTime < 946681200000) oldTime = oldTime * 1000;
+
+        if (typeof moment !== 'undefined') {
+            return moment(new Date(oldTime)).fromNow();
+        }
+
         var result = '';
 
         var newTime = new Date ();
@@ -898,7 +916,9 @@ vis.binds.hqwidgets = {
         if (typeof oldTime === 'string') {
             oldTime = new Date(oldTime);
         } else {
-            if (typeof oldTime === 'number') oldTime = new Date(oldTime);
+            if (typeof oldTime === 'number') {
+                oldTime = new Date(oldTime);
+            }
         }
 
         var seconds = (newTime.getTime() - oldTime.getTime ()) / 1000;
@@ -908,17 +928,27 @@ vis.binds.hqwidgets = {
         if (seconds < 60) {
             result = _('just&nbsp;now');
         } else
-        if (seconds <= 3600)
-            result = _('for&nbsp;%s&nbsp;min.', Math.floor (seconds / 60));
+        if (seconds <= 3600) {
+            result = _('for&nbsp;%s&nbsp;min.', Math.floor(seconds / 60));
+        }
         else
-        if (seconds <= 3600 * 24)
-            result = _('for&nbsp;%s&nbsp;hr.&nbsp;and&nbsp;%s&nbsp;min.', Math.floor (seconds / 3600), (Math.floor (seconds / 60) % 60));
+        if (seconds <= 3600 * 24) { // between 1 und 24 hours
+            var hrs = Math.floor(seconds / 3600);
+            if (hrs === 1 || hrs === 21) {
+                result = _('for1Hour',  hrs, (Math.floor(seconds / 60) % 60));
+            } else if (hrs >= 2 && hrs <= 4) {
+                result = _('for2-4Hours',  hrs, (Math.floor(seconds / 60) % 60));
+            } else {
+                result = _('forHours', hrs, (Math.floor(seconds / 60) % 60));
+            }
+        }
         else
-        if (seconds > 3600 * 24 && seconds <= 3600 * 48)
+        if (seconds > 3600 * 24 && seconds <= 3600 * 48) {
             result = _('yesterday');
+        }
         else
-        if (seconds > 3600 * 48) {
-            result = _('for&nbsp;%s&nbsp;hours', Math.floor (seconds / 3600));
+        if (seconds > 3600 * 48) { // over 2 days
+            result = _('for&nbsp;%s&nbsp;hours', Math.floor(seconds / 3600));
         }
 
         return result;

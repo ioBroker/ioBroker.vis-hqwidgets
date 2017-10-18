@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.1.0"
+    version: "1.1.1"
 
     Copyright 6'2014-2017 bluefox<dogafox@gmail.com>
 
@@ -878,7 +878,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.1.0",
+    version: "1.1.1",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -903,10 +903,6 @@ vis.binds.hqwidgets = {
     getTimeInterval: function (oldTime, hoursToShow) {
         // if less than 2000.01.01 00:00:00
         if (oldTime < 946681200000) oldTime = oldTime * 1000;
-
-        if (typeof moment !== 'undefined') {
-            return moment(new Date(oldTime)).fromNow();
-        }
 
         var result = '';
 

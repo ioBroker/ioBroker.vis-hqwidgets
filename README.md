@@ -14,8 +14,8 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
-### 1.1.0 (2017-10-17)
-* (bluefox) moment.js
+### 1.1.1 (2017-10-18)
+* (bluefox) Fix interval description for russian
 
 ### 1.0.11 (2017-09-18)
 * (bluefox) Hide left description

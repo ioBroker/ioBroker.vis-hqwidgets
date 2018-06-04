@@ -7,11 +7,11 @@
 	user-select: none;
 }*/
 .vis-hq-no-space {
-    border: 0px;
-    margin: 0px;
-    padding: 0px;
-    border-spacing: 0px;
-    border-image-width: 0px;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    border-spacing: 0;
+    border-image-width: 0;
 }
 
 .vis-hq-nodata {
@@ -183,7 +183,7 @@
 }
 .hq-blind-blind {
 	background-image:url(../img/blind.png);
-	background-position: 0% 100%;
+	background-position: 0 100%;
 }
 .hq-blind-blind1 {
 	width: 100%;
@@ -334,9 +334,9 @@
 .hq-blind-big-button {
 	height: 2.5em;
 	width: 100%;
-	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
-	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
-	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-moz-box-shadow:inset 0 1px 0 0 #bbdaf7;
+	-webkit-box-shadow:inset 0 1px 0 0 #bbdaf7;
+	box-shadow:inset 0 1px 0 0 #bbdaf7;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
 	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');

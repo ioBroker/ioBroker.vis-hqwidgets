@@ -14,6 +14,9 @@ For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 ## Changelog
+### 1.1.2 (2018-06-09)
+* (bluefox) Odometer was fixed while rendering in invisible state
+
 ### 1.1.1 (2017-10-18)
 * (bluefox) Fix interval description for russian
 
@@ -116,5 +119,5 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 - (bluefox) initial checkin
 
 ## License
- Copyright (c) 2013-2017 bluefox https://github.com/GermanBluefox
+ Copyright (c) 2013-2018 bluefox https://github.com/GermanBluefox
  MIT

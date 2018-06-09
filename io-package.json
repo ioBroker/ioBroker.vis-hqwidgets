@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "vis-hqwidgets",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "news": {
+            "1.1.2": {
+                "en": "Odometer was fixed while rendering in invisible state",
+                "de": "Der Entfernungsmesser wurde beim Rendern im unsichtbaren Zustand behoben",
+                "ru": "Одометр был зафиксирован при визуализации в невидимом состоянии",
+                "pt": "Odometro foi corrigido durante a renderização em estado invisível",
+                "nl": "De odimeter is gerepareerd tijdens het renderen in onzichtbare toestand",
+                "fr": "Odomètre a été fixé lors du rendu dans un état invisible",
+                "it": "L'odometro è stato corretto durante il rendering in stato invisibile",
+                "es": "El odómetro se corrigió mientras se renderizaba en estado invisible",
+                "pl": "Licznik został naprawiony podczas renderowania w stanie niewidocznym"
+            },
             "1.1.1": {
                 "en": "Fix interval description for russian",
                 "de": "Korrigiere Intevall auf russisch",
@@ -64,11 +75,17 @@
                 "ru": "add odometer widget"
             }
         },
-        "title": "ioBroker Visualisation - hqwidgets style Widgets",
+        "title": "hqwidgets style Widgets",
         "desc": {
             "en": "High quality Widgets for ioBroker.vis",
-            "de": "High quality Widgets für ioBroker.vis",
-            "ru": "High quality Widgets для ioBroker.vis"
+            "de": "Hochwertige (High quality) Widgets für ioBroker.vis",
+            "ru": "Высококачественные виджеты (High quality) для ioBroker.vis",
+            "pt": "Widgets de alta qualidade para ioBroker.vis",
+            "nl": "Hoge kwaliteit (High quality) Widgets voor ioBroker.vis",
+            "fr": "Widgets de haute qualité (High quality) pour ioBroker.vis",
+            "it": "Widget di alta qualità (High quality) per ioBroker.vis",
+            "es": "Widgets de alta calidad (High quality) para ioBroker.vis",
+            "pl": "Wysokiej jakości widżety (High quality) dla ioBroker.vis"
         },
         "platform": "Javascript/Node.js",
         "loglevel": "info",

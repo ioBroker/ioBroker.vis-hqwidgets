@@ -1,9 +1,9 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.1.1"
+    version: "1.1.2"
 
-    Copyright 6'2014-2017 bluefox<dogafox@gmail.com>
+    Copyright 6'2014-2018 bluefox<dogafox@gmail.com>
 
 */
 'use strict';
@@ -878,7 +878,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.1.1",
+    version: "1.1.2",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -2755,10 +2755,10 @@ vis.binds.hqwidgets = {
         vis.binds.hqwidgets.showVersion();
 
         var $div = $('#' + data.wid);
-        if (!$div.length) {
+        if (!$div.length || !$div.is(':visible')) {
             setTimeout(function () {
                 vis.binds.hqwidgets.odometer(view, data);
-            }, 100);
+            }, 300);
             return;
         }
 

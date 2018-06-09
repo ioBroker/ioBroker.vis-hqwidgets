@@ -2755,10 +2755,16 @@ vis.binds.hqwidgets = {
         vis.binds.hqwidgets.showVersion();
 
         var $div = $('#' + data.wid);
-        if (!$div.length || !$div.is(':visible')) {
+        if (!$div.length) {
             setTimeout(function () {
                 vis.binds.hqwidgets.odometer(view, data);
-            }, 300);
+            }, 100);
+            return;
+        } else
+        if (!$div.is(':visible')) {
+            setTimeout(function () {
+                vis.binds.hqwidgets.odometer(view, data);
+            }, 500);
             return;
         }
 

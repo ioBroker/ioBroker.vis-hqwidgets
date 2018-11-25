@@ -830,7 +830,9 @@ if (vis.editMode) {
         "infoLeftPaddingRight":  {"en": "Right padding (left",  "de": "Rechter Abstand (Links)", "ru": "Отступ справа (левый текст)"},
         "infoRightPaddingLeft":  {"en": "Left padding (right)",  "de": "Linker Abstand (Rechts)", "ru": "Отступ слева (правый текст)"},
         "infoRightPaddingRight": {"en": "Right padding (right)", "de": "Rechter Abstand (Rechts)", "ru": "Отступ справа (правый текст)"},
-        "valveBinary":      {"en": "Valve only On/Off",  "de": "Ventil nur An/Aus",     "ru": "Вентиль только Откр/Закр"}
+        "valveBinary":      {"en": "Valve only On/Off",  "de": "Ventil nur An/Aus",     "ru": "Вентиль только Откр/Закр"},
+        "oid-updown": {"en": "Object ID Up/Down", "de": "Objekt-ID rauf/runter"},
+        "oid-stop": {"en": "Object ID stop", "de": "Objekt-ID stop"}
     });
 }
 
@@ -1903,11 +1905,31 @@ vis.binds.hqwidgets = {
                     vis.binds.hqwidgets.window.hidePopup($div);
                 });
                 $div.find('.hq-blind-big-button-down').click(function () {
-                    vis.setValue(data.oid, data.invert ? data.min : data.max);
+                    var stopMode = $div.data('stopMode');
+                    if (stopMode && data['oid-stop']) {
+                        vis.setValue(data['oid-stop'], true);
+                        $div.data('stopMode', false);
+                    } else if (data['oid-updown']) {
+                        vis.setValue(data['oid-updown'], data.invert ? false : true);
+                        $div.data('stopMode', true);
+                    } else {
+                        vis.setValue(data.oid, data.invert ? data.min : data.max);
+                        $div.data('stopMode', true);
+                    }
                     vis.binds.hqwidgets.window.hidePopup($div);
                 });
                 $div.find('.hq-blind-big-button-up').click(function () {
-                    vis.setValue(data.oid, data.invert ? data.max : data.min);
+                    var stopMode = $div.data('stopMode');
+                    if (stopMode && data['oid-stop']) {
+                        vis.setValue(data['oid-stop'], true);
+                        $div.data('stopMode', false);
+                    } else if (data['oid-updown']) {
+                        vis.setValue(data['oid-updown'], data.invert ? true : false);
+                        $div.data('stopMode', true);
+                    } else {
+                        vis.setValue(data.oid, data.invert ? data.max : data.min);
+                        $div.data('stopMode', true);
+                    }
                     vis.binds.hqwidgets.window.hidePopup($div);
                 });
                 $big = $div.find('.hq-blind-big');
@@ -2098,6 +2120,9 @@ vis.binds.hqwidgets = {
 
             function onChange(e, newVal /* , oldVal */) {
                 if (e.type === data.oid + '.val') {
+                    $div.data('stopMode', false); //my blinds only report new position when the stopped after movement.
+                                                  //this probably is not true for all blinds. So we need some other way
+                                                  //to decide if blinds stopped working, then.
                     var shutterPos = newVal;
                     data.value = shutterPos;
                     if (shutterPos === undefined || shutterPos === null) {

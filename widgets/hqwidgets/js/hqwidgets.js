@@ -100,8 +100,7 @@
                         setValue($knobDiv._oldValue);
                         if (settings.click) {
                             var newVal = settings.click($knobDiv._oldValue);
-
-                            if (newVal !== undefined) setValue(newVal);
+                            newVal !== undefined && newVal !== null && setValue(newVal);
                         }
                     } else {
                         // remove unit
@@ -449,8 +448,10 @@
 
                 options = $this.data('options');
 
-                if (onChange !== undefined) {
-                    if (options.invert) onChange = options.max - onChange + options.min;
+                if (onChange !== undefined && onChange !== null) {
+                    if (options.invert) {
+                        onChange = options.max - onChange + options.min;
+                    }
                     $this.slider('value', onChange);
                 }
 
@@ -459,7 +460,7 @@
                 if (options.timeout) {
                     $this.data('hideTimer', setTimeout(function () {
                         $this.data('hideTimer', null);
-                        if (options.onIdle) options.onIdle();
+                        options.onIdle && options.onIdle();
                     }, options.timeout));
                 }
             });
@@ -471,7 +472,7 @@
                     var options = $this.data('options');
                     if (options.timeout) {
                         $this.data('hideTimer', setTimeout(function () {
-                            if (options.onIdle) options.onIdle();
+                            options.onIdle && options.onIdle();
                         }, options.timeout));
                     }
                 });
@@ -541,13 +542,13 @@
                     if (options.timeout) {
                         $this.data('hideTimer', setTimeout(function () {
                             $this.data('hideTimer', null);
-                            if (options.onIdle) options.onIdle();
+                            options.onIdle && options.onIdle();
                         }, options.timeout));
                     }
                 }
             });
 
-            $this.find('.ui-slider-range').removeClass("ui-widget-header").addClass('hq-blind-blind').css({'background-position': '0% 100%'});
+            $this.find('.ui-slider-range').removeClass('ui-widget-header').addClass('hq-blind-blind').css({'background-position': '0% 100%'});
         });
     };
 
@@ -556,7 +557,9 @@
             if (options === 'show') {
                 return this.each(function () {
                     var $this = $(this);
-                    if (args === undefined) args = true;
+                    if (args === undefined || args === null) {
+                        args = true;
+                    }
 
                     if (args) {
                         $this.find('.vis-hq-battery').show();
@@ -575,7 +578,7 @@
 
         options = options || {};
         options.color = options.color || '#FF5555';
-        options.angle = (options.angle !== undefined) ? options.angle : -90;
+        options.angle = (options.angle !== undefined && options.angle !== null) ? options.angle : -90;
         options.size  = options.size  || 32;
         options.title = options.title || '';
 
@@ -994,10 +997,12 @@ vis.binds.hqwidgets = {
             // Set number value
             var text = null;
             if (data.wType === 'number' && data.oid) {
-                var html = ((value === undefined || value === null) ? data.min : value) + ((data.unit === undefined) ? '' : data.unit);
-                if (data.drive !== undefined) {
+                var html = (value === undefined || value === null ? data.min : value) + (data.unit === undefined || data.unit === null ? '' : data.unit);
+                if (data.drive !== undefined && data.drive !== null) {
                     html += '<br><span class="vis-hq-drive">' + data.drive + '</span>';
-                    if (!data.valveBinary) html += '%';
+                    if (!data.valveBinary) {
+                        html += '%';
+                    }
                 }
                 text = $div.find('.vis-hq-rightinfo-text').html(html);
             }
@@ -1015,7 +1020,9 @@ vis.binds.hqwidgets = {
             if (!data) return;
 
             var $c = $div.find('.vis-hq-centerinfo');
-            if (reInit || data.humidity !== undefined || data.actual !== undefined) {
+            if (reInit ||
+                (data.humidity !== undefined && data.humidity !== null) ||
+                (data.actual   !== undefined && data.actual   !== null)) {
                 if (isHide) {
                     $c.hide();
                     $div.find('.vis-hq-middle').css('opacity', 1);
@@ -1034,10 +1041,10 @@ vis.binds.hqwidgets = {
                         $c.remove();
                         var text = '<table class="vis-hq-centerinfo vis-hq-no-space" style="z-index: 2;position: absolute' +  (data.midTextColor ? ';color: ' + data.midTextColor : '') + '">';
 
-                        if (data.actual   !== undefined) {
-                            text += '<tr class="vis-hq-actual-style vis-hq-no-space"><td class="vis-hq-no-space"><span class="vis-hq-actual"></span>' + ((data.unit === undefined) ? '' : data.unit) + '</tr>';
+                        if (data.actual   !== undefined && data.actual   !== null) {
+                            text += '<tr class="vis-hq-actual-style vis-hq-no-space"><td class="vis-hq-no-space"><span class="vis-hq-actual"></span>' + (data.unit === undefined && data.unit === null ? '' : data.unit) + '</tr>';
                         }
-                        if (data.humidity !== undefined) {
+                        if (data.humidity !== undefined && data.humidity !== null) {
                             text += '<tr class="vis-hq-humidity-style vis-hq-no-space"><td class="vis-hq-no-space"><span class="vis-hq-humidity"></span>%</td></tr>';
                         }
 
@@ -1102,11 +1109,15 @@ vis.binds.hqwidgets = {
         // Calculate state of button
         changeState: function ($div, isInit, isForce, isOwn) {
             var data = $div.data('data');
-            if (!data) return;
+            if (!data) {
+                return;
+            }
 
-            var value = (data.tempValue !== undefined) ? data.tempValue : data.value;
+            var value = data.tempValue !== undefined && data.tempValue !== null ? data.tempValue : data.value;
 
-            if (!isForce && data.oldValue !== undefined && data.oldValue == value && !data.ack) return;
+            if (!isForce && data.oldValue !== undefined && data.oldValue !== null && data.oldValue == value && !data.ack) {
+                return;
+            }
 
             if (data.wType === 'number') {
                 value = parseFloat((value || 0).toString().replace(',', '.'));
@@ -1345,15 +1356,21 @@ vis.binds.hqwidgets = {
                     data.lc    = vis.states[data.oid + '.lc'];
 
                     if (data.wType === 'number') {
-                        if (newVal === false || newVal === 'false') data.value = data.min;
-                        if (newVal === true  || newVal === 'true')  data.value = data.max;
+                        if (newVal === false || newVal === 'false') {
+                            data.value = data.min;
+                        }
+                        if (newVal === true  || newVal === 'true')  {
+                            data.value = data.max;
+                        }
                     }
-                        data.tempValue = undefined;
+                    data.tempValue = undefined;
 
                     vis.binds.hqwidgets.button.changeState($div);
 
                     if (data.wType === 'number') {
-                        if (typeof data.value !== 'number') data.value = parseFloat(data.value) || 0;
+                        if (typeof data.value !== 'number') {
+                            data.value = parseFloat(data.value) || 0;
+                        }
                         $main.scala('value', (data.digits !== null) ? data.value.toFixed(data.digits) : data.value);
                     }
                     return;
@@ -1678,11 +1695,11 @@ vis.binds.hqwidgets = {
             data.pushButton     = (data.pushButton === 'true' || data.pushButton === true);
 
             if (data.wType === 'number') {
-                data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined) ? parseFloat(data.min) : 0));
-                data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : ((data.max !== undefined) ? parseFloat(data.max) : 100));
+                data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : (data.min !== undefined && data.min !== null ? parseFloat(data.min) : 0));
+                data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : (data.max !== undefined && data.max !== null ? parseFloat(data.max) : 100));
             } else {
-                data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : ((data.min !== undefined && data.min !== null && data.min !== '') ? data.min : 0));
-                data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : ((data.max !== undefined && data.max !== null && data.max !== '') ? data.max : 100));
+                data.min = (data.min === 'true' || data.min === true) ? true : ((data.min === 'false' || data.min === false) ? false : (data.min !== undefined && data.min !== null && data.min !== '' ? data.min : 0));
+                data.max = (data.max === 'true' || data.max === true) ? true : ((data.max === 'false' || data.max === false) ? false : (data.max !== undefined && data.max !== null && data.max !== '' ? data.max : 100));
             }
             $div.data('data',  data);
             $div.data('style', style);
@@ -1915,7 +1932,7 @@ vis.binds.hqwidgets = {
 
             $big.data('show', true);
 
-            if (data.bigLeft === undefined) {
+            if (data.bigLeft === undefined || data.bigLeft === null) {
                 var pos = $div.position();
                 var w   = $div.width();
                 var h   = $div.height();
@@ -2068,13 +2085,15 @@ vis.binds.hqwidgets = {
             }
             data = _data;
 
-            data.hide_timeout = (data.hide_timeout === 0 || data.hide_timeout === '0') ? 0 : (parseInt(data.hide_timeout, 10) || 2000);
-            data.min          = ((data.min !== undefined) ? parseFloat(data.min) : 0);
-            data.max          = ((data.max !== undefined) ? parseFloat(data.max) : 100);
-            data.digits       = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
-            data.noAnimate    = (data.noAnimate === 'true' || data.noAnimate === true || data.noAnimate == 1);
+            data.hide_timeout = data.hide_timeout === 0 || data.hide_timeout === '0' ? 0 : parseInt(data.hide_timeout, 10) || 2000;
+            data.min          = data.min !== undefined && data.min !== null ? parseFloat(data.min) : 0;
+            data.max          = data.max !== undefined && data.max !== null ? parseFloat(data.max) : 100;
+            data.digits       = data.digits || data.digits === 0 ? parseInt(data.digits, 10) : null;
+            data.noAnimate    = data.noAnimate === 'true' || data.noAnimate === true || data.noAnimate === 1 || data.noAnimate === '1';
 
-            if (!data.border_width && data.border_width !== '0') data.border_width = 3;
+            if (!data.border_width && data.border_width !== '0') {
+                data.border_width = 3;
+            }
             data.border_width = parseInt(data.border_width, 10);
 
             $div.data('data',  data);
@@ -2600,7 +2619,7 @@ vis.binds.hqwidgets = {
             }
 
             var offset = settings.angleOffset;
-            if (settings.angleArc !== undefined && !offset && offset !== 0 && offset !== '0') {
+            if (settings.angleArc !== undefined && settings.angleArc !== null && !offset && offset !== 0 && offset !== '0') {
                 offset = 180 + (360 - parseInt(settings.angleArc, 10)) / 2;
             }
 
@@ -2700,13 +2719,25 @@ vis.binds.hqwidgets = {
                 }, 100);
                 return;
             }
-            if (data.val_false === undefined || data.val_false === 'false') data.val_false = false;
-            if (data.val_false === 'true') data.val_false = true;
-            if (data.val_false == parseFloat(data.val_false)) data.val_false = parseFloat(data.val_false);
+            if (data.val_false === undefined || data.val_false === null || data.val_false === 'false') {
+                data.val_false = false;
+            }
+            if (data.val_false === 'true') {
+                data.val_false = true;
+            }
+            if (data.val_false == parseFloat(data.val_false)) {
+                data.val_false = parseFloat(data.val_false);
+            }
 
-            if (data.val_true === undefined || data.val_true === 'true') data.val_true = true;
-            if (data.val_true === 'false')   data.val_true = false;
-            if (data.val_true == parseFloat(data.val_true)) data.val_true = parseFloat(data.val_true);
+            if (data.val_true === undefined || data.val_true === null || data.val_true === 'true') {
+                data.val_true = true;
+            }
+            if (data.val_true === 'false')   {
+                data.val_true = false;
+            }
+            if (data.val_true == parseFloat(data.val_true)) {
+                data.val_true = parseFloat(data.val_true);
+            }
 
             var settings = {
                 oid:             data.oid             || null,
@@ -2979,9 +3010,9 @@ if (vis.editMode) {
                             }
                         }
                         widget.data.border_width = 1;
-                        if (widget.data.hm_id  !== undefined) delete widget.data.hm_id;
-                        if (widget.data.digits !== undefined) delete widget.data.digits;
-                        if (widget.data.factor !== undefined) delete widget.data.factor;
+                        if (widget.data.hm_id  !== undefined && widget.data.hm_id  !== null) delete widget.data.hm_id;
+                        if (widget.data.digits !== undefined && widget.data.digits !== null) delete widget.data.digits;
+                        if (widget.data.factor !== undefined && widget.data.factor !== null) delete widget.data.factor;
                     }
                 }
             } catch (e) {

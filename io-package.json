@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "vis-hqwidgets",
-        "version": "1.1.2",
+        "version": "1.1.3",
         "news": {
+            "1.1.3": {
+                "en": "Preparations for js-controller 2.0",
+                "de": "Vorbereitungen für js-controller 2.0",
+                "ru": "Подготовка к js-controller 2.0",
+                "pt": "Preparativos para js-controller 2.0",
+                "nl": "Voorbereidingen voor js-controller 2.0",
+                "fr": "Préparations pour js-controller 2.0",
+                "it": "Preparativi per js-controller 2.0",
+                "es": "Preparativos para js-controller 2.0",
+                "pl": "Przygotowania do js-kontrolera 2.0",
+                "zh-cn": "js-controller 2.0的准备"
+            },
             "1.1.2": {
                 "en": "Odometer was fixed while rendering in invisible state",
                 "de": "Der Entfernungsmesser wurde beim Rendern im unsichtbaren Zustand behoben",

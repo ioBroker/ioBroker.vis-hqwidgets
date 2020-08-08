@@ -30,6 +30,7 @@
     "hqwidgets GUI"
   ],
   "devDependencies": {
+    "@alcalzone/release-script": "^1.6.0",
     "mocha": "^7.1.1",
     "chai": "^4.2.0"
   },
@@ -38,7 +39,8 @@
   },
   "main": "widgets/hqwidgets.html",
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha --exit"
+    "test": "node node_modules/mocha/bin/mocha --exit",
+    "release": "release-script"
   },
   "license": "MIT"
 }

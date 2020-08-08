@@ -18,7 +18,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
-### __WORK IN PROGRESS__
+### 1.1.5 (2020-08-08)
 * (mk176) Resolved the button even if mouse is moved out
 
 ### 1.1.4 (2020-03-28)

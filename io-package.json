@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "vis-hqwidgets",
-        "version": "1.1.4",
+        "version": "1.1.5",
         "news": {
+            "1.1.5": {
+                "en": "Resolved the button even if mouse is moved out",
+                "de": "Die Schaltfläche wurde behoben, auch wenn die Maus herausgezogen wurde",
+                "ru": "Решена кнопка, даже если мышь перемещена",
+                "pt": "O botão foi resolvido mesmo se o mouse for movido para fora",
+                "nl": "De knop is opgelost, zelfs als de muis naar buiten is verplaatst",
+                "fr": "Résolution du bouton même si la souris est déplacée",
+                "it": "Risolto il problema con il pulsante anche se il mouse veniva spostato all'esterno",
+                "es": "Se resolvió el botón incluso si el mouse se movía hacia afuera",
+                "pl": "Rozwiązano problem z przyciskiem, nawet jeśli mysz jest wyprowadzona",
+                "zh-cn": "解决了按钮，即使将鼠标移出"
+            },
             "1.1.4": {
                 "en": "Fixed blinds widget",
                 "de": "Blinds Widget behoben",

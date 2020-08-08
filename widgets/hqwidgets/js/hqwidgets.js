@@ -205,6 +205,8 @@
                 press(e.type);
             }).bind('mouseup', function (e) {
                 unpress(e.type);
+            }).bind('mouseout', function (e) {
+                unpress(e.type);
             }).bind('mouseenter', function (e) {
                 $knobDiv._mouseEnter = true;
                 show(e.type);
@@ -1612,7 +1614,7 @@ vis.binds.hqwidgets = {
                             if (data.urlTrue) vis.conn.httpGet(data.urlTrue);
                             if (data.oid && data.oid !== 'nothing_selected') vis.setValue(data.oid, data.value);
                         });
-                        $main.on('mouseup touchend', function (e) {
+                        $main.on('mouseup mouseout touchend', function (e) {
 
                             // Protect against two events
                             if (vis.detectBounce(this, true)) return;

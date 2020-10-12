@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.1.4"
+    version: "1.1.6"
 
     Copyright 6'2014-2020 bluefox <dogafox@gmail.com>
 
@@ -337,7 +337,9 @@
             options = options || {};
             effect  = effect || 'waves';
 
-            if (options.speed != 1 && options.speed != 2 && options.speed != 2) options.speed = 1;
+            if (options.speed != 1 && options.speed != 2 && options.speed != 2) {
+                options.speed = 1;
+            }
 
             if (effect === 'waves') {
                 var borderThickness = (options.tickness || 3) - 1;
@@ -883,7 +885,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.1.4",
+    version: "1.1.6",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -1058,8 +1060,15 @@ vis.binds.hqwidgets = {
                     }
                     $div.find('.vis-hq-middle').css('opacity', 0.7);
                     if (data.actual   !== undefined && data.actual !== null) {
-                        if (typeof data.actual !== 'number') data.actual = parseFloat(data.actual) || 0;
-                        $div.find('.vis-hq-actual').html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
+                        if (typeof data.actual !== 'number') {
+                            data.actual = parseFloat(data.actual) || 0;
+                        }
+                        var val = data.digits !== null ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0);
+                        if (data.is_comma) {
+                            val = val.toString().replace('.', ',');
+                        }
+
+                        $div.find('.vis-hq-actual').html(val);
                     }
 
                     if (data.humidity !== undefined && data.humidity !== null) {
@@ -1212,10 +1221,14 @@ vis.binds.hqwidgets = {
                     break;
             }
             if (data.digits !== null && value !== null && value !== undefined) {
-                if (typeof value !== 'number') value = parseFloat(value) || 0;
+                if (typeof value !== 'number') {
+                    value = parseFloat(value) || 0;
+                }
                 value = value.toFixed(data.digits);
             }
-            if (data.is_comma && value) value = value.toString().replace('.', ',');
+            if (data.is_comma && value) {
+                value = value.toString().replace('.', ',');
+            }
 
             vis.binds.hqwidgets.button.showRightInfo($div, value);
 
@@ -1245,8 +1258,14 @@ vis.binds.hqwidgets = {
                 if (!$a.length) {
                     vis.binds.hqwidgets.button.showCenterInfo($div, false, true);
                 } else {
-                    if (typeof data.actual !== 'number') data.actual = parseFloat(data.actual) || 0;
-                    $a.html((data.digits !== null) ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0));
+                    if (typeof data.actual !== 'number') {
+                        data.actual = parseFloat(data.actual) || 0;
+                    }
+                    var val = data.digits !== null ? (data.actual || 0).toFixed(data.digits) : (data.actual || 0);
+                    if (data.is_comma) {
+                        val = val.toString().replace('.', ',');
+                    }
+                    $a.html(val);
                 }
             }
 
@@ -1323,7 +1342,9 @@ vis.binds.hqwidgets = {
 
             var width = $div.width();
             var offset = width - 20 - parseInt(radius, 10);
-            if (offset < width / 2) offset = width / 2;
+            if (offset < width / 2) {
+                offset = width / 2;
+            }
             $div.find('.vis-hq-leftinfo').css({right: offset + 'px'});
             $div.find('.vis-hq-rightinfo').css({'padding-left': (5 + (width / 2) + (parseInt(data.infoRightPaddingLeft, 10) || 0)) + 'px'});
 
@@ -1373,7 +1394,11 @@ vis.binds.hqwidgets = {
                         if (typeof data.value !== 'number') {
                             data.value = parseFloat(data.value) || 0;
                         }
-                        $main.scala('value', (data.digits !== null) ? data.value.toFixed(data.digits) : data.value);
+                        var val = data.digits !== null ? data.value.toFixed(data.digits) : data.value;
+                        if (data.is_comma) {
+                            val = val.toString().replace('.', ',');
+                        }
+                        $main.scala('value', val);
                     }
                     return;
                 } else if (e.type === data.oid + '.ack') {
@@ -1394,7 +1419,9 @@ vis.binds.hqwidgets = {
                     data.actual = newVal;
                 } else if (e.type === data['oid-drive'] + '.val') {
                     if (data.valveBinary === 'true' || data.valveBinary === true) {
-                        if (newVal === null || newVal === undefined) newVal = 0;
+                        if (newVal === null || newVal === undefined) {
+                            newVal = 0;
+                        }
                         if (newVal === 'true') {
                             newVal = true;
                         } else if (parseFloat(newVal).toString() === newVal.toString()) {
@@ -1403,6 +1430,9 @@ vis.binds.hqwidgets = {
                             newVal = false;
                         }
                         newVal = newVal ? _('opened') : _('closed');
+                    } else {
+                        // no digits after comma
+                        newVal = Math.round(parseFloat(newVal) || 0);
                     }
 
                     data.drive = newVal;
@@ -1475,8 +1505,14 @@ vis.binds.hqwidgets = {
                             data.value = parseFloat(value.toString().replace(',', '.'));
 
                             if (data.digits !== null) {
-                                if (typeof data.value !== 'number') data.value = parseFloat(data.value) || 0;
+                                if (typeof data.value !== 'number') {
+                                    data.value = parseFloat(data.value) || 0;
+                                }
                                 data.value = data.value.toFixed(data.digits);
+
+                                if (data.is_comma) {
+                                    data.value = data.value.toString().replace('.', ',');
+                                }
                             }
 
                             data.value     = parseFloat(data.value) || 0;
@@ -1603,7 +1639,7 @@ vis.binds.hqwidgets = {
                         $main.on('mousedown touchstart', function (e) {
                             // Protect against two events
                             if (vis.detectBounce(this)) return;
-                            
+
                             vis.binds.hqwidgets.contextMenu(false);
 
                             data.value = data.max;
@@ -1687,7 +1723,9 @@ vis.binds.hqwidgets = {
             data.styleNormal    = data.usejQueryStyle ? 'ui-state-default' : (data.styleNormal || 'vis-hq-button-base-normal');
             data.styleActive    = data.usejQueryStyle ? 'ui-state-active'  : (data.styleActive || 'vis-hq-button-base-on');
             data.digits         = (data.digits || data.digits === 0) ? parseInt(data.digits, 10) : null;
-            if (typeof data.step === 'string') data.step = data.step.replace(',', '.');
+            if (typeof data.step === 'string') {
+                data.step = data.step.replace(',', '.');
+            }
             data.step           = parseFloat(data.step || 1);
             data.is_comma       = (data.is_comma === 'true' || data.is_comma === true);
             data.readOnly       = (data.readOnly === 'true' || data.readOnly === true);
@@ -1719,7 +1757,9 @@ vis.binds.hqwidgets = {
             if (data['oid-actual'])   data.actual   = vis.states.attr(data['oid-actual']   + '.val');
             if (data['oid-drive'])    {
                 var val = vis.states.attr(data['oid-drive'] + '.val');
-                if (val === null || val === undefined) val = 0;
+                if (val === null || val === undefined) {
+                    val = 0;
+                }
                 if (data.valveBinary === 'true' || data.valveBinary === true) {
                     if (val === 'true') {
                         val = true;
@@ -1729,7 +1769,10 @@ vis.binds.hqwidgets = {
                         val = false;
                     }
                     val = val ? _('opened') : _('closed');
+                } else {
+                    val = Math.round(parseFloat(val) || 0);
                 }
+
                 data.drive = val;
             }
 
@@ -1945,7 +1988,7 @@ vis.binds.hqwidgets = {
                 //default will still be center
                 var popUpHorPos = Math.round((h - data.bigHeight) / 2);
                 var popUpVerPos = Math.round((w - data.bigWidth) / 2);
-                
+
                 if ( data.popupVerticalPos === "left" ) {
                 	  popUpVerPos = Math.round(w - data.bigWidth);
                 }
@@ -1962,7 +2005,7 @@ vis.binds.hqwidgets = {
                 	  popUpHorPos = 0;
                 }
                 data.bigTop = popUpHorPos;
-                
+
 
                 if (pos.top  + data.bigTop < 0)  data.bigTop  = -pos.top;
                 if (pos.left + data.bigLeft < 0) data.bigLeft = -pos.left;
@@ -2802,7 +2845,7 @@ vis.binds.hqwidgets = {
         }
 
         Odometer.prototype.watchForMutations = function() {};
-        
+
         var oid    = data.oid;
         var format = data.format || '(.ddd),dd';
         var factor = parseFloat(data.factor) || 1;
@@ -2814,7 +2857,7 @@ vis.binds.hqwidgets = {
         }
         $div.append('<div class="odometer"></div>');
         $od = $div.find('.odometer');
-        
+
         if (data.leadingZeros) {
             var m = format.match(/\([,.\s]?(d+)\)/);
             if (m && m[1]) {

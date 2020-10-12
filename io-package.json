@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "vis-hqwidgets",
-        "version": "1.1.5",
+        "version": "1.1.6",
         "news": {
+            "1.1.6": {
+                "en": "Corrected the after comma digits for the valve",
+                "de": "Die Nachkommastellen für das Ventil wurden korrigiert",
+                "ru": "Исправлены цифры после запятой для клапана.",
+                "pt": "Corrigidos os dígitos posteriores da vírgula para a válvula",
+                "nl": "De cijfers achter de komma voor de klep zijn gecorrigeerd",
+                "fr": "Correction des chiffres après la virgule pour la vanne",
+                "it": "Corrette le cifre dopo la virgola per la valvola",
+                "es": "Se corrigieron los dígitos posteriores a la coma de la válvula.",
+                "pl": "Poprawiono cyfry po przecinku dla zaworu",
+                "zh-cn": "纠正了阀门的逗号后数字"
+            },
             "1.1.5": {
                 "en": "Resolved the button even if mouse is moved out",
                 "de": "Die Schaltfläche wurde behoben, auch wenn die Maus herausgezogen wurde",

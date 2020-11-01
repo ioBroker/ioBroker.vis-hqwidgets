@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.1.6"
+    version: "1.1.7"
 
     Copyright 6'2014-2020 bluefox <dogafox@gmail.com>
 
@@ -885,7 +885,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.1.6",
+    version: "1.1.7",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -1498,29 +1498,28 @@ vis.binds.hqwidgets = {
                     scalaOptions = {
                         change:     function (value, notAck) {
                             //console.log(data.wid + ' filtered out:' + value + '(' + notAck + ')');
-                            if (!notAck) return;
-
-                            if (data.readOnly || (data.value || 0).toString() === value.toString()) return;
-
-                            data.value = parseFloat(value.toString().replace(',', '.'));
-
-                            if (data.digits !== null) {
-                                if (typeof data.value !== 'number') {
-                                    data.value = parseFloat(data.value) || 0;
-                                }
-                                data.value = data.value.toFixed(data.digits);
-
-                                if (data.is_comma) {
-                                    data.value = data.value.toString().replace('.', ',');
-                                }
+                            if (!notAck) {
+                                return;
                             }
 
-                            data.value     = parseFloat(data.value) || 0;
+                            if (data.readOnly || (data.value || 0).toString() === value.toString()) {
+                                return;
+                            }
+                            var setValue = parseFloat(value.toString().replace(',', '.')) || 0;
+
+                            if (data.digits !== null) {
+                                data.value = setValue.toFixed(data.digits);
+                            } else {
+                                data.value = setValue;
+                            }
+                            if (data.is_comma) {
+                                data.value = data.value.toString().replace('.', ',');
+                            }
                             data.ack       = false;
                             data.tempValue = undefined;
 
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
-                            vis.setValue(data.oid, data.value);
+                            vis.setValue(data.oid, setValue);
                         },
                         min:        data.min,
                         max:        data.max,

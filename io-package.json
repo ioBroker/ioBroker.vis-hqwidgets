@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "vis-hqwidgets",
-        "version": "1.1.6",
+        "version": "1.1.7",
         "news": {
-            "1.1.6": {
+            "1.1.7": {
                 "en": "Corrected the after comma digits for the valve",
                 "de": "Die Nachkommastellen für das Ventil wurden korrigiert",
                 "ru": "Исправлены цифры после запятой для клапана.",

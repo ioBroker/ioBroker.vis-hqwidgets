@@ -18,7 +18,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
-### 1.1.8 (2021-10-20)
+### 1.1.9 (2021-10-20)
 * (bluefox) Added the valve values from 0 to 1 
 
 ### 1.1.7 (2020-10-31)

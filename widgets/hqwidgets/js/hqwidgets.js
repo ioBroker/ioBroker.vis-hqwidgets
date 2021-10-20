@@ -1,7 +1,7 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.1.8"
+    version: "1.1.9"
 
     Copyright 6'2014-2021 bluefox <dogafox@gmail.com>
 
@@ -510,15 +510,15 @@
             if (options.timeout && options.show) {
                 $this.data('hideTimer', setTimeout(function () {
                     $this.data('hideTimer', null);
-                    if (onIdle) onIdle();
+                    onIdle && onIdle();
                 }, options.timeout));
             }
 
             $this.data('options', options);
 
             $this.slider({
-                orientation:    "vertical",
-                range:          "max",
+                orientation:    'vertical',
+                range:          'max',
                 min:            options.min,
                 max:            options.max,
                 value:          options.value,
@@ -838,7 +838,7 @@ if (vis.editMode) {
         "infoRightPaddingLeft":  {"en": "Left padding (right)",  "de": "Linker Abstand (Rechts)", "ru": "Отступ слева (правый текст)"},
         "infoRightPaddingRight": {"en": "Right padding (right)", "de": "Rechter Abstand (Rechts)", "ru": "Отступ справа (правый текст)"},
         "valveBinary":      {"en": "Valve only On/Off",  "de": "Ventil nur An/Aus",     "ru": "Вентиль только Откр/Закр"},
-        "valve1":      {"en": "Valve is from 0 to 1",  "de": "Ventil ist von 0 bis 1",     "ru": "Вентиль от 0 до 1"}
+        "valve1":           {"en": "Valve is from 0 to 1", "de": "Ventil ist von 0 bis 1", "ru": "Вентиль от 0 до 1"}
     });
 }
 
@@ -886,7 +886,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: "1.1.8",
+    version: "1.1.9",
     contextEnabled: true,
     zindex: [],
     preventDefault: function (e) {
@@ -1436,7 +1436,7 @@ vis.binds.hqwidgets = {
                         newVal = Math.round((parseFloat(newVal) || 0) * 100);
                         if (newVal < 0) {
                             newVal = 0;
-                        } else if (newVal < 100) {
+                        } else if (newVal > 100) {
                             newVal = 100;
                         }
                     } else {
@@ -1782,7 +1782,7 @@ vis.binds.hqwidgets = {
                     val = Math.round((parseFloat(val) || 0) * 100);
                     if (val < 0) {
                         val = 0;
-                    } else if (val < 100) {
+                    } else if (val > 100) {
                         val = 100;
                     }
                 }  else {

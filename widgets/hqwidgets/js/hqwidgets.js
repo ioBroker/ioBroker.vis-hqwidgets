@@ -1,9 +1,9 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.1.7"
+    version: "1.1.8"
 
-    Copyright 6'2014-2020 bluefox <dogafox@gmail.com>
+    Copyright 6'2014-2021 bluefox <dogafox@gmail.com>
 
 */
 'use strict';
@@ -837,7 +837,8 @@ if (vis.editMode) {
         "infoLeftPaddingRight":  {"en": "Right padding (left",  "de": "Rechter Abstand (Links)", "ru": "Отступ справа (левый текст)"},
         "infoRightPaddingLeft":  {"en": "Left padding (right)",  "de": "Linker Abstand (Rechts)", "ru": "Отступ слева (правый текст)"},
         "infoRightPaddingRight": {"en": "Right padding (right)", "de": "Rechter Abstand (Rechts)", "ru": "Отступ справа (правый текст)"},
-        "valveBinary":      {"en": "Valve only On/Off",  "de": "Ventil nur An/Aus",     "ru": "Вентиль только Откр/Закр"}
+        "valveBinary":      {"en": "Valve only On/Off",  "de": "Ventil nur An/Aus",     "ru": "Вентиль только Откр/Закр"},
+        "valve1":      {"en": "Valve is from 0 to 1",  "de": "Ventil ist von 0 bis 1",     "ru": "Вентиль от 0 до 1"}
     });
 }
 
@@ -1430,6 +1431,14 @@ vis.binds.hqwidgets = {
                             newVal = false;
                         }
                         newVal = newVal ? _('opened') : _('closed');
+                    } else if (data.valve1 === 'true' || data.valve1 === true) {
+                        // value is from 0 to 1.01
+                        newVal = Math.round((parseFloat(newVal) || 0) * 100);
+                        if (newVal < 0) {
+                            newVal = 0;
+                        } else if (newVal < 100) {
+                            newVal = 100;
+                        }
                     } else {
                         // no digits after comma
                         newVal = Math.round(parseFloat(newVal) || 0);
@@ -1768,7 +1777,15 @@ vis.binds.hqwidgets = {
                         val = false;
                     }
                     val = val ? _('opened') : _('closed');
-                } else {
+                } else if (data.valve1 === 'true' || data.valve1 === true) {
+                    // value is from 0 to 1.01
+                    val = Math.round((parseFloat(val) || 0) * 100);
+                    if (val < 0) {
+                        val = 0;
+                    } else if (val < 100) {
+                        val = 100;
+                    }
+                }  else {
                     val = Math.round(parseFloat(val) || 0);
                 }
 

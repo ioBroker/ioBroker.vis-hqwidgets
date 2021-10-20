@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "vis-hqwidgets",
-        "version": "1.1.7",
+        "version": "1.1.8",
         "news": {
+            "1.1.8": {
+                "en": "Added the valve values from 0 to 1 ",
+                "de": "Ventilwerte von 0 bis 1 . hinzugefügt",
+                "ru": "Добавлены значения клапана от 0 до 1",
+                "pt": "Adicionados os valores da válvula de 0 a 1",
+                "nl": "De klepwaarden toegevoegd van 0 tot 1",
+                "fr": "Ajout des valeurs de vanne de 0 à 1",
+                "it": "Aggiunti i valori della valvola da 0 a 1",
+                "es": "Añadidos los valores de la válvula de 0 a 1",
+                "pl": "Dodano wartości zaworu od 0 do 1",
+                "zh-cn": "添加了从 0 到 1 的阀门值"
+            },
             "1.1.7": {
                 "en": "Corrected the after comma digits for the valve",
                 "de": "Die Nachkommastellen für das Ventil wurden korrigiert",
@@ -124,6 +136,18 @@
             }
         },
         "title": "hqwidgets style Widgets",
+        "titleLang": {
+            "en": "High quality Widgets",
+            "de": "Hochwertige Widgets",
+            "ru": "Виджеты высокого качества",
+            "pt": "Widgets de alta qualidade",
+            "nl": "Widgets van hoge kwaliteit",
+            "fr": "Widgets de haute qualité",
+            "it": "Widget di alta qualità",
+            "es": "Widgets de alta calidad",
+            "pl": "Widżety wysokiej jakości",
+            "zh-cn": "高品质的小工具"
+        },
         "desc": {
             "en": "High quality Widgets for ioBroker.vis",
             "de": "Hochwertige (High quality) Widgets für ioBroker.vis",
@@ -163,7 +187,10 @@
         "restartAdapters": [
             "vis"
         ],
-        "noConfig": true
+        "noConfig": true,
+        "adminUI": {
+            "config": "none"
+        }
     },
     "native": {},
     "instanceObjects": []

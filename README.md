@@ -18,11 +18,11 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.2.0 (2022-04-05)
 * (bluefox) Removed deprecated method `load`
 
 ### 1.1.9 (2021-10-20)
-* (bluefox) Added the valve values from 0 to 1 
+* (bluefox) Added the valve values from 0 to 1
 
 ### 1.1.7 (2020-10-31)
 * (bluefox) Corrected the after comma digits for the valve

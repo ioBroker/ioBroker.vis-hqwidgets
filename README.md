@@ -1,15 +1,15 @@
 ![Logo](admin/hqwidgets.png)
-# oBroker.vis-hqWidgets
+# ioBroker.vis-hqWidgets
 
 ![Number of Installations](http://iobroker.live/badges/vis-hqwidgets-installed.svg) ![Number of Installations](http://iobroker.live/badges/vis-hqwidgets-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.vis-hqwidgets.svg)](https://www.npmjs.com/package/iobroker.vis-hqwidgets)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.vis-hqwidgets.svg)](https://www.npmjs.com/package/iobroker.vis-hqwidgets)
 
 [![NPM](https://nodei.co/npm/iobroker.vis-hqwidgets.png?downloads=true)](https://nodei.co/npm/iobroker.vis-hqwidgets/)
 
-hqWidgets - High quality widgets for ioBroker.vis
+hqWidgets - High quality widgets for [ioBroker.vis](https://github.com/ioBroker/ioBroker.vis)
 ![Example](img/widgets.png)
 
-For one widget the jQuery.knob plugin (MIT) from Anthony Terrien is used.
+For one widget the `jQuery.knob` plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob 
 
 <!--
@@ -141,5 +141,5 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 - (bluefox) initial checkin
 
 ## License
- Copyright (c) 2013-2021 bluefox <dogafox@gmail.com>
+ Copyright (c) 2013-2022 bluefox <dogafox@gmail.com>
  MIT

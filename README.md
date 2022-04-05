@@ -14,11 +14,11 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
-	### **WORK IN PROGRESS*
+	### **WORK IN PROGRESS**
 -->
 
 ## Changelog
-### **WORK IN PROGRESS*
+### **WORK IN PROGRESS**
 * (bluefox) Removed deprecated method `load`
 
 ### 1.1.9 (2021-10-20)

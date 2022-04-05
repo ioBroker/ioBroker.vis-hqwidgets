@@ -14,10 +14,13 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
-	### __WORK IN PROGRESS__
+	### **WORK IN PROGRESS*
 -->
 
 ## Changelog
+### **WORK IN PROGRESS*
+* (bluefox) Removed deprecated method `load`
+
 ### 1.1.9 (2021-10-20)
 * (bluefox) Added the valve values from 0 to 1 
 

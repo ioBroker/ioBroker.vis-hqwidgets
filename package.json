@@ -49,8 +49,10 @@
   ],
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --exit",
-    "release": "release-script patch --yes",
-    "release-minor": "release-script minor --yes"
+    "release": "release-script",
+    "release-patch": "release-script patch --yes --no-update-lockfile",
+    "release-minor": "release-script minor --yes --no-update-lockfile",
+    "release-major": "release-script major --yes --no-update-lockfile"
   },
   "license": "MIT"
 }

@@ -18,7 +18,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.3.0 (2022-08-15)
 * (bluefox) Made it compatible with ioBroker.vis v2
 
 ### 1.2.0 (2022-04-05)

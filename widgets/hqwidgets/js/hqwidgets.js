@@ -345,24 +345,25 @@
                 var borderThickness = (options.tickness || 3) - 1;
                 var border = ';border: ' + borderThickness + 'px ' + (options.style || 'solid') +' ' + (options.color || 'grey');
 
-                var text = '<div class="wave wave1" style="top:-' + borderThickness + 'px; left: -' + borderThickness + 'px;width: ' + Math.round($this.width()) +
+                var text = '<div class="vis-hq-wave wave1" style="top:-' + borderThickness + 'px; left: -' + borderThickness + 'px;width: ' + Math.round($this.width()) +
                     'px;height: ' + Math.round($this.height()) + 'px;border-radius: ' + (options.radius || $this.css('border-radius')) +
                     border +
                     '; position: absolute"></div>';
+
                 $this.prepend(text);
                 $this.prepend(text.replace('wave1', 'wave2'));
 
-                $this.find('.wave1').show().addClass('animated' + options.speed + 's zoomIn1');
-                $this.find('.wave2').show().addClass('animated' + options.speed + 's zoomIn2');
+                $this.find('.wave1').show().addClass('animated' + options.speed + 's vis-hq-zoomIn1');
+                $this.find('.wave2').show().addClass('animated' + options.speed + 's vis-hq-zoomIn2');
 
                 setTimeout(function () {
                     $this.find('.wave1').remove();
                     $this.find('.wave2').remove();
                 }, 2050);
             } else {
-                $this.addClass('animated' + options.speed + 's ' + effect);
+                $this.addClass('animated' + options.speed + 's vis-hq-' + effect);
                 setTimeout(function () {
-                    $this.removeClass('animated' + options.speed + 's ' + effect);
+                    $this.removeClass('animated' + options.speed + 's vis-hq-' + effect);
                 }, 2100);
             }
         });
@@ -399,10 +400,10 @@
             zindex = options.zindex || ((zindex === 'auto') ? 1 : (zindex || 0) + 1);
             $div.css({position: 'absolute', left: eLeft + ($this.width() - dw) / 2, top: eTop + ($this.height() - dh) / 2, 'z-index': zindex});
             setTimeout(function () {
-                $div.addClass('animated' + options.speed + 's ' + options.effect);
+                $div.addClass('animated' + options.speed + 's vis-hq-' + options.effect);
             }, 0);
             setTimeout(function () {
-                $div.removeClass('animated' + options.speed + 's ' + options.effect).css({opacity: 1});
+                $div.removeClass('animated' + options.speed + 's vis-hq-' + options.effect).css({opacity: 1});
                 if (callback) callback();
             }, (options.speed === '05') ? 550 : parseInt(options.speed, 10) * 1000 + 50);
         });
@@ -426,10 +427,10 @@
                 $div = $(this);
             }
             setTimeout(function () {
-                $div.addClass('animated' + options.speed + 's ' + options.effect);
+                $div.addClass('animated' + options.speed + 's vis-hq-' + options.effect);
             }, 0);
             setTimeout(function () {
-                $div.removeClass('animated' + options.speed + 's ' + options.effect);
+                $div.removeClass('animated' + options.speed + 's vis-hq-' + options.effect);
                 $div.hide();
                 if (callback) callback();
             }, (options.speed === '05') ? 550 : parseInt(options.speed, 10) * 1000 + 50);

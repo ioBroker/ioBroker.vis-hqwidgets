@@ -839,7 +839,8 @@ if (vis.editMode) {
         "infoRightPaddingLeft":  {"en": "Left padding (right)",  "de": "Linker Abstand (Rechts)", "ru": "Отступ слева (правый текст)"},
         "infoRightPaddingRight": {"en": "Right padding (right)", "de": "Rechter Abstand (Rechts)", "ru": "Отступ справа (правый текст)"},
         "valveBinary":      {"en": "Valve only On/Off",  "de": "Ventil nur An/Aus",     "ru": "Вентиль только Откр/Закр"},
-        "valve1":           {"en": "Valve is from 0 to 1", "de": "Ventil ist von 0 bis 1", "ru": "Вентиль от 0 до 1"}
+        "valve1":           {"en": "Valve is from 0 to 1", "de": "Ventil ist von 0 bis 1", "ru": "Вентиль от 0 до 1"},
+        "set_by_click":     {"en": "Set value by click", "de": "Wert Beim Klick", "ru": "Значение при щелчке мыши"},
     });
 }
 
@@ -1503,11 +1504,18 @@ vis.binds.hqwidgets = {
 
             // If dimmer or number
             if (data.wType === 'number') {
+                var ff = parseFloat(data.set_by_click);
+                if (ff.toString() == data.set_by_click) {
+                    data.set_by_click = ff;
+                } else {
+                    data.set_by_click = undefined;
+                }
+
                 var scalaOptions;
                 if (data.oid) {
                     scalaOptions = {
                         change:     function (value, notAck) {
-                            //console.log(data.wid + ' filtered out:' + value + '(' + notAck + ')');
+                            // console.log(data.wid + ' filtered out:' + value + '(' + notAck + ')');
                             if (!notAck) {
                                 return;
                             }
@@ -1541,9 +1549,18 @@ vis.binds.hqwidgets = {
                         click:      function (val) {
                             val = data.value;
                             if (!data.temperature) {
+                                // if greater than middle, then set to minimum
+                                if (data.set_by_click !== undefined) {
+                                    if (val > data.min) {
+                                        val = data.min;
+                                    } else {
+                                        val = data.set_by_click;
+                                    }
+                                } else
                                 if (val - data.min > ((data.max - data.min) / 2)) {
                                     val = data.min;
                                 } else {
+                                    // else set to maximum
                                     val = data.max;
                                 }
                             } else {
@@ -1551,7 +1568,7 @@ vis.binds.hqwidgets = {
                                 vis.binds.hqwidgets.button.changeState($div, false, false, true);
 
                                 // Show dialog
-                                if (data.url) $div.popupDialog('show');
+                                data.url && $div.popupDialog('show');
                             }
                             return val;
                         },
@@ -1609,6 +1626,13 @@ vis.binds.hqwidgets = {
                 f = parseFloat(data.min);
                 if (f.toString() == data.min) data.min = f;
 
+                f = parseFloat(data.set_by_click);
+                if (f.toString() == data.set_by_click) {
+                    data.set_by_click = f;
+                } else {
+                    data.set_by_click = undefined;
+                }
+
                 f = parseFloat(data.max);
                 if (f.toString() == data.max) data.max = f;
 
@@ -1616,9 +1640,11 @@ vis.binds.hqwidgets = {
                     if (!data.pushButton) {
                         $main.on('click touchstart', function () {
                             // Protect against two events
-                            if (vis.detectBounce(this)) return;
+                            if (vis.detectBounce(this)) {
+                                return;
+                            }
 
-                            data.value = (data.state === 'normal') ? data.max : data.min;
+                            data.value = data.state === 'normal' ? data.max : data.min;
                             data.ack   = false;
 
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
@@ -1633,7 +1659,7 @@ vis.binds.hqwidgets = {
 
                             if (data.urlTrue) {
                                 if (data.state !== 'normal') {
-                                    vis.conn.httpGet(data.urlTrue)
+                                    vis.conn.httpGet(data.urlTrue);
                                 } else {
                                     vis.conn.httpGet(data.urlFalse);
                                 }
@@ -1647,7 +1673,9 @@ vis.binds.hqwidgets = {
                     } else {
                         $main.on('mousedown touchstart', function (e) {
                             // Protect against two events
-                            if (vis.detectBounce(this)) return;
+                            if (vis.detectBounce(this)) {
+                                return;
+                            }
 
                             vis.binds.hqwidgets.contextMenu(false);
 
@@ -1655,22 +1683,23 @@ vis.binds.hqwidgets = {
                             data.ack   = false;
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
 
-                            if (data.oidTrue) vis.setValue(data.oidTrue,  data.oidTrueVal);
-                            if (data.urlTrue) vis.conn.httpGet(data.urlTrue);
-                            if (data.oid && data.oid !== 'nothing_selected') vis.setValue(data.oid, data.value);
+                            data.oidTrue && vis.setValue(data.oidTrue, data.oidTrueVal);
+                            data.urlTrue && vis.conn.httpGet(data.urlTrue);
+                            data.oid && data.oid !== 'nothing_selected' && vis.setValue(data.oid, data.value);
                         });
                         $main.on('mouseup mouseout touchend', function (e) {
-
                             // Protect against two events
-                            if (vis.detectBounce(this, true)) return;
+                            if (vis.detectBounce(this, true)) {
+                                return;
+                            }
 
                             data.value = data.min;
                             data.ack   = false;
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
 
-                            if (data.oidFalse) vis.setValue(data.oidFalse, data.oidFalseVal);
-                            if (data.urlFalse) vis.conn.httpGet(data.urlFalse);
-                            if (data.oid && data.oid !== 'nothing_selected') vis.setValue(data.oid, data.value);
+                            data.oidFalse && vis.setValue(data.oidFalse, data.oidFalseVal);
+                            data.urlFalse && vis.conn.httpGet(data.urlFalse);
+                            data.oid && data.oid !== 'nothing_selected' && vis.setValue(data.oid, data.value);
 
                             vis.binds.hqwidgets.contextMenu(true);
                         });

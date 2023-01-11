@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "vis-hqwidgets",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "news": {
+      "1.3.1": {
+        "en": "Added new parameter for dimmer",
+        "de": "Neue Parameter für Dimmer hinzugefügt",
+        "ru": "Добавлен новый параметр для dimmer",
+        "pt": "Adicionado novo parâmetro para dimmer",
+        "nl": "Vertaling:",
+        "fr": "Ajout du nouveau paramètre pour dimmer",
+        "it": "Aggiunto nuovo parametro per dimmer",
+        "es": "Nuevo parámetro añadido para dimmer",
+        "pl": "Dodano nowy parametr dimmera",
+        "uk": "Додано новий параметр для dimmer",
+        "zh-cn": "增加一线新参数"
+      },
       "1.3.0": {
         "en": "Made it compatible with ioBroker.vis v2",
         "de": "Kompatibel mit ioBroker.vis v2",
@@ -74,18 +87,6 @@
         "es": "Widget de persianas fijas",
         "pl": "Naprawiono widżet w ciemno",
         "zh-cn": "固定百叶窗小部件"
-      },
-      "1.1.3": {
-        "en": "Preparations for js-controller 2.0",
-        "de": "Vorbereitungen für js-controller 2.0",
-        "ru": "Подготовка к js-controller 2.0",
-        "pt": "Preparativos para js-controller 2.0",
-        "nl": "Voorbereidingen voor js-controller 2.0",
-        "fr": "Préparations pour js-controller 2.0",
-        "it": "Preparativi per js-controller 2.0",
-        "es": "Preparativos para js-controller 2.0",
-        "pl": "Przygotowania do js-kontrolera 2.0",
-        "zh-cn": "js-controller 2.0的准备"
       }
     },
     "title": "hqwidgets style Widgets",

@@ -18,7 +18,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.3.1 (2023-01-11)
 * (bluefox) Added new parameter for dimmer
 
 ### 1.3.0 (2022-08-15)

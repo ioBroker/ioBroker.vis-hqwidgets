@@ -1549,7 +1549,7 @@ vis.binds.hqwidgets = {
                         click:      function (val) {
                             val = data.value;
                             if (!data.temperature) {
-                                // if greater than middle, then set to minimum
+                                // if "set by click" is defined and value is greater than a minimum, use "set by click" as value
                                 if (data.set_by_click !== undefined) {
                                     if (val > data.min) {
                                         val = data.min;
@@ -1557,7 +1557,8 @@ vis.binds.hqwidgets = {
                                         val = data.set_by_click;
                                     }
                                 } else
-                                if (val - data.min > ((data.max - data.min) / 2)) {
+                                // if greater than middle, then set to the minimum
+                                if (val - data.min > ((data.max - data.min) / 20)) {
                                     val = data.min;
                                 } else {
                                     // else set to maximum

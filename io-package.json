@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "vis-hqwidgets",
-    "version": "1.3.1",
+    "version": "1.4.0",
     "news": {
+      "1.4.0": {
+        "en": "Behavior of the dimmer was changed. If the current value is over 5% and the user clicks on dimmer, the dimmer will be set to 0%. If the current value is less than 5%, the dimmer will be set to 100%.",
+        "de": "Verhalten des Dimmers wurde geändert. Wenn der aktuelle Wert über 5% liegt und der Benutzer auf Dimmer klickt, wird der Dimmer auf 0% gesetzt. Wenn der aktuelle Wert weniger als 5% beträgt, wird der Dimmer auf 100% eingestellt.",
+        "ru": "Поведение диммера было изменено. Если текущее значение превышает 5%, и пользователь нажимает на деммер, диммер будет установлен на 0%. Если текущее значение меньше чем 5%, то погружение будет установлено на 100%.",
+        "pt": "O comportamento do dimmer foi mudado. Se o valor atual for superior a 5% e o usuário clicar em dimmer, o dimmer será definido para 0%. Se o valor atual for inferior a 5%, o dimmer será definido para 100%.",
+        "nl": "Gedrag van de dimmer is veranderd. Als de huidige waarde meer dan 5% is en de gebruiker klikt op dimmer, zal de dimmer op 0% worden gezet. Als de huidige waarde minder dan 5% is, zal de dimmer 100% zijn.",
+        "fr": "Le comportement du plongeur a été changé. Si la valeur actuelle est supérieure à 5 % et que l'utilisateur cliquera sur le plongeur, le plongeur sera réglé à 0 %. Si la valeur actuelle est inférieure à 5%, le plongeur sera réglé à 100%.",
+        "it": "Il comportamento del dimmer è stato cambiato. Se il valore corrente è superiore al 5% e l'utente clicca sul dimmer, il dimmer verrà impostato al 0%. Se il valore corrente è inferiore al 5%, il dimmer sarà impostato al 100%.",
+        "es": "El comportamiento del martillo fue cambiado. Si el valor actual es superior al 5% y el usuario hace clic en dimmer, el dimmer se establecerá al 0%. Si el valor actual es inferior al 5%, el dimmer se fijará al 100%.",
+        "pl": "Zmienił się wygląd dimmera. Jeśli aktualna wartość wynosi ponad 5%, a użytkownik kliknie na dimmer, dany dany jest 0%. Jeśli wartość bieżąca wynosi mniej niż 5%, to czynnik osiągnie 100%.",
+        "uk": "Змінювалася поведінка нумера. Якщо поточне значення перевищує 5% і користувач натискає на занурення, занурення буде встановлено на 0%. Якщо поточна вартість менше 5%, занурення буде встановлена на 100%.",
+        "zh-cn": "改装了一线。 如果目前的价值超过5%,用户对一线的面纱将达到30%。 如果目前的价值低于5%,则将确定100%。."
+      },
       "1.3.1": {
         "en": "Added new parameter for dimmer",
         "de": "Neue Parameter für Dimmer hinzugefügt",
@@ -75,18 +88,6 @@
         "es": "Se resolvió el botón incluso si el mouse se movía hacia afuera",
         "pl": "Rozwiązano problem z przyciskiem, nawet jeśli mysz jest wyprowadzona",
         "zh-cn": "解决了按钮，即使将鼠标移出"
-      },
-      "1.1.4": {
-        "en": "Fixed blinds widget",
-        "de": "Blinds Widget behoben",
-        "ru": "Исправлен виджет жалюзи",
-        "pt": "Widget de persianas fixas",
-        "nl": "Vaste blinds-widget",
-        "fr": "Widget de stores fixes",
-        "it": "Widget per tende fisse",
-        "es": "Widget de persianas fijas",
-        "pl": "Naprawiono widżet w ciemno",
-        "zh-cn": "固定百叶窗小部件"
       }
     },
     "title": "hqwidgets style Widgets",

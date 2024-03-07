@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "vis-hqwidgets",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "news": {
+      "1.5.0": {
+        "en": "Removed vis dependency and replaced with message by installation or update if vis is not installed",
+        "de": "Visabhängigkeit entfernt und durch Installation oder Aktualisierung durch Meldung ersetzt, wenn vis nicht installiert ist",
+        "ru": "Удаленная зависимость vis и заменена сообщением путем установки или обновления, если vis не установлен",
+        "pt": "Dependência de vis removida e substituída por mensagem por instalação ou atualização se vis não estiver instalado",
+        "nl": "Verwijderd vis afhankelijkheid en vervangen door bericht door installatie of update als vis niet is geïnstalleerd",
+        "fr": "Supprimé vis dépendance et remplacé par message par installation ou mise à jour si vis n'est pas installé",
+        "it": "Rimosso vis dipendenza e sostituito con messaggio da installazione o aggiornamento se vis non è installato",
+        "es": "Eliminado vis dependencia y reemplazado por mensaje por instalación o actualización si vis no se instala",
+        "pl": "Usunięty z zależności i zastąpiony komunikatem przez instalację lub aktualizację, jeśli vis nie jest zainstalowany",
+        "uk": "Видаляє в'язкість і замінено повідомлення шляхом установки або оновлення, якщо в'язкість не встановлена",
+        "zh-cn": "相对于依赖性删除,如果未安装,则通过安装或更新替换为消息"
+      },
       "1.4.0": {
         "en": "Behavior of the dimmer was changed. If the current value is over 5% and the user clicks on dimmer, the dimmer will be set to 0%. If the current value is less than 5%, the dimmer will be set to 100%.",
         "de": "Verhalten des Dimmers wurde geändert. Wenn der aktuelle Wert über 5% liegt und der Benutzer auf Dimmer klickt, wird der Dimmer auf 0% gesetzt. Wenn der aktuelle Wert weniger als 5% beträgt, wird der Dimmer auf 100% eingestellt.",
@@ -76,18 +89,6 @@
         "es": "Se corrigieron los dígitos posteriores a la coma de la válvula.",
         "pl": "Poprawiono cyfry po przecinku dla zaworu",
         "zh-cn": "纠正了阀门的逗号后数字"
-      },
-      "1.1.5": {
-        "en": "Resolved the button even if mouse is moved out",
-        "de": "Die Schaltfläche wurde behoben, auch wenn die Maus herausgezogen wurde",
-        "ru": "Решена кнопка, даже если мышь перемещена",
-        "pt": "O botão foi resolvido mesmo se o mouse for movido para fora",
-        "nl": "De knop is opgelost, zelfs als de muis naar buiten is verplaatst",
-        "fr": "Résolution du bouton même si la souris est déplacée",
-        "it": "Risolto il problema con il pulsante anche se il mouse veniva spostato all'esterno",
-        "es": "Se resolvió el botón incluso si el mouse se movía hacia afuera",
-        "pl": "Rozwiązano problem z przyciskiem, nawet jeśli mysz jest wyprowadzona",
-        "zh-cn": "解决了按钮，即使将鼠标移出"
       }
     },
     "title": "hqwidgets style Widgets",

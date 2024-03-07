@@ -18,7 +18,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.5.0 (2024-03-07)
 * (bluefox) Removed vis dependency and replaced with message by installation or update if vis is not installed
 
 ### 1.4.0 (2023-05-03)

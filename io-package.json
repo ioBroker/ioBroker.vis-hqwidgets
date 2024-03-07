@@ -119,7 +119,7 @@
     "loglevel": "info",
     "icon": "hqwidgets.png",
     "enabled": true,
-    "mode": "once",
+    "mode": "none",
     "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.vis-hqwidgets/master/admin/hqwidgets.png",
     "keywords": [
       "hqwidgets",

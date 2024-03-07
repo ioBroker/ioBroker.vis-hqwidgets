@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "vis-hqwidgets",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "news": {
+      "1.5.1": {
+        "en": "Removed vis dependency and replaced with message by installation or update if vis is not installed",
+        "de": "Visabhängigkeit entfernt und durch Installation oder Aktualisierung durch Meldung ersetzt, wenn vis nicht installiert ist",
+        "ru": "Удаленная зависимость vis и заменена сообщением путем установки или обновления, если vis не установлен",
+        "pt": "Dependência de vis removida e substituída por mensagem por instalação ou atualização se vis não estiver instalado",
+        "nl": "Verwijderd vis afhankelijkheid en vervangen door bericht door installatie of update als vis niet is geïnstalleerd",
+        "fr": "Supprimé vis dépendance et remplacé par message par installation ou mise à jour si vis n'est pas installé",
+        "it": "Rimosso vis dipendenza e sostituito con messaggio da installazione o aggiornamento se vis non è installato",
+        "es": "Eliminado vis dependencia y reemplazado por mensaje por instalación o actualización si vis no se instala",
+        "pl": "Usunięty z zależności i zastąpiony komunikatem przez instalację lub aktualizację, jeśli vis nie jest zainstalowany",
+        "uk": "Видаляє в'язкість і замінено повідомлення шляхом установки або оновлення, якщо в'язкість не встановлена",
+        "zh-cn": "相对于依赖性删除,如果未安装,则通过安装或更新替换为消息"
+      },
       "1.5.0": {
         "en": "Removed vis dependency and replaced with message by installation or update if vis is not installed",
         "de": "Visabhängigkeit entfernt und durch Installation oder Aktualisierung durch Meldung ersetzt, wenn vis nicht installiert ist",
@@ -77,18 +90,6 @@
         "es": "Añadidos los valores de la válvula de 0 a 1",
         "pl": "Dodano wartości zaworu od 0 do 1",
         "zh-cn": "添加了从 0 到 1 的阀门值"
-      },
-      "1.1.7": {
-        "en": "Corrected the after comma digits for the valve",
-        "de": "Die Nachkommastellen für das Ventil wurden korrigiert",
-        "ru": "Исправлены цифры после запятой для клапана.",
-        "pt": "Corrigidos os dígitos posteriores da vírgula para a válvula",
-        "nl": "De cijfers achter de komma voor de klep zijn gecorrigeerd",
-        "fr": "Correction des chiffres après la virgule pour la vanne",
-        "it": "Corrette le cifre dopo la virgola per la valvola",
-        "es": "Se corrigieron los dígitos posteriores a la coma de la válvula.",
-        "pl": "Poprawiono cyfry po przecinku dla zaworu",
-        "zh-cn": "纠正了阀门的逗号后数字"
       }
     },
     "title": "hqwidgets style Widgets",
@@ -137,7 +138,8 @@
     "singleton": true,
     "type": "visualization-widgets",
     "restartAdapters": [
-      "vis", "vis-2"
+      "vis",
+      "vis-2"
     ],
     "noConfig": true,
     "adminUI": {

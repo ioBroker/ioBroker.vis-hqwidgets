@@ -133,7 +133,6 @@
     "authors": [
       "bluefox <dogafox@gmail.com>"
     ],
-    "license": "MIT",
     "onlyWWW": true,
     "singleton": true,
     "type": "visualization-widgets",
@@ -148,6 +147,7 @@
     "tier": 3,
     "licenseInformation": {
       "type": "free",
+      "license": "MIT",
       "link": "https://github.com/ioBroker/ioBroker.vis-hqwidgets/blob/master/LICENSE"
     },
     "messages": [

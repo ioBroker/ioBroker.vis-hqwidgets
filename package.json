@@ -44,8 +44,9 @@
     "LICENSE"
   ],
   "scripts": {
+    "prepublishOnly": "npm run build",
     "test": "node node_modules/mocha/bin/mocha --exit",
-    "build": "node build.js",
+    "build": "node build",
     "release": "release-script",
     "release-patch": "release-script patch --yes --no-update-lockfile",
     "release-minor": "release-script minor --yes --no-update-lockfile",

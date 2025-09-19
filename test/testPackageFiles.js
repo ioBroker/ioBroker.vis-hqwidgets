@@ -1,2 +1,4 @@
-process.env.IOBROKER_ROOT_DIR = `${__dirname}/../`;
-require('@iobroker/legacy-testing/tests/testPackageFiles');
+const { tests } = require('@iobroker/testing');
+
+// Validate the package files
+tests.packageFiles(`${__dirname}/..`);

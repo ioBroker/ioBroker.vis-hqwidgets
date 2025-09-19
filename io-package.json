@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "vis-hqwidgets",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "news": {
+      "1.5.3": {
+        "en": "Optimization of button de-bouncing",
+        "de": "Optimierung des Button-Entprellens",
+        "ru": "Оптимизация подавления дребезга кнопок",
+        "pt": "Otimização da eliminação de falsos contatos dos botões",
+        "nl": "Optimalisatie van knop-ontprellen",
+        "fr": "Optimisation du rebond de bouton",
+        "it": "ottimizzazione del debounce dei pulsanti",
+        "es": "Optimización de la eliminación de rebotes de botones",
+        "pl": "Optymalizacja odbijania przycisku",
+        "uk": "Оптимізація дебаунса кнопки",
+        "zh-cn": "按钮去抖动的优化"
+      },
       "1.5.1": {
         "en": "Removed vis dependency and replaced with message by installation or update if vis is not installed",
         "de": "Visabhängigkeit entfernt und durch Installation oder Aktualisierung durch Meldung ersetzt, wenn vis nicht installiert ist",

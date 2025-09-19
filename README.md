@@ -18,7 +18,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
-### 1.5.2 (2025-09-19)
+### **WORK IN PROGRESS**
 * (bluefox) Optimization of button de-bouncing
 
 ### 1.5.1 (2024-03-07)

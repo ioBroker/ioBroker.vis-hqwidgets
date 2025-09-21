@@ -1,9 +1,9 @@
 /*
     ioBroker.vis high quality Widget-Set
 
-    version: "1.5.4"
+    version: "1.6.0"
 
-    Copyright 6'2014-2024 bluefox <dogafox@gmail.com>
+    Copyright 6'2014-2025 bluefox <dogafox@gmail.com>
 
 */
 'use strict';
@@ -12,10 +12,12 @@
     $.fn.scala = function (options, arg) {
         if (typeof options === 'string') {
             if (options === 'value') {
-                if (arg === null || arg === undefined) arg = '0';
+                if (arg === null || arg === undefined) {
+                    arg = '0';
+                }
                 return this.each(function () {
-                    var $this = $(this);
-                    var $input = $this.find('.scalaInput');
+                    const $this = $(this);
+                    const $input = $this.find('.scalaInput');
                     if ($input.val().toString() !== arg.toString()) {
                         $this.find('.scalaInput').val(arg).trigger('change');
                     }
@@ -25,14 +27,14 @@
         }
 
         function h2rgba(h, a) {
-            var rgb;
+            let rgb;
             h = h.substring(1, 7);
             rgb = [parseInt(h.substring(0, 2), 16), parseInt(h.substring(2, 4), 16), parseInt(h.substring(4, 6), 16)];
 
-            return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a + ')';
+            return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`;
         }
 
-        var settings = $.extend(
+        const settings = $.extend(
             {
                 bgColor: '#EEEEEE',
                 value: 0,
@@ -66,38 +68,32 @@
 
         return this.each(function () {
             // Do something to each element here.
-            var $this = $(this);
-            if ($this.data('scaled')) return;
+            const $this = $(this);
+            if ($this.data('scaled')) {
+                return;
+            }
             $this.data('scaled', true);
             $this.wrapInner('<div class="scalaWrapped"></div>');
-            var divW = $this.width();
-            var divH = $this.height();
-            var divMax = divW > divH ? divW : divH;
+            const divW = $this.width();
+            const divH = $this.height();
+            const divMax = divW > divH ? divW : divH;
 
             // calculate thickness
             if (!settings.width) settings.width = Math.round(divMax + 30) + '';
             if (!settings.thickness) settings.thickness = 1 - divMax / settings.width;
 
             $this.prepend(
-                '<input type="text" value="' +
-                    settings.value +
-                    '" class="scalaInput" data-width="' +
-                    settings.width +
-                    '" data-height="' +
-                    settings.width +
-                    '" data-thickness="' +
-                    settings.thickness +
-                    '"/>',
+                `<input type="text" value="${settings.value}" class="scalaInput" data-width="${settings.width}" data-height="${settings.width}" data-thickness="${settings.thickness}"/>`,
             );
 
-            var $scalaInput = $this.find('.scalaInput');
-            var $scalaWrapped = $this.find('.scalaWrapped');
+            const $scalaInput = $this.find('.scalaInput');
+            const $scalaWrapped = $this.find('.scalaWrapped');
 
             if (typeof settings.step === 'string') {
                 settings.step = parseFloat(settings.step.replace(',', '.') || 1);
             }
 
-            var $knobDiv = $scalaInput.knobHQ({
+            const $knobDiv = $scalaInput.knobHQ({
                 release: function (v, noAck) {
                     $knobDiv._mouseDown = false;
 
@@ -107,12 +103,12 @@
                         $knobDiv._pressTimer = null;
                         setValue($knobDiv._oldValue);
                         if (settings.click) {
-                            var newVal = settings.click($knobDiv._oldValue);
+                            const newVal = settings.click($knobDiv._oldValue);
                             newVal !== undefined && newVal !== null && setValue(newVal);
                         }
                     } else {
                         // remove unit
-                        var val = $scalaInput.val();
+                        let val = $scalaInput.val();
                         if (
                             settings.unit !== null &&
                             val.substring(val.length - settings.unit.length, val.length) === settings.unit
@@ -129,12 +125,20 @@
                     setValue($knobDiv._oldValue);
                 },
                 change: function (value) {
-                    if (settings.changing) settings.changing(value);
+                    if (settings.changing) {
+                        settings.changing(value);
+                    }
                 },
                 format: function (v) {
-                    if (settings.digits !== null) v = v.toFixed(settings.digits);
-                    if (settings.isComma && v) v = v.toString().replace('.', ',');
-                    if (settings.unit) v = v + settings.unit;
+                    if (settings.digits !== null) {
+                        v = v.toFixed(settings.digits);
+                    }
+                    if (settings.isComma && v) {
+                        v = v.toString().replace('.', ',');
+                    }
+                    if (settings.unit) {
+                        v = v + settings.unit;
+                    }
                     return v;
                 },
                 displayPrevious: true,
@@ -149,11 +153,11 @@
                 step: parseFloat(settings.step || 1),
             });
 
-            var w = $knobDiv.width();
+            const w = $knobDiv.width();
             $this.data('$knobDiv', $knobDiv);
 
             function setValue(value) {
-                console.log('Restore value ' + value);
+                console.log(`Restore value ${value}`);
                 setTimeout(function () {
                     $scalaInput.data('setByUser', true);
                     $scalaInput.val(value).trigger('change');
@@ -164,7 +168,9 @@
                 if (!settings.alwaysShow && !$knobDiv._mouseEnter && !$knobDiv._mouseDown) {
                     $knobDiv.hide();
                     $scalaWrapped.show();
-                    if (settings.onhide) settings.onhide(false);
+                    if (settings.onhide) {
+                        settings.onhide(false);
+                    }
                 }
                 //console.log((event || '') +  ' (enter: ' + $knobDiv._mouseEnter + ', down: ' + $knobDiv._mouseDown + ')');
             }
@@ -177,7 +183,7 @@
 
             function press(event) {
                 if (!$knobDiv._mouseDown) {
-                    var val = $scalaInput.val();
+                    let val = $scalaInput.val();
                     if (settings.unit !== null) {
                         val = val.substring(0, val.length - settings.unit.length);
                     }
@@ -204,8 +210,8 @@
             $knobDiv
                 .css({
                     position: 'absolute',
-                    left: '-' + (w - divW) / 2 + 'px',
-                    top: '-' + (w - divH) / 2 + 'px',
+                    left: `-${(w - divW) / 2}px`,
+                    top: `-${(w - divH) / 2}px`,
                     'z-index': 2,
                     cursor: 'pointer',
                     opacity: 0.7,
@@ -246,7 +252,7 @@
                         return;
                     }
                     press(e.type);
-                    var event = $.Event(e.type, {
+                    const event = $.Event(e.type, {
                         simulated: true,
                         originalEvent: {
                             touches: [
@@ -266,7 +272,7 @@
                         return;
                     }
                     press(e.type);
-                    var event = $.Event(e.type, { simulated: true, pageX: e.pageX, pageY: e.pageY });
+                    const event = $.Event(e.type, { simulated: true, pageX: e.pageX, pageY: e.pageY });
                     $knobDiv.find('canvas').trigger(event);
                     e.preventDefault();
                 });
@@ -297,9 +303,9 @@
         if (typeof options === 'string') {
             if (options === 'value') {
                 return this.each(function () {
-                    var $this = $(this);
-                    var f = parseFloat(arg);
-                    var val;
+                    const $this = $(this);
+                    const f = parseFloat(arg);
+                    let val;
                     if (f.toString() == arg) {
                         val = f > 0;
                     } else {
@@ -316,7 +322,7 @@
 
         if (!options) options = {};
 
-        var settings = {
+        const settings = {
             backgroundCheckbox: '', //-webkit-linear-gradient(top, #fe9810 0%,#e75400 61%,#e75400 91%,#ea8810 100%)",
             backgroundButton: '', //"-webkit-linear-gradient(top, #efeeee 0%,#bcb9b8 100%);",
             checkboxSize: options.checkboxSize || 'big',
@@ -327,58 +333,44 @@
 
         return this.each(function () {
             // Do something to each element here.
-            var $this = $(this);
-            if ($this.data('shineCheckbox')) return;
+            const $this = $(this);
+            if ($this.data('shineCheckbox')) {
+                return;
+            }
             $this.data('shineCheckbox', true);
             $this.hide();
-            var checkboxStyle = 'background: ' + settings.backgroundCheckbox;
-            var buttonStyle = 'background: ' + settings.backgroundButton;
-            var color = $this.prop('checked') ? settings.checkboxColorOn : settings.checkboxColor;
+            const checkboxStyle = 'background: ' + settings.backgroundCheckbox;
+            const buttonStyle = 'background: ' + settings.backgroundButton;
+            const color = $this.prop('checked') ? settings.checkboxColorOn : settings.checkboxColor;
 
             $this.wrap(
-                '<div class="checkbox-' +
-                    settings.checkboxSize +
-                    '-' +
-                    color +
-                    '-wrap" style="' +
-                    checkboxStyle +
-                    '"><div class="checkbox-' +
-                    settings.checkboxSize +
-                    '-' +
-                    color +
-                    '-button" style="' +
-                    buttonStyle +
-                    '"></div></div>',
+                `<div class="checkbox-${settings.checkboxSize}-${color}-wrap" style="${checkboxStyle}"><div class="checkbox-${settings.checkboxSize}-${color}-button" style="${buttonStyle}"></div></div>`,
             );
             $this.change(function () {
                 //console.log('change ' + $this.prop('checked'));
-                var color;
+                let color;
                 if ($this.prop('checked')) {
                     color = settings.checkboxColorOn;
                     setTimeout(function () {
                         $this
                             .parent()
-                            .addClass(
-                                'checkbox-' + settings.checkboxSize + '-' + settings.checkboxColorOn + '-button-active',
-                            );
+                            .addClass(`checkbox-${settings.checkboxSize}-${settings.checkboxColorOn}-button-active`);
                         $this
                             .parent()
                             .parent()
-                            .removeClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-wrap')
-                            .addClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColorOn + '-wrap');
+                            .removeClass(`checkbox-${settings.checkboxSize}-${settings.checkboxColor}-wrap`)
+                            .addClass(`checkbox-${settings.checkboxSize}-${settings.checkboxColorOn}-wrap`);
                     }, 100);
                 } else {
                     color = settings.checkboxColor;
                     $this
                         .parent()
-                        .removeClass(
-                            'checkbox-' + settings.checkboxSize + '-' + settings.checkboxColorOn + '-button-active',
-                        );
+                        .removeClass(`checkbox-${settings.checkboxSize}-${settings.checkboxColorOn}-button-active`);
                     $this
                         .parent()
                         .parent()
-                        .removeClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColorOn + '-wrap')
-                        .addClass('checkbox-' + settings.checkboxSize + '-' + settings.checkboxColor + '-wrap');
+                        .removeClass(`checkbox-${settings.checkboxSize}-${settings.checkboxColorOn}-wrap`)
+                        .addClass(`checkbox-${settings.checkboxSize}-${settings.checkboxColor}-wrap`);
                 }
             });
 
@@ -393,7 +385,7 @@
             }
 
             if ($this.prop('checked'))
-                $this.parent().addClass('checkbox-' + settings.checkboxSize + '-' + color + '-button-active');
+                $this.parent().addClass(`checkbox-${settings.checkboxSize}-${color}-button-active`);
         });
     };
 
@@ -401,7 +393,7 @@
     $.fn.animateDiv = function (effect, options) {
         return this.each(function () {
             // Do something to each element here.
-            var $this = $(this);
+            const $this = $(this);
             options = options || {};
             effect = effect || 'waves';
 
@@ -410,49 +402,25 @@
             }
 
             if (effect === 'waves') {
-                var borderThickness = (options.tickness || 3) - 1;
-                var border =
-                    ';border: ' +
-                    borderThickness +
-                    'px ' +
-                    (options.style || 'solid') +
-                    ' ' +
-                    (options.color || 'grey');
+                const borderThickness = (options.tickness || 3) - 1;
+                const border = `;border: ${borderThickness}px ${options.style || 'solid'} ${options.color || 'grey'}`;
 
-                var text =
-                    '<div class="vis-hq-wave wave1" style="top:-' +
-                    borderThickness +
-                    'px; left: -' +
-                    borderThickness +
-                    'px;width: ' +
-                    Math.round($this.width()) +
-                    'px;height: ' +
-                    Math.round($this.height()) +
-                    'px;border-radius: ' +
-                    (options.radius || $this.css('border-radius')) +
-                    border +
-                    '; position: absolute"></div>';
+                const text = `<div class="vis-hq-wave wave1" style="top:-${borderThickness}px; left: -${borderThickness}px;width: ${Math.round($this.width())}px;height: ${Math.round($this.height())}px;border-radius: ${options.radius || $this.css('border-radius')}${border}; position: absolute"></div>`;
 
                 $this.prepend(text);
                 $this.prepend(text.replace('wave1', 'wave2'));
 
-                $this
-                    .find('.wave1')
-                    .show()
-                    .addClass('animated' + options.speed + 's vis-hq-zoomIn1');
-                $this
-                    .find('.wave2')
-                    .show()
-                    .addClass('animated' + options.speed + 's vis-hq-zoomIn2');
+                $this.find('.wave1').show().addClass(`animated${options.speed}s vis-hq-zoomIn1`);
+                $this.find('.wave2').show().addClass(`animated${options.speed}s vis-hq-zoomIn2`);
 
                 setTimeout(function () {
                     $this.find('.wave1').remove();
                     $this.find('.wave2').remove();
                 }, 2050);
             } else {
-                $this.addClass('animated' + options.speed + 's vis-hq-' + effect);
+                $this.addClass(`animated${options.speed}s vis-hq-${effect}`);
                 setTimeout(function () {
-                    $this.removeClass('animated' + options.speed + 's vis-hq-' + effect);
+                    $this.removeClass(`animated${options.speed}s vis-hq-${effect}`);
                 }, 2100);
             }
         });
@@ -470,21 +438,21 @@
 
         return this.each(function () {
             // Do something to each element here.
-            var $this = $(this);
+            const $this = $(this);
             if (!$div) {
                 console.log('no div');
                 return;
             }
-            var offset = $this.position();
-            var eTop = options.relative ? 0 : offset.top; //get the offset top of the element
-            var eLeft = options.relative ? 0 : offset.left; //get the offset top of the element
+            const offset = $this.position();
+            const eTop = options.relative ? 0 : offset.top; //get the offset top of the element
+            const eLeft = options.relative ? 0 : offset.left; //get the offset top of the element
 
-            var dh = $div.css({ opacity: 0 }).show().height();
-            var dw = $div.width();
+            const dh = $div.css({ opacity: 0 }).show().height();
+            const dw = $div.width();
             // calculate center
-            //var x = $this.width();
-            //var y = $this.height();
-            var zindex = $div.css('z-index');
+            //const x = $this.width();
+            //const y = $this.height();
+            let zindex = $div.css('z-index');
             zindex = options.zindex || (zindex === 'auto' ? 1 : (zindex || 0) + 1);
             $div.css({
                 position: 'absolute',
@@ -493,11 +461,11 @@
                 'z-index': zindex,
             });
             setTimeout(function () {
-                $div.addClass('animated' + options.speed + 's vis-hq-' + options.effect);
+                $div.addClass(`animated${options.speed}s vis-hq-${options.effect}`);
             }, 0);
             setTimeout(
                 function () {
-                    $div.removeClass('animated' + options.speed + 's vis-hq-' + options.effect).css({ opacity: 1 });
+                    $div.removeClass(`animated${options.speed}s vis-hq-${options.effect}`).css({ opacity: 1 });
                     if (callback) callback();
                 },
                 options.speed === '05' ? 550 : parseInt(options.speed, 10) * 1000 + 50,
@@ -523,11 +491,11 @@
                 $div = $(this);
             }
             setTimeout(function () {
-                $div.addClass('animated' + options.speed + 's vis-hq-' + options.effect);
+                $div.addClass(`animated${options.speed}s vis-hq-${options.effect}`);
             }, 0);
             setTimeout(
                 function () {
-                    $div.removeClass('animated' + options.speed + 's vis-hq-' + options.effect);
+                    $div.removeClass(`animated${options.speed}s vis-hq-${options.effect}`);
                     $div.hide();
                     if (callback) callback();
                 },
@@ -539,16 +507,16 @@
     $.fn.makeSlider = function (options, onChange, onIdle) {
         if (options === 'hide') {
             return this.each(function () {
-                var $this = $(this);
-                var timer = $this.data('hideTimer');
+                const $this = $(this);
+                const timer = $this.data('hideTimer');
                 if (timer) clearTimeout(timer);
                 $this.data('hideTimer', null);
                 $this.hide();
             });
         } else if (options === 'show') {
             return this.each(function () {
-                var $this = $(this).show();
-                var hideTimer = $this.data('hideTimer');
+                const $this = $(this).show();
+                const hideTimer = $this.data('hideTimer');
 
                 options = $this.data('options');
 
@@ -575,8 +543,8 @@
         if (typeof options === 'string') {
             if (options === 'restart') {
                 return this.each(function () {
-                    var $this = $(this);
-                    var options = $this.data('options');
+                    const $this = $(this);
+                    const options = $this.data('options');
                     if (options.timeout) {
                         $this.data(
                             'hideTimer',
@@ -611,7 +579,7 @@
         }
 
         return this.each(function () {
-            var $this = $(this);
+            const $this = $(this);
 
             if (options.timeout && options.show) {
                 $this.data(
@@ -632,19 +600,19 @@
                 max: options.max,
                 value: options.value,
                 start: function () {
-                    var timer = $this.data('hideTimer');
+                    const timer = $this.data('hideTimer');
                     if (timer) {
                         clearTimeout(timer);
                         $this.data('hideTimer', null);
                     }
                 },
                 stop: function (event, ui) {
-                    var hideTimer = $this.data('hideTimer');
+                    const hideTimer = $this.data('hideTimer');
 
                     if (hideTimer) clearTimeout(hideTimer);
 
                     if (options.onChange) {
-                        var val = ui.value;
+                        let val = ui.value;
                         if (options.invert) {
                             val = options.max - ui.value + options.min;
                         }
@@ -676,7 +644,7 @@
         if (typeof options === 'string') {
             if (options === 'show') {
                 return this.each(function () {
-                    var $this = $(this);
+                    const $this = $(this);
                     if (args === undefined || args === null) {
                         args = true;
                     }
@@ -702,29 +670,13 @@
         options.title = options.title || '';
 
         return this.each(function () {
-            var $this = $(this);
+            const $this = $(this);
 
             $this.data('options', options);
             if ($this.find('.vis-hq-battery').length) return;
 
             $this.append(
-                '<div class="vis-hq-battery ' +
-                    (options.classes || '') +
-                    '" title="' +
-                    options.title +
-                    '">' +
-                    '<svg xmlns="http://www.w3.org/2000/svg" width="' +
-                    options.size +
-                    '" height="' +
-                    options.size +
-                    '" viewBox="0 0 48 48">' +
-                    '<path d="M0 0h48v48h-48z" fill="none"/>' +
-                    '<path fill="' +
-                    options.color +
-                    '" transform="rotate(' +
-                    options.angle +
-                    ', 24, 24)" d="M31.33 8h-3.33v-4h-8v4h-3.33c-1.48 0-2.67 1.19-2.67 2.67v30.67c0 1.47 1.19 2.67 2.67 2.67h14.67c1.47 0 2.67-1.19 2.67-2.67v-30.67c-.01-1.48-1.2-2.67-2.68-2.67zm-5.33 28h-4v-4h4v4zm0-8h-4v-10h4v10z"/></svg>' +
-                    '</div>',
+                `<div class="vis-hq-battery ${options.classes || ''}" title="${options.title}"><svg xmlns="http://www.w3.org/2000/svg" width="${options.size}" height="${options.size}" viewBox="0 0 48 48"><path d="M0 0h48v48h-48z" fill="none"/><path fill="${options.color}" transform="rotate(${options.angle}, 24, 24)" d="M31.33 8h-3.33v-4h-8v4h-3.33c-1.48 0-2.67 1.19-2.67 2.67v30.67c0 1.47 1.19 2.67 2.67 2.67h14.67c1.47 0 2.67-1.19 2.67-2.67v-30.67c-.01-1.48-1.2-2.67-2.68-2.67zm-5.33 28h-4v-4h4v4zm0-8h-4v-10h4v10z"/></svg></div>`,
             );
             if (!options.show) {
                 $this.find('.vis-hq-battery').hide();
@@ -734,23 +686,23 @@
 
     $.fn.popupDialog = function (options) {
         return this.each(function () {
-            var $this = $(this);
-            var $dialog;
+            const $this = $(this);
+            let $dialog;
             //    timeout: data.dialog_timeout,
 
-            var dialog = $this.data('dialog');
+            const dialog = $this.data('dialog');
             if (!dialog) {
                 if (typeof options === 'string') {
                     console.log('Show prior init');
                     return;
                 }
-                var text = '<div class="vis-hq-dialog" style="display: none"></div>';
+                const text = '<div class="vis-hq-dialog" style="display: none"></div>';
                 $this.append(text);
                 $dialog = $this.find('.vis-hq-dialog');
 
                 $this.data('dialog', $dialog[0]);
 
-                var dialogButtons = [
+                const dialogButtons = [
                     {
                         text: _('Ok'),
                         click: function () {
@@ -778,7 +730,7 @@
                                     .button({
                                         icons: { primary: 'ui-icon-pin-s' },
                                     });
-                                var timeout = $dialog.data('timeout');
+                                const timeout = $dialog.data('timeout');
                                 if (timeout) {
                                     clearTimeout(timeout);
                                     $dialog.data('timeout', null);
@@ -839,7 +791,7 @@
                     },
                     close: function () {
                         $dialog.html('');
-                        var timeout = $dialog.data('timeout');
+                        const timeout = $dialog.data('timeout');
                         if (timeout) {
                             clearTimeout(timeout);
                             $dialog.data('timeout', null);
@@ -851,7 +803,7 @@
             } else {
                 $dialog = $(dialog);
             }
-            var data = $dialog.data('data');
+            const data = $dialog.data('data');
 
             if (typeof options === 'string') {
                 switch (options) {
@@ -864,7 +816,7 @@
                         break;
 
                     default:
-                        console.log('Unknown command ' + options);
+                        console.log(`Unknown command ${options}`);
                         break;
                 }
             }
@@ -1079,19 +1031,9 @@ vis.binds.hqwidgets = {
     version: '1.5.4',
     contextEnabled: true,
     zindex: [],
-    contextMenu: function (isEnable) {
-        if (isEnable && !vis.binds.hqwidgets.contextEnabled) {
-            vis.binds.hqwidgets.contextEnabled = true;
-            document.removeEventListener('contextmenu', e => e.preventDefault(), false);
-        }
-        if (!isEnable && vis.binds.hqwidgets.contextEnabled) {
-            vis.binds.hqwidgets.contextEnabled = false;
-            document.addEventListener('contextmenu', e => e.preventDefault(), false);
-        }
-    },
     showVersion: function () {
         if (vis.binds.hqwidgets.version) {
-            console.log('Version vis-hqwidgets: ' + vis.binds.hqwidgets.version);
+            console.log(`Version vis-hqwidgets: ${vis.binds.hqwidgets.version}`);
             vis.binds.hqwidgets.version = null;
         }
     },
@@ -1099,11 +1041,13 @@ vis.binds.hqwidgets = {
         // if less than 2000.01.01 00:00:00
         if (oldTime < 946681200000) oldTime = oldTime * 1000;
 
-        var result = '';
+        let result = '';
 
-        var newTime = new Date();
+        const newTime = new Date();
 
-        if (!oldTime) return '';
+        if (!oldTime) {
+            return '';
+        }
         if (typeof oldTime === 'string') {
             oldTime = new Date(oldTime);
         } else {
@@ -1112,7 +1056,7 @@ vis.binds.hqwidgets = {
             }
         }
 
-        var seconds = (newTime.getTime() - oldTime.getTime()) / 1000;
+        const seconds = (newTime.getTime() - oldTime.getTime()) / 1000;
 
         if (hoursToShow && seconds / 3600 > hoursToShow) return '';
 
@@ -1122,7 +1066,7 @@ vis.binds.hqwidgets = {
             result = _('for&nbsp;%s&nbsp;min.', Math.floor(seconds / 60));
         } else if (seconds <= 3600 * 24) {
             // between 1 und 24 hours
-            var hrs = Math.floor(seconds / 3600);
+            const hrs = Math.floor(seconds / 3600);
             if (hrs === 1 || hrs === 21) {
                 result = _('for1Hour', hrs, Math.floor(seconds / 60) % 60);
             } else if (hrs >= 2 && hrs <= 4) {
@@ -1141,27 +1085,16 @@ vis.binds.hqwidgets = {
     },
     window: {
         drawOneWindow: function (index, options) {
-            var bWidth = options.border_width;
-            var div1 =
-                '<div class="hq-blind-blind1" style="' +
-                'border-width: ' +
-                bWidth +
-                'px;' + //'px 2px 2px 2px; ' +
-                'border-color: #a9a7a8;' +
-                '">';
+            const bWidth = options.border_width;
+            const div1 = `<div class="hq-blind-blind1" style="border-width: ${bWidth}px;border-color: #a9a7a8;">`;
 
-            var div2 = '<div class="hq-blind-blind2" style="' + 'border-width: ' + bWidth + 'px; ' + '">';
+            const div2 = '<div class="hq-blind-blind2" style="' + 'border-width: ' + bWidth + 'px; ' + '">';
             options.shutterPos = options.shutterPos || 0;
 
-            var div3 =
-                '<div class="hq-blind-blind3"><table class="vis-hq-no-space" style="width: 100%; height: 100%; position: absolute"><tr class="vis-hq-no-space hq-blind-position" style="height: ' +
-                options.shutterPos +
-                '%"><td class="vis-hq-no-space hq-blind-blind"></td></tr><tr class="vis-hq-no-space" style="height: ' +
-                (100 - options.shutterPos) +
-                '%"><td class="vis-hq-no-space"></td></tr></table>';
+            const div3 = `<div class="hq-blind-blind3"><table class="vis-hq-no-space" style="width: 100%; height: 100%; position: absolute"><tr class="vis-hq-no-space hq-blind-position" style="height: ${options.shutterPos}%"><td class="vis-hq-no-space hq-blind-blind"></td></tr><tr class="vis-hq-no-space" style="height: ${100 - options.shutterPos}%"><td class="vis-hq-no-space"></td></tr></table>`;
 
-            var hanldePos = null;
-            var slidePos = null;
+            let hanldePos = null;
+            let slidePos = null;
 
             if (options.handleOid) {
                 hanldePos = vis.states[options.handleOid + '.val'];
@@ -1179,7 +1112,7 @@ vis.binds.hqwidgets = {
                 if (hanldePos == 2) slidePos = 2;
             }
 
-            var div4 = '<div class="hq-blind-blind4';
+            let div4 = '<div class="hq-blind-blind4';
             if (
                 (slidePos == 1 ||
                     slidePos === true ||
@@ -1188,21 +1121,15 @@ vis.binds.hqwidgets = {
                     slidePos === 'opened') &&
                 options.type
             ) {
-                div4 += ' hq-blind-blind4-opened-' + options.type;
+                div4 += ` hq-blind-blind4-opened-${options.type}`;
             }
             if ((slidePos == 2 || slidePos === 'tilt' || slidePos === 'tilted') && options.type) {
                 div4 += ' hq-blind-blind4-tilted';
             }
             options.shutterPos = options.shutterPos || 0;
-            div4 +=
-                '" style="' +
-                'border-width: ' +
-                bWidth +
-                'px;' + //'3px 1px 1px 1px;' +
-                'border-color: #a5aaad;' +
-                '">';
+            div4 += `" style="border-width: ${bWidth}px;border-color: #a5aaad;">`;
 
-            var div5 = '';
+            let div5 = '';
 
             //console.log('HOID: ' + options.handleOid + ', ' + hanldePos);
             if (options.type) {
@@ -1210,22 +1137,24 @@ vis.binds.hqwidgets = {
                 if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
                     div5 += ' hq-blind-handle-tilted-bg';
                 }
-                var bbWidth = Math.round(bWidth / 3);
-                if (bbWidth < 1) bbWidth = 1;
-                div5 += '" style="border-width: ' + bbWidth + 'px;';
+                let bbWidth = Math.round(bWidth / 3);
+                if (bbWidth < 1) {
+                    bbWidth = 1;
+                }
+                div5 += `" style="border-width: ${bbWidth}px;`;
                 if (options.type === 'left' || options.type === 'right') {
-                    div5 += 'top: 50%;	width: ' + bWidth + 'px; height: 15%;';
+                    div5 += `top: 50%;\twidth: ${bWidth}px; height: 15%;`;
                 } else if (options.type === 'top' || options.type === 'bottom') {
-                    div5 += 'left: 50%; height: ' + bWidth + 'px; width: 15%;';
+                    div5 += `left: 50%; height: ${bWidth}px; width: 15%;`;
                 }
                 if (options.type === 'left') {
-                    div5 += 'left: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);';
+                    div5 += `left: calc(100% - ${bbWidth * 2 + bWidth}px);`;
                 } else if (options.type === 'bottom') {
-                    div5 += 'top: calc(100% - ' + (bbWidth * 2 + bWidth) + 'px);';
+                    div5 += `top: calc(100% - ${bbWidth * 2 + bWidth}px);`;
                 }
 
                 if (hanldePos) {
-                    var format =
+                    const format =
                         '-moz-transform-origin: ------;' +
                         '-ms-transform-origin: ------;' +
                         '-o-transform-origin: ------;' +
@@ -1237,7 +1166,7 @@ vis.binds.hqwidgets = {
                         '-webkit-transform: rotate(DDDdeg);' +
                         'transform: rotate(DDDdeg);';
 
-                    var w = Math.round(bbWidth + bWidth / 2);
+                    const w = Math.round(bbWidth + bWidth / 2);
                     if (options.type === 'right' || options.type === 'bottom') {
                         if (
                             hanldePos == 1 ||
@@ -1246,9 +1175,9 @@ vis.binds.hqwidgets = {
                             hanldePos === 'open' ||
                             hanldePos === 'opened'
                         ) {
-                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '-90');
+                            div5 += format.replace(/------/g, `${w}px ${w}px`).replace(/DDD/g, '-90');
                         } else if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
-                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
+                            div5 += format.replace(/------/g, `${w}px ${w}px`).replace(/DDD/g, '180');
                         }
                     } else {
                         if (
@@ -1258,9 +1187,9 @@ vis.binds.hqwidgets = {
                             hanldePos === 'open' ||
                             hanldePos === 'opened'
                         ) {
-                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '90');
+                            div5 += format.replace(/------/g, `${w}px ${w}px`).replace(/DDD/g, '90');
                         } else if (hanldePos == 2 || hanldePos === 'tilt' || hanldePos === 'tilted') {
-                            div5 += format.replace(/------/g, w + 'px ' + w + 'px').replace(/DDD/g, '180');
+                            div5 += format.replace(/------/g, `${w}px ${w}px`).replace(/DDD/g, '180');
                         }
                     }
                 }
@@ -1271,17 +1200,17 @@ vis.binds.hqwidgets = {
             return div1 + div2 + div3 + div4 + div5 + '</div></div></div></div></div>';
         },
         hidePopup: function ($div) {
-            var data = $div.data('data');
+            const data = $div.data('data');
             if (!data) return;
 
-            for (var z = 0; z < vis.binds.hqwidgets.zindex.length; z++) {
+            for (let z = 0; z < vis.binds.hqwidgets.zindex.length; z++) {
                 if (vis.binds.hqwidgets.zindex[z] === $div.css('z-index')) {
                     vis.binds.hqwidgets.zindex.splice(z, 1);
                     break;
                 }
             }
 
-            var $big = $div.find('.hq-blind-big');
+            const $big = $div.find('.hq-blind-big');
             if (data.noAnimate) {
                 //$big.makeSlider('hide');
                 setTimeout(function () {
@@ -1307,24 +1236,26 @@ vis.binds.hqwidgets = {
             }
         },
         openPopup: function ($div) {
-            var data = $div.data('data');
+            const data = $div.data('data');
             if (!data) return;
 
             // make temporary z-index maximal
-            var zindex = $div.data('zindex');
+            let zindex = $div.data('zindex');
             // remember z-index
             if (zindex === null || zindex === undefined) {
                 zindex = $div.css('z-index');
                 $div.data('zindex', zindex);
             }
             // find maximal z-index
-            var zindexMax = 900;
+            let zindexMax = 900;
             /*$('.vis-widget').each(function () {
-                var z = $(this).css('z-index');
+                const z = $(this).css('z-index');
                 if (z > zindexMax) zindexMax = z;
             });*/
-            for (var z = 0; z < vis.binds.hqwidgets.zindex.length; z++) {
-                if (vis.binds.hqwidgets.zindex[z] > zindexMax) zindexMax = vis.binds.hqwidgets.zindex[z];
+            for (let z = 0; z < vis.binds.hqwidgets.zindex.length; z++) {
+                if (vis.binds.hqwidgets.zindex[z] > zindexMax) {
+                    zindexMax = vis.binds.hqwidgets.zindex[z];
+                }
             }
             zindexMax++;
 
@@ -1332,9 +1263,9 @@ vis.binds.hqwidgets = {
             $div.css('z-index', zindexMax);
             vis.binds.hqwidgets.zindex.push($div.css('z-index'));
 
-            var $big = $div.find('.hq-blind-big');
+            let $big = $div.find('.hq-blind-big');
             if (!$big.length) {
-                var text =
+                const text =
                     '<table class="hq-blind-big vis-hq-no-space" style="display:none">' +
                     '    <tr><td><div class="hq-blind-big-button hq-blind-big-button-up"></div></td></tr>' +
                     '    <tr style="height: 100%"><td><div class="hq-blind-big-slider"></div></td></tr>' +
@@ -1373,16 +1304,16 @@ vis.binds.hqwidgets = {
             $big.data('show', true);
 
             if (data.bigLeft === undefined || data.bigLeft === null) {
-                var pos = $div.position();
-                var w = $div.width();
-                var h = $div.height();
+                const pos = $div.position();
+                const w = $div.width();
+                const h = $div.height();
 
                 data.bigWidth = $big.width();
                 data.bigHeight = $big.height();
 
                 //default will still be center
-                var popUpHorPos = Math.round((h - data.bigHeight) / 2);
-                var popUpVerPos = Math.round((w - data.bigWidth) / 2);
+                let popUpHorPos = Math.round((h - data.bigHeight) / 2);
+                let popUpVerPos = Math.round((w - data.bigWidth) / 2);
 
                 if (data.popupVerticalPos === 'left') {
                     popUpVerPos = Math.round(w - data.bigWidth);
@@ -1417,7 +1348,7 @@ vis.binds.hqwidgets = {
             }
         },
         draw: function ($div) {
-            var data = $div.data('data');
+            const data = $div.data('data');
             if (!data) return;
 
             $div.css({
@@ -1443,31 +1374,24 @@ vis.binds.hqwidgets = {
                 if (data.invert) data.shutterPos = 100 - data.shutterPos;
             }
 
-            var text =
+            let text =
                 '<table class="hq-blind vis-hq-no-space" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;"><tr>';
             if (!data.descriptionLeftDisabled && data.descriptionLeft) {
-                if (data.infoLeftPaddingLeft === undefined || data.infoLeftPaddingLeft === null)
+                if (data.infoLeftPaddingLeft === undefined || data.infoLeftPaddingLeft === null) {
                     data.infoLeftPaddingLeft = '15px';
-                if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null)
+                }
+                if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null) {
                     data.infoLeftPaddingRight = '50px';
-                if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/))
-                    data.infoLeftPaddingLeft = data.infoLeftPaddingLeft + 'px';
-                if (!data.infoLeftPaddingRight.match(/px$|rem$|em$/))
-                    data.infoLeftPaddingRight = data.infoLeftPaddingRight + 'px';
+                }
+                if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/)) {
+                    data.infoLeftPaddingLeft = `${data.infoLeftPaddingLeft}px`;
+                }
+                if (!data.infoLeftPaddingRight.match(/px$|rem$|em$/)) {
+                    data.infoLeftPaddingRight = `${data.infoLeftPaddingRight}px`;
+                }
 
-                text +=
-                    '<div class="vis-hq-leftinfo" style="padding-left: ' +
-                    data.infoLeftPaddingLeft +
-                    '; padding-right: ' +
-                    data.infoLeftPaddingRight +
-                    '; font-size: ' +
-                    (data.infoLeftFontSize || 12) +
-                    'px' +
-                    (data.infoColor ? ';color: ' + data.infoColor : '') +
-                    (data.infoBackground ? ';background: ' + data.infoBackground : '') +
-                    '"><span class="vis-hq-leftinfo-text">' +
-                    (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') +
-                    '</span></div>\n';
+                text += `<div class="vis-hq-leftinfo" style="padding-left: ${data.infoLeftPaddingLeft}; padding-right: ${data.infoLeftPaddingRight}; font-size: ${data.infoLeftFontSize || 12}px${data.infoColor ? ';color: ' + data.infoColor : ''}${data.infoBackground ? ';background: ' + data.infoBackground : ''}"><span class="vis-hq-leftinfo-text">${(data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>')}</span></div>
+`;
             }
             if (data.show_value) {
                 if (data.infoRightPaddingLeft === undefined || data.infoRightPaddingLeft === null)
@@ -1475,39 +1399,29 @@ vis.binds.hqwidgets = {
                 if (data.infoRightPaddingRight === undefined || data.infoRightPaddingRight === null)
                     data.infoRightPaddingRight = '15px';
                 if (!data.infoRightPaddingRight.match(/px$|rem$|em$/))
-                    data.infoRightPaddingRight = data.infoRightPaddingRight + 'px';
+                    data.infoRightPaddingRight = `${data.infoRightPaddingRight}px`;
 
-                text +=
-                    '<div class="vis-hq-rightinfo" style="padding-right: ' +
-                    data.infoRightPaddingRight +
-                    '; font-size: ' +
-                    (data.infoFontRightSize || 12) +
-                    'px' +
-                    (data.infoColor ? ';color: ' + data.infoColor : '') +
-                    (data.infoBackground ? ';background: ' + data.infoBackground : '') +
-                    '"><span class="vis-hq-rightinfo-text">' +
-                    (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') +
-                    '</span>';
+                text += `<div class="vis-hq-rightinfo" style="padding-right: ${data.infoRightPaddingRight}; font-size: ${data.infoFontRightSize || 12}px${data.infoColor ? ';color: ' + data.infoColor : ''}${data.infoBackground ? ';background: ' + data.infoBackground : ''}"><span class="vis-hq-rightinfo-text">${(data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>')}</span>`;
 
                 text += '</div>\n';
             }
-            for (var i = 1; i <= data.slide_count; i++) {
-                var options = {
+            for (let i = 1; i <= data.slide_count; i++) {
+                const options = {
                     slideOid: data['oid-slide-sensor' + i],
                     handleOid: data['oid-slide-handle' + i],
                     type: data['slide_type' + i],
                     border_width: data.border_width,
                     shutterPos: data.shutterPos,
                 };
-                text += '<td style="height: 100%">' + this.drawOneWindow(i, options) + '</td>';
+                text += `<td style="height: 100%">${this.drawOneWindow(i, options)}</td>`;
             }
             text += '</tr></table>';
             $div.html(text);
 
             $div.find('.hq-blind-blind2').each(function (id) {
                 id++;
-                if (data['oid-slide-sensor-lowbat' + id]) {
-                    data['oid-slide-sensor-lowbat'][id] = vis.states[data['oid-slide-sensor-lowbat' + id] + '.val'];
+                if (data[`oid-slide-sensor-lowbat${id}`]) {
+                    data['oid-slide-sensor-lowbat'][id] = vis.states[`${data[`oid-slide-sensor-lowbat${id}`]}.val`];
                     $(this).batteryIndicator({
                         show: data['oid-slide-sensor-lowbat'][id] || false,
                         title: _('Low battery on sash sensor'),
@@ -1517,8 +1431,8 @@ vis.binds.hqwidgets = {
             });
             $div.find('.hq-blind-blind3').each(function (id) {
                 id++;
-                if (data['oid-slide-handle-lowbat' + id]) {
-                    data['oid-slide-handle-lowbat'][id] = vis.states[data['oid-slide-handle-lowbat' + id] + '.val'];
+                if (data[`oid-slide-handle-lowbat${id}`]) {
+                    data['oid-slide-handle-lowbat'][id] = vis.states[`${data[`oid-slide-handle-lowbat${id}`]}.val`];
                     $(this).batteryIndicator({
                         show: data['oid-slide-handle-lowbat'][id] || false,
                         color: '#FF55FA',
@@ -1529,28 +1443,34 @@ vis.binds.hqwidgets = {
                 }
             });
 
-            var width = $div.width();
-            var offset = width - 20;
-            if (offset < width / 2) offset = width / 2;
-            $div.find('.vis-hq-leftinfo').css({ right: offset + 'px' });
+            const width = $div.width();
+            let offset = width - 20;
+            if (offset < width / 2) {
+                offset = width / 2;
+            }
+            $div.find('.vis-hq-leftinfo').css({ right: `${offset}px` });
             $div.find('.vis-hq-rightinfo').css({
-                'padding-left': 5 + width / 2 + (parseInt(data.infoRightPaddingLeft, 10) || 0) + 'px',
+                'padding-left': `${5 + width / 2 + (parseInt(data.infoRightPaddingLeft, 10) || 0)}px`,
             });
         },
         init: function (wid, view, data, style) {
             vis.binds.hqwidgets.showVersion();
 
-            var $div = $('#' + wid).addClass('vis-hq-button-base');
+            const $div = $(`#${wid}`).addClass('vis-hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
                     vis.binds.hqwidgets.window.init(wid, view, data, style);
                 }, 100);
                 return;
             }
-            var _data = { wid: wid, view: view };
-            for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] === 'function') continue;
-                if (a[0] !== '_') _data[a] = data[a];
+            const _data = { wid: wid, view: view };
+            for (const a in data) {
+                if (!data.hasOwnProperty(a) || typeof data[a] === 'function') {
+                    continue;
+                }
+                if (a[0] !== '_') {
+                    _data[a] = data[a];
+                }
             }
             data = _data;
 
@@ -1573,7 +1493,7 @@ vis.binds.hqwidgets = {
             data.min = parseFloat(data.min);
             data.max = parseFloat(data.max);
             if (data.max < data.min) {
-                var tmp = data.min;
+                const tmp = data.min;
                 data.min = data.max;
                 data.max = tmp;
             }
@@ -1581,20 +1501,24 @@ vis.binds.hqwidgets = {
             data['oid-slide-handle-lowbat'] = [];
 
             if (data['oid-working']) {
-                data.working = vis.states.attr(data['oid-working'] + '.val');
+                data.working = vis.states.attr(`${data['oid-working']}.val`);
             }
 
             vis.binds.hqwidgets.window.draw($div);
 
             function onChange(e, newVal /* , oldVal */) {
                 if (e.type === data.oid + '.val') {
-                    var shutterPos = newVal;
+                    let shutterPos = newVal;
                     data.value = shutterPos;
                     if (shutterPos === undefined || shutterPos === null) {
                         data.shutterPos = 0;
                     } else {
-                        if (shutterPos < data.min) shutterPos = data.min;
-                        if (shutterPos > data.max) shutterPos = data.max;
+                        if (shutterPos < data.min) {
+                            shutterPos = data.min;
+                        }
+                        if (shutterPos > data.max) {
+                            shutterPos = data.max;
+                        }
 
                         data.shutterPos = Math.round((100 * (shutterPos - data.min)) / (data.max - data.min));
                     }
@@ -1602,25 +1526,25 @@ vis.binds.hqwidgets = {
                     if (data.invert) data.shutterPos = 100 - data.shutterPos;
 
                     if (!data.noAnimate) {
-                        $div.find('.hq-blind-position').animate({ height: data.shutterPos + '%' }, 500);
+                        $div.find('.hq-blind-position').animate({ height: `${data.shutterPos}%` }, 500);
                     } else {
-                        $div.find('.hq-blind-position').css({ height: data.shutterPos + '%' });
+                        $div.find('.hq-blind-position').css({ height: `${data.shutterPos}%` });
                     }
                     $div.find('.vis-hq-rightinfo-text').html(data.shutterPos + '%');
                 } else {
-                    for (var t = 1; t <= data.slide_count; t++) {
+                    for (let t = 1; t <= data.slide_count; t++) {
                         if (
-                            e.type === data['oid-slide-sensor' + t] + '.val' ||
+                            e.type === `${data['oid-slide-sensor' + t]}.val` ||
                             e.type === data['oid-slide-handle' + t] + '.val'
                         ) {
                             vis.binds.hqwidgets.window.draw($div);
                             break;
-                        } else if (e.type === data['oid-slide-sensor-lowbat' + t] + '.val') {
+                        } else if (e.type === `${data[`oid-slide-sensor-lowbat${t}`]}.val`) {
                             data['oid-slide-sensor-lowbat'][t] =
-                                vis.states[data['oid-slide-sensor-lowbat' + t] + '.val'];
+                                vis.states[`${data[`oid-slide-sensor-lowbat${t}`]}.val`];
                             $div.find('.slide-low-battery').each(function (id) {
                                 id++;
-                                if (data['oid-slide-sensor-lowbat' + id]) {
+                                if (data[`oid-slide-sensor-lowbat${id}`]) {
                                     if (data['oid-slide-sensor-lowbat'][id]) {
                                         $(this).show();
                                     } else {
@@ -1628,12 +1552,12 @@ vis.binds.hqwidgets = {
                                     }
                                 }
                             });
-                        } else if (e.type === data['oid-slide-handle-lowbat' + t] + '.val') {
+                        } else if (e.type === `${data[`oid-slide-handle-lowbat${t}`]}.val`) {
                             data['oid-slide-handle-lowbat'][t] =
-                                vis.states[data['oid-slide-handle-lowbat' + t] + '.val'];
+                                vis.states[`${data[`oid-slide-handle-lowbat${t}`]}.val`];
                             $div.find('.handle-low-battery').each(function (id) {
                                 id++;
-                                if (data['oid-slide-handle-lowbat' + id]) {
+                                if (data[`oid-slide-handle-lowbat${id}`]) {
                                     if (data['oid-slide-handle-lowbat'][id]) {
                                         $(this).show();
                                     } else {
@@ -1646,11 +1570,11 @@ vis.binds.hqwidgets = {
                 }
             }
 
-            var bound = [];
+            const bound = [];
 
-            for (var i = 1; i <= data.slide_count; i++) {
+            for (let i = 1; i <= data.slide_count; i++) {
                 if (data['oid-slide-sensor' + i]) {
-                    vis.states.bind(data['oid-slide-sensor' + i] + '.val', onChange);
+                    vis.states.bind(`${data[`oid-slide-sensor${i}`]}.val`, onChange);
                     bound.push(data['oid-slide-sensor' + i] + '.val');
                 }
                 if (data['oid-slide-handle' + i]) {
@@ -1671,7 +1595,7 @@ vis.binds.hqwidgets = {
                 if (!vis.editMode) {
                     // prepare big window
                     $div.click(function () {
-                        var $big = $div.find('.hq-blind-big');
+                        const $big = $div.find('.hq-blind-big');
                         if (!$big.length || !$big.data('show')) {
                             vis.binds.hqwidgets.window.openPopup($div);
                         }
@@ -1689,11 +1613,17 @@ vis.binds.hqwidgets = {
                 $div.data('bindHandler', onChange);
             }
 
-            var shutterPos = vis.states[data.oid + '.val'] || 0;
-            if (shutterPos < data.min) shutterPos = data.min;
-            if (shutterPos > data.max) shutterPos = data.max;
+            let shutterPos = vis.states[data.oid + '.val'] || 0;
+            if (shutterPos < data.min) {
+                shutterPos = data.min;
+            }
+            if (shutterPos > data.max) {
+                shutterPos = data.max;
+            }
             shutterPos = Math.round((100 * (shutterPos - data.min)) / (data.max - data.min));
-            if (data.invert) shutterPos = 100 - shutterPos;
+            if (data.invert) {
+                shutterPos = 100 - shutterPos;
+            }
             $div.find('.vis-hq-rightinfo-text').html(shutterPos + '%');
 
             if (vis.editMode && vis.activeWidgets.indexOf(wid) !== -1) {
@@ -1704,10 +1634,10 @@ vis.binds.hqwidgets = {
     },
     door: {
         changeState: function ($div, notUpdateDoor, isFirst) {
-            var data = $div.data('data');
+            const data = $div.data('data');
             if (!data) return;
 
-            var value = data.value;
+            const value = data.value;
 
             if (data['oid-battery']) $div.batteryIndicator('show', data.battery || false);
 
@@ -1746,35 +1676,28 @@ vis.binds.hqwidgets = {
             }
         },
         draw: function ($div) {
-            var data = $div.data('data');
+            const data = $div.data('data');
             if (!data) return;
 
             // place left-info, right-info, caption and image
             if (!$div.find('.vis-hq-main').length) {
-                var text = '';
+                let text = '';
                 if (!data.descriptionLeftDisabled && data.descriptionLeft) {
-                    if (data.infoLeftPaddingLeft === undefined || data.infoLeftPaddingLeft === null)
+                    if (data.infoLeftPaddingLeft === undefined || data.infoLeftPaddingLeft === null) {
                         data.infoLeftPaddingLeft = '15px';
-                    if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null)
+                    }
+                    if (data.infoLeftPaddingRight === undefined || data.infoLeftPaddingRight === null) {
                         data.infoLeftPaddingRight = '50px';
-                    if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/))
-                        data.infoLeftPaddingLeft = data.infoLeftPaddingLeft + 'px';
-                    if (!data.infoLeftPaddingRight.match(/px$|rem$|em$/))
-                        data.infoLeftPaddingRight = data.infoLeftPaddingRight + 'px';
+                    }
+                    if (!data.infoLeftPaddingLeft.match(/px$|rem$|em$/)) {
+                        data.infoLeftPaddingLeft = `${data.infoLeftPaddingLeft}px`;
+                    }
+                    if (!data.infoLeftPaddingRight.match(/px$|rem$|em$/)) {
+                        data.infoLeftPaddingRight = `${data.infoLeftPaddingRight}px`;
+                    }
 
-                    text +=
-                        '<div class="vis-hq-leftinfo" style="padding-left: ' +
-                        data.infoLeftPaddingLeft +
-                        '; padding-right: ' +
-                        data.infoLeftPaddingRight +
-                        '; font-size: ' +
-                        (data.infoLeftFontSize || 12) +
-                        'px' +
-                        (data.infoColor ? ';color: ' + data.infoColor : '') +
-                        (data.infoBackground ? ';background: ' + data.infoBackground : '') +
-                        '"><span class="vis-hq-leftinfo-text">' +
-                        (data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') +
-                        '</span></div>\n';
+                    text += `<div class="vis-hq-leftinfo" style="padding-left: ${data.infoLeftPaddingLeft}; padding-right: ${data.infoLeftPaddingRight}; font-size: ${data.infoLeftFontSize || 12}px${data.infoColor ? ';color: ' + data.infoColor : ''}${data.infoBackground ? ';background: ' + data.infoBackground : ''}"><span class="vis-hq-leftinfo-text">${(data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>')}</span></div>
+`;
                 }
                 if (data.infoRight || data.wType === 'number' || data.hoursLastAction) {
                     if (data.infoRightPaddingLeft === undefined || data.infoRightPaddingLeft === null)
@@ -1782,22 +1705,14 @@ vis.binds.hqwidgets = {
                     if (data.infoRightPaddingRight === undefined || data.infoRightPaddingRight === null)
                         data.infoRightPaddingRight = '15px';
                     if (!data.infoRightPaddingRight.match(/px$|rem$|em$/))
-                        data.infoRightPaddingRight = data.infoRightPaddingRight + 'px';
+                        data.infoRightPaddingRight = `${data.infoRightPaddingRight}px`;
 
-                    text +=
-                        '<div class="vis-hq-rightinfo" style="padding-right: ' +
-                        data.infoRightPaddingRight +
-                        '; font-size: ' +
-                        (data.infoFontRightSize || 12) +
-                        'px' +
-                        (data.infoColor ? ';color: ' + data.infoColor : '') +
-                        (data.infoBackground ? ';background: ' + data.infoBackground : '') +
-                        '"><span class="vis-hq-rightinfo-text">' +
-                        (data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>') +
-                        '</span>';
+                    text += `<div class="vis-hq-rightinfo" style="padding-right: ${data.infoRightPaddingRight}; font-size: ${data.infoFontRightSize || 12}px${data.infoColor ? ';color: ' + data.infoColor : ''}${data.infoBackground ? ';background: ' + data.infoBackground : ''}"><span class="vis-hq-rightinfo-text">${(data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>')}</span>`;
 
                     if (data.hoursLastAction) {
-                        if (data.infoRight || data.wType === 'number') text += '<br>';
+                        if (data.infoRight || data.wType === 'number') {
+                            text += '<br>';
+                        }
                         text += '<span class="vis-hq-time"></span>';
                     }
 
@@ -1812,7 +1727,7 @@ vis.binds.hqwidgets = {
                     '</tr></table>\n';
                 $div.append(text);
             }
-            $div.find('.vis-hq-door-empty-' + (data.door_type || 'left')).css({
+            $div.find(`.vis-hq-door-empty-${data.door_type || 'left'}`).css({
                 background: data.emptyColor || '#515151',
             });
             if (data.door_type === 'right') {
@@ -1828,23 +1743,25 @@ vis.binds.hqwidgets = {
                 'padding-left': data.border_width + 1,
             });
 
-            var width = $div.width();
-            var offset = width - 20;
-            if (offset < width / 2) offset = width / 2;
+            const width = $div.width();
+            let offset = width - 20;
+            if (offset < width / 2) {
+                offset = width / 2;
+            }
             $div.find('.vis-hq-leftinfo').css({ right: offset + 'px' });
         },
         init: function (wid, view, data, style) {
             vis.binds.hqwidgets.showVersion();
 
-            var $div = $('#' + wid).addClass('vis-hq-button-base');
+            const $div = $(`#${wid}`).addClass('vis-hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
                     vis.binds.hqwidgets.door.init(wid, view, data, style);
                 }, 100);
                 return;
             }
-            var _data = { wid: wid, view: view };
-            for (var a in data) {
+            const _data = { wid: wid, view: view };
+            for (const a in data) {
                 if (!data.hasOwnProperty(a) || typeof data[a] === 'function') continue;
                 if (a[0] !== '_') _data[a] = data[a];
             }
@@ -1852,8 +1769,12 @@ vis.binds.hqwidgets = {
 
             if (!data.border_width && data.border_width !== '0') data.border_width = 3;
             data.border_width = parseInt(data.border_width, 10);
-            if (data['oid-battery']) data.battery = vis.states.attr(data['oid-battery'] + '.val');
-            if (data['oid-signal']) data.signal = vis.states.attr(data['oid-signal'] + '.val');
+            if (data['oid-battery']) {
+                data.battery = vis.states.attr(`${data['oid-battery']}.val`);
+            }
+            if (data['oid-signal']) {
+                data.signal = vis.states.attr(`${data['oid-signal']}.val`);
+            }
 
             $div.data('data', data);
             $div.data('style', style);
@@ -1861,8 +1782,8 @@ vis.binds.hqwidgets = {
             vis.binds.hqwidgets.door.draw($div);
 
             function onChange(e, newVal) {
-                if (e.type === data.oid + '.val') {
-                    var doorState = newVal;
+                if (e.type === `${data.oid}.val`) {
+                    let doorState;
                     if (newVal === 'true' || newVal === true) {
                         doorState = true;
                     } else if (newVal === 'false' || newVal === false) {
@@ -1877,31 +1798,31 @@ vis.binds.hqwidgets = {
                     data.value = doorState;
 
                     vis.binds.hqwidgets.door.changeState($div);
-                } else if (e.type === data['oid-signal'] + '.val') {
+                } else if (e.type === `${data['oid-signal']}.val`) {
                     data.signal = newVal;
                     vis.binds.hqwidgets.door.changeState($div, true);
-                } else if (e.type === data['oid-battery'] + '.val') {
+                } else if (e.type === `${data['oid-battery']}.val`) {
                     data.battery = newVal;
                     vis.binds.hqwidgets.door.changeState($div, true);
                 }
             }
-            var bound = [];
+            const bound = [];
 
             if (data.oid) {
                 if (!vis.editMode) {
                     // prepare big window
                     $div.click(function () {
-                        var $big = $div.find('.hq-blind-big');
+                        const $big = $div.find('.hq-blind-big');
                         if (!$big.length || !$big.data('show')) {
                             //vis.binds.hqwidgets.window.openPopup($div);
                         }
                     });
                 }
 
-                vis.states.bind(data.oid + '.val', onChange);
-                bound.push(data.oid + '.val');
-                var newVal = vis.states.attr(data.oid + '.val');
-                var doorState;
+                vis.states.bind(`${data.oid}.val`, onChange);
+                bound.push(`${data.oid}.val`);
+                const newVal = vis.states.attr(`${data.oid}.val`);
+                let doorState;
 
                 if (newVal === 'true' || newVal === true) {
                     doorState = true;
@@ -1918,13 +1839,13 @@ vis.binds.hqwidgets = {
             }
             if (data['oid-battery']) {
                 $div.batteryIndicator();
-                vis.states.bind(data['oid-battery'] + '.val', onChange);
-                bound.push(data['oid-battery'] + '.val');
+                vis.states.bind(`${data['oid-battery']}.val`, onChange);
+                bound.push(`${data['oid-battery']}.val`);
             }
 
             if (data['oid-signal']) {
-                vis.states.bind(data['oid-signal'] + '.val', onChange);
-                bound.push(data['oid-signal'] + '.val');
+                vis.states.bind(`${data['oid-signal']}.val`, onChange);
+                bound.push(`${data['oid-signal']}.val`);
             }
             if (bound.length) {
                 // remember all ids, that bound
@@ -1937,10 +1858,12 @@ vis.binds.hqwidgets = {
     },
     lock: {
         draw: function ($div, isInit) {
-            var data = $div.data('data');
-            if (!data) return;
+            const data = $div.data('data');
+            if (!data) {
+                return;
+            }
 
-            var $img = $div.find('img:first');
+            let $img = $div.find('img:first');
             if (!$img.length) {
                 if (!$div.is(':visible')) {
                     return setTimeout(function () {
@@ -1949,27 +1872,10 @@ vis.binds.hqwidgets = {
                 }
 
                 $div.html(
-                    '<img src="" class="vis-hq-lock1" style="width: 100%; height:100%;"/>' +
-                        '<div class="vis-hq-biglock" style="display: none">' +
-                        '    <div class="vis-hq-biglock-button vis-hq-biglock-close ' +
-                        (data.closeStyle || '') +
-                        '"><img src="' +
-                        (data.closeIcon || '') +
-                        '" style="width: 100%; height:100%"/></div>' +
-                        '    <div class="vis-hq-biglock-button vis-hq-biglock-open ' +
-                        (data.openStyle || '') +
-                        '"><img src="' +
-                        (data.openIcon || '') +
-                        '" style="width: 100%; height:100%"/></div>' +
-                        '    <div class="vis-hq-biglock-button vis-hq-biglock-openDoor ' +
-                        (data.openDoorStyle || '') +
-                        '"><img src="' +
-                        (data.openDoorIcon || '') +
-                        '" style="width: 100%; height:100%"/></div>' +
-                        '</div>',
+                    `<img src="" class="vis-hq-lock1" style="width: 100%; height:100%;"/><div class="vis-hq-biglock" style="display: none">    <div class="vis-hq-biglock-button vis-hq-biglock-close ${data.closeStyle || ''}"><img src="${data.closeIcon || ''}" style="width: 100%; height:100%"/></div>    <div class="vis-hq-biglock-button vis-hq-biglock-open ${data.openStyle || ''}"><img src="${data.openIcon || ''}" style="width: 100%; height:100%"/></div>    <div class="vis-hq-biglock-button vis-hq-biglock-openDoor ${data.openDoorStyle || ''}"><img src="${data.openDoorIcon || ''}" style="width: 100%; height:100%"/></div></div>`,
                 );
                 $img = $div.find('.vis-hq-lock1');
-                var $big = $div.find('.vis-hq-biglock');
+                const $big = $div.find('.vis-hq-biglock');
                 data.popupRadius = parseInt(data.popupRadius, 10) || 75;
                 $big.css({
                     'border-radius': data.popupRadius,
@@ -1984,18 +1890,24 @@ vis.binds.hqwidgets = {
                     if (data.openValue === undefined || data.openValue === null || data.openValue === '') {
                         data.openValue = true;
                     } else {
-                        if (data.openValue === 'true') data.openValue = true;
-                        if (data.openValue === 'false') data.openValue = false;
-                        if (parseFloat(data.openValue).toString() == data.openValue)
+                        if (data.openValue === 'true') {
+                            data.openValue = true;
+                        } else if (data.openValue === 'false') {
+                            data.openValue = false;
+                        } else if (parseFloat(data.openValue).toString() == data.openValue) {
                             data.openValue = parseFloat(data.openValue);
+                        }
                     }
                     if (data.closeValue === undefined || data.closeValue === null || data.closeValue === '') {
                         data.closeValue = false;
                     } else {
-                        if (data.closeValue === 'true') data.closeValue = true;
-                        if (data.closeValue === 'false') data.closeValue = false;
-                        if (parseFloat(data.closeValue).toString() == data.closeValue)
+                        if (data.closeValue === 'true') {
+                            data.closeValue = true;
+                        } else if (data.closeValue === 'false') {
+                            data.closeValue = false;
+                        } else if (parseFloat(data.closeValue).toString() == data.closeValue) {
                             data.closeValue = parseFloat(data.closeValue);
+                        }
                     }
 
                     $img.click(function () {
@@ -2033,10 +1945,13 @@ vis.binds.hqwidgets = {
                     if (data.openDoorValue === undefined || data.openDoorValue === null || data.openDoorValue === '') {
                         data.openDoorValue = true;
                     } else {
-                        if (data.openDoorValue === 'true') data.openDoorValue = true;
-                        if (data.openDoorValue === 'false') data.openDoorValue = false;
-                        if (parseFloat(data.openDoorValue).toString() == data.openDoorValue)
+                        if (data.openDoorValue === 'true') {
+                            data.openDoorValue = true;
+                        } else if (data.openDoorValue === 'false') {
+                            data.openDoorValue = false;
+                        } else if (parseFloat(data.openDoorValue).toString() == data.openDoorValue) {
                             data.openDoorValue = parseFloat(data.openDoorValue);
+                        }
                     }
                     if (!vis.editMode) {
                         $div.find('.vis-hq-biglock-openDoor').click(function () {
@@ -2077,31 +1992,38 @@ vis.binds.hqwidgets = {
             }
             if (val === undefined || val === null || val === false || val === 'false' || val === '') return true;
             if (val === '0' || val === 0) return true;
-            var f = parseFloat(val);
-            if (f.toString() !== 'NaN') return !f;
+            const f = parseFloat(val);
+            if (f.toString() !== 'NaN') {
+                return !f;
+            }
             return false;
         },
         init: function (wid, view, data, style) {
             vis.binds.hqwidgets.showVersion();
-            var $div = $('#' + wid).addClass('vis-hq-button-base');
+            const $div = $('#' + wid).addClass('vis-hq-button-base');
             if (!$div.length) {
                 setTimeout(function () {
                     vis.binds.hqwidgets.lock.init(wid, view, data, style);
                 }, 100);
                 return;
             }
-            var _data = { wid: wid, view: view };
-            for (var a in data) {
-                if (!data.hasOwnProperty(a) || typeof data[a] === 'function') continue;
+            const _data = { wid: wid, view: view };
+            for (const a in data) {
+                if (!data.hasOwnProperty(a) || typeof data[a] === 'function') {
+                    continue;
+                }
                 if (a[0] !== '_') {
                     _data[a] = data[a];
                 }
             }
             data = _data;
 
-            if (data.closeValue === undefined || data.closeValue === null || data.closeValue === '')
+            if (data.closeValue === undefined || data.closeValue === null || data.closeValue === '') {
                 data.closeValue = false;
-            if (data.openValue === undefined || data.openValue === null || data.openValue === '') data.openValue = true;
+            }
+            if (data.openValue === undefined || data.openValue === null || data.openValue === '') {
+                data.openValue = true;
+            }
 
             data.styleNormal = data.usejQueryStyle ? 'ui-state-default' : data.styleNormal || 'hq-button-no-background';
             data.styleActive = data.usejQueryStyle ? 'ui-state-active' : data.styleActive || 'hq-button-no-background';
@@ -2112,9 +2034,9 @@ vis.binds.hqwidgets = {
             }
 
             if (data.oid) {
-                vis.states.bind(data.oid + '.val', onChange);
+                vis.states.bind(`${data.oid}.val`, onChange);
                 // remember all ids, that bound
-                $div.data('bound', [data.oid + '.val']);
+                $div.data('bound', [`${data.oid}.val`]);
                 // remember bind handler
                 $div.data('bindHandler', onChange);
             }
@@ -2126,7 +2048,7 @@ vis.binds.hqwidgets = {
         init: function (wid, view, data) {
             vis.binds.hqwidgets.showVersion();
 
-            var $div = $('#' + wid);
+            const $div = $('#' + wid);
             if (!$div.length) {
                 setTimeout(function () {
                     vis.binds.hqwidgets.circle.init(wid, view, data);
@@ -2134,8 +2056,8 @@ vis.binds.hqwidgets = {
                 return;
             }
 
-            var settings = data;
-            var $scalaInput = $div.find('input');
+            const settings = data;
+            const $scalaInput = $div.find('input');
             $div.addClass('vis-hq-button-base');
 
             function onChange(e, newVal, oldVal) {
@@ -2144,11 +2066,11 @@ vis.binds.hqwidgets = {
             }
 
             if (settings.oid) {
-                $scalaInput.val(vis.states.attr(settings.oid + '.val'));
+                $scalaInput.val(vis.states.attr(`${settings.oid}.val`));
                 if (1 || !vis.editMode) {
-                    vis.states.bind(settings.oid + '.val', onChange);
+                    vis.states.bind(`${settings.oid}.val`, onChange);
                     // remember all ids, that bound
-                    $div.data('bound', [settings.oid + '.val']);
+                    $div.data('bound', [`${settings.oid}.val`]);
                     // remember bind handler
                     $div.data('bindHandler', onChange);
                 }
@@ -2156,7 +2078,7 @@ vis.binds.hqwidgets = {
                 $scalaInput.val(settings.min);
             }
 
-            var offset = settings.angleOffset;
+            let offset = settings.angleOffset;
             if (
                 settings.angleArc !== undefined &&
                 settings.angleArc !== null &&
@@ -2182,8 +2104,8 @@ vis.binds.hqwidgets = {
                 release: function () {
                     if (settings.readOnly) return;
                     // remove unit
-                    var oldValue = $scalaInput.data('oldValue');
-                    var val = $scalaInput.val();
+                    const oldValue = $scalaInput.data('oldValue');
+                    let val = $scalaInput.val();
 
                     if (
                         (settings.unit || settings.unit === 0) &&
@@ -2201,10 +2123,15 @@ vis.binds.hqwidgets = {
                 change: function (value) {},
                 format: function (v) {
                     v = parseFloat(v) || 0;
-                    if (settings.digits !== null) v = v.toFixed(settings.digits);
-                    if ((settings.is_comma === 'true' || settings.is_comma === true) && v)
+                    if (settings.digits !== null) {
+                        v = v.toFixed(settings.digits);
+                    }
+                    if ((settings.is_comma === 'true' || settings.is_comma === true) && v) {
                         v = v.toString().replace('.', ',');
-                    if (settings.unit) v = v + settings.unit;
+                    }
+                    if (settings.unit) {
+                        v = v + settings.unit;
+                    }
                     return v;
                 },
                 displayPrevious: settings.displayPrevious,
@@ -2230,29 +2157,41 @@ vis.binds.hqwidgets = {
             }
 
             $scalaInput.prop('readonly', true);
-            var parentFont = $div.parent().css('font-size');
-            var font = $div.css('font-size');
-            if (font !== parentFont) $scalaInput.css('font-size', font);
+            let parentFont = $div.parent().css('font-size');
+            let font = $div.css('font-size');
+            if (font !== parentFont) {
+                $scalaInput.css('font-size', font);
+            }
 
             parentFont = $div.parent().css('font-weight');
             font = $div.css('font-weight');
-            if (font !== parentFont) $scalaInput.css('font-weight', font);
+            if (font !== parentFont) {
+                $scalaInput.css('font-weight', font);
+            }
 
             parentFont = $div.parent().css('font-style');
             font = $div.css('font-style');
-            if (font !== parentFont) $scalaInput.css('font-style', font);
+            if (font !== parentFont) {
+                $scalaInput.css('font-style', font);
+            }
 
-            parentFont = $div.parent().css('font-variant');
-            font = $div.css('font-variant');
-            if (font !== parentFont) $scalaInput.css('font-variant', font);
+            parentFont = $div.parent().css('font-constiant');
+            font = $div.css('font-constiant');
+            if (font !== parentFont) {
+                $scalaInput.css('font-constiant', font);
+            }
         },
     },
     checkbox: {
         styles: ['orange', 'blue', 'green', 'grey'],
         isTrue: function (value, max) {
-            if (value === 'true') value = true;
-            if (value === 'false') value = false;
-            if (value == parseFloat(value)) value = parseFloat(value);
+            if (value === 'true') {
+                value = true;
+            } else if (value === 'false') {
+                value = false;
+            } else if (value == parseFloat(value)) {
+                value = parseFloat(value);
+            }
             if (max === true && typeof value === 'number') {
                 value = value > 0;
             }
@@ -2262,7 +2201,7 @@ vis.binds.hqwidgets = {
         init: function (wid, view, data) {
             vis.binds.hqwidgets.showVersion();
 
-            var $div = $('#' + wid);
+            const $div = $('#' + wid);
             if (!$div.length) {
                 setTimeout(function () {
                     vis.binds.hqwidgets.checkbox.init(wid, view, data);
@@ -2289,7 +2228,7 @@ vis.binds.hqwidgets = {
                 data.val_true = parseFloat(data.val_true);
             }
 
-            var settings = {
+            const settings = {
                 oid: data.oid || null,
                 staticValue: data.staticValue,
                 checkboxSize: data.checkboxSize || 'big',
@@ -2304,9 +2243,9 @@ vis.binds.hqwidgets = {
             }
 
             if (!$div.find('input').length) $div.append('<input type="checkbox"/>');
-            var $input = $div.find('input');
+            const $input = $div.find('input');
 
-            var $shineCheckbox = $input.shineCheckbox(settings);
+            const $shineCheckbox = $input.shineCheckbox(settings);
             function onChange(e, newVal, oldVal) {
                 $shineCheckbox.shineCheckbox('value', vis.binds.hqwidgets.checkbox.isTrue(newVal, settings.max));
             }
@@ -2317,9 +2256,9 @@ vis.binds.hqwidgets = {
                     vis.binds.hqwidgets.checkbox.isTrue(vis.states.attr(settings.oid + '.val'), settings.max),
                 );
                 $shineCheckbox.data('update', false);
-                vis.states.bind(settings.oid + '.val', onChange);
+                vis.states.bind(`${settings.oid}.val`, onChange);
                 // remember all ids, that bound
-                $div.data('bound', [settings.oid + '.val']);
+                $div.data('bound', [`${settings.oid}.val`]);
                 // remember bind handler
                 $div.data('bindHandler', onChange);
 
@@ -2341,7 +2280,7 @@ vis.binds.hqwidgets = {
     odometer: function (view, data) {
         vis.binds.hqwidgets.showVersion();
 
-        var $div = $('#' + data.wid);
+        const $div = $(`#${data.wid}`);
         if (!$div.length) {
             setTimeout(function () {
                 vis.binds.hqwidgets.odometer(view, data);
@@ -2356,11 +2295,11 @@ vis.binds.hqwidgets = {
 
         Odometer.prototype.watchForMutations = function () {};
 
-        var oid = data.oid;
-        var format = data.format || '(.ddd),dd';
-        var factor = parseFloat(data.factor) || 1;
-        var max = 0;
-        var $od = $div.find('.odometer');
+        const oid = data.oid;
+        let format = data.format || '(.ddd),dd';
+        let factor = parseFloat(data.factor) || 1;
+        let max = 0;
+        let $od = $div.find('.odometer');
         if ($od.length) {
             $od.innerHTML = '';
             $od.remove();
@@ -2369,7 +2308,7 @@ vis.binds.hqwidgets = {
         $od = $div.find('.odometer');
 
         if (data.leadingZeros) {
-            var m = format.match(/\([,.\s]?(d+)\)/);
+            let m = format.match(/\([,.\s]?(d+)\)/);
             if (m && m[1]) {
                 max = m[1].length;
                 max = Math.pow(10, max);
@@ -2386,19 +2325,19 @@ vis.binds.hqwidgets = {
             $od.parent().addClass('odometer-leading');
         }
 
-        var od = new Odometer({
+        const od = new Odometer({
             el: $od[0],
-            value: (vis.states[oid + '.val'] || 0) * factor + max,
+            value: (vis.states[`${oid}.val`] || 0) * factor + max,
             duration: parseInt(data.duration, 10) || 3000,
             theme: data.style || 'car',
             format: format,
         });
 
         if (oid && oid !== 'nothing_selected') {
-            vis.states.bind(oid + '.val', function (e, newVal) {
+            vis.states.bind(`${oid}.val`, function (e, newVal) {
                 od.update(parseFloat(newVal) * factor + max);
             });
-            od.update(parseFloat(vis.states[oid + '.val']) * factor + max);
+            od.update(parseFloat(vis.states[`${oid}.val`]) * factor + max);
         } else {
             od.update(max);
         }
@@ -2406,194 +2345,20 @@ vis.binds.hqwidgets = {
 };
 
 if (vis.editMode) {
-    /*
-		"tpl": "tplHqShutter",
-        "hqoptions" : "{
-			"x":1095,
-			"y":336,
-			"height":54,
-			"width":54,
-			"radius":0,
-			"zindex":3,
-			"buttonType":3,
-			"windowConfig":"1",
-			"title":"Schlaffzimmer.Rolladen.Aktor",
-			"room":"Schlafzimmer",
-
-		}",
-
-        *  /
-	  /*
-		"tpl": "tplHqButton",
-        "hqoptions": "{
-			"x":1040,
-			"y":429,
-			"height":46,
-			"width":46,
-			"radius":22,
-			"zindex":2,
-			"iconName":"img/KinderBug.png",
-			"title":"LampeAmFenster.Aktor",
-			"room":"Kinderzimmer",
-			"hm_id":"7480"
-		}",
-	*/
-    /*
-		"tpl": "tplHqOutTemp",
-        "hqoptions": "{
-			"x":481,
-			"y":45,
-			"width":46,
-			"radius":22,
-			"zindex":2,
-			"buttonType":2,
-			"iconName":"Temperature.png",
-			"title":"Temperatur.Sensor",
-			"room":"Balkon",
-			"hm_id":"12871",
-			"charts":{
-				"navigator":"",
-				"percentaxis":"true",
-				"period":"72",
-				"theme":"dark-blue",
-				"range":"24",
-				"scrollbar":"true",
-				"grouping":"true",
-				"legend":"inline",
-				"zoom":"true",
-				"loader":"false"
-			}
-		}",
-        "informWindow": "{"x":85,
-			"y":20,
-			"width":656,
-			"height":491}"
-		},
-*/ /*
-      "tpl": "tplHqInTemp",
-        "hqoptions": "{
-			"x":877,
-			"y":430,
-			"height":44,
-			"width":46,
-			"radius":22,
-			"zindex":2,
-			"buttonType":1,
-			"iconName":"Temperature.png",
-			"title":"Heizung.Regler",
-			"room":"Kinderzimmer",
-			"hm_id":"3837",
-			"hm_idV":"3822",
-			"charts":{
-				"navigator":"",
-				"percentaxis":"true",
-				"period":"72",
-				"theme":"dark-green",
-				"range":"24",
-				"scrollbar":"true",
-				"grouping":"true",
-				"legend":"inline",
-				"zoom":"true",
-				"loader":"false"
-			}
-		}",
-        "informWindow": "{
-			"x":500,
-			"y":253,
-			"width":800,
-			"height":400
-		}"
- */
-
-    vis.binds.hqwidgets.convertOldWidgets = function (widget) {
-        if (widget.data && widget.data.hqoptions) {
-            try {
-                var hqoptions = JSON.parse(widget.data.hqoptions);
-                widget.style.height = 45;
-                widget.style.width = 45;
-                for (var opt in hqoptions) {
-                    if (opt === 'width') {
-                        widget.style.width = hqoptions.width || 45;
-                    } else if (opt === 'height') {
-                        widget.style.height = hqoptions.height || 45;
-                    } else if (opt === 'radius') {
-                        widget.style['border-radius'] = hqoptions.radius + 'px';
-                    } else if (opt === 'zindex') {
-                        widget.style['z-index'] = hqoptions.zindex;
-                    } else if (opt === 'iconName') {
-                        widget.data.btIconWidth = 32;
-                        if (hqoptions.iconName === 'Temperature.png') {
-                            widget.data.iconName = 'img/Heating.png';
-                        } else if (hqoptions.iconName === 'Lamp.png') {
-                            widget.data.iconName = 'img/Lamp.png';
-                        } else if (
-                            hqoptions.iconName &&
-                            hqoptions.iconName.indexOf('http://') === -1 &&
-                            hqoptions.iconName[0] !== '/'
-                        ) {
-                            widget.data.iconName =
-                                '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconName;
-                        } else {
-                            widget.data.iconName = hqoptions.iconName;
-                        }
-                    } else if (opt === 'iconOn') {
-                        if (hqoptions.iconOn === 'Temperature.png') {
-                            widget.data.iconOn = 'img/Heating.png';
-                        } else if (hqoptions.iconOn === 'Lamp.png') {
-                            widget.data.iconOn = 'img/Lamp.png';
-                        } else if (
-                            hqoptions.iconOn &&
-                            hqoptions.iconOn.indexOf('http://') === -1 &&
-                            hqoptions.iconOn[0] !== '/'
-                        ) {
-                            widget.data.iconOn = '/' + vis.conn.namespace + '/' + vis.projectPrefix + hqoptions.iconOn;
-                        } else {
-                            widget.data.iconOn = hqoptions.iconOn;
-                        }
-                    } else if (opt === 'title') {
-                        widget.data.descriptionLeft = hqoptions.title;
-                    } else if (opt === 'room') {
-                        widget.data.descriptionLeft += '<br>' + hqoptions.room;
-                    } else if (opt === 'windowConfig') {
-                        var parts = hqoptions.windowConfig.split(',');
-                        widget.data.slide_count = parts.length || 1;
-                        for (var p = 0; p < parts.length; p++) {
-                            if (parts[p] === '0') {
-                                widget.data['slide_type' + (p + 1)] = '';
-                            } else if (parts[p] === '1') {
-                                widget.data['slide_type' + (p + 1)] = 'left';
-                            } else if (parts[p] === '2') {
-                                widget.data['slide_type' + (p + 1)] = 'right';
-                            } else if (parts[p] === '3') {
-                                widget.data['slide_type' + (p + 1)] = 'top';
-                            }
-                        }
-                        widget.data.border_width = 1;
-                        if (widget.data.hm_id !== undefined && widget.data.hm_id !== null) delete widget.data.hm_id;
-                        if (widget.data.digits !== undefined && widget.data.digits !== null) delete widget.data.digits;
-                        if (widget.data.factor !== undefined && widget.data.factor !== null) delete widget.data.factor;
-                    }
-                }
-            } catch (e) {
-                console.log('Cannot convert. Invalid JSON in hqoptions: ' + widget.data.hqoptions);
-            }
-            delete widget.data.hqoptions;
-        }
-        return widget;
-    };
-
     vis.binds.hqwidgets.changedSensorId = function (widgetID, view, newId, attr, isCss, oldValue) {
-        var index = attr.match(/(\d+)$/);
-        var bName = attr === 'oid-slide-handle' + index[1] ? 'oid-slide-handle-lowbat' : 'oid-slide-sensor-lowbat';
+        const index = attr.match(/(\d+)$/);
+        let bName = attr === `oid-slide-handle${index[1]}` ? 'oid-slide-handle-lowbat' : 'oid-slide-sensor-lowbat';
         bName += index[1];
-        var fields = {};
+        const fields = {};
         fields[bName] = 'indicator.battery';
 
         return vis.binds.hqwidgets.changedId(widgetID, view, newId, fields);
     };
 
     vis.binds.hqwidgets.changedWindowId = function (widgetID, view, newId, attr, isCss, oldValue) {
-        if (oldValue && oldValue !== 'nothing_selected') return;
+        if (oldValue && oldValue !== 'nothing_selected') {
+            return;
+        }
         return vis.binds.hqwidgets.changedId(widgetID, view, newId, {
             'oid-battery': 'indicator.battery',
             'oid-working': 'indicator.working',
@@ -2603,27 +2368,33 @@ if (vis.editMode) {
     };
 
     vis.binds.hqwidgets.changedId = function (widgetID, view, newId, fields) {
-        var obj = vis.objects[newId];
-        var changed = [];
-        // If it is real object and SETPOINT
+        const obj = vis.objects[newId];
+        const changed = [];
+        // If it is a real object and SETPOINT
         if (obj && obj.common && obj.type === 'state') {
-            var roles = [];
+            const roles = [];
 
             // If some attributes are not set
-            for (var field in fields) {
-                if (!fields.hasOwnProperty(field)) continue;
+            for (const field in fields) {
+                if (!fields.hasOwnProperty(field)) {
+                    continue;
+                }
                 if (!vis.views[view].widgets[widgetID].data[field]) roles.push(fields[field]);
             }
 
             if (roles.length) {
-                var result = vis.findByRoles(newId, roles);
+                const result = vis.findByRoles(newId, roles);
                 if (result) {
-                    var name;
-                    for (var r in result) {
-                        if (!result.hasOwnProperty(r)) continue;
+                    let name;
+                    for (const r in result) {
+                        if (!result.hasOwnProperty(r)) {
+                            continue;
+                        }
                         name = null;
-                        for (field in fields) {
-                            if (!fields.hasOwnProperty(field)) continue;
+                        for (let field in fields) {
+                            if (!fields.hasOwnProperty(field)) {
+                                continue;
+                            }
                             if (fields[field] == r) {
                                 name = field;
                                 break;
@@ -2647,7 +2418,9 @@ if (vis.editMode) {
     };
 
     vis.binds.hqwidgets.changedTempId = function (widgetID, view, newId, attr, isCss, oldValue) {
-        if (oldValue && oldValue !== 'nothing_selected') return;
+        if (oldValue && oldValue !== 'nothing_selected') {
+            return;
+        }
         return vis.binds.hqwidgets.changedId(widgetID, view, newId, {
             'oid-battery': 'indicator.battery',
             'oid-working': 'indicator.working',
@@ -2657,7 +2430,9 @@ if (vis.editMode) {
     };
 
     vis.binds.hqwidgets.changedButtonId = function (widgetID, view, newId, attr, isCss, oldValue) {
-        if (oldValue && oldValue !== 'nothing_selected') return;
+        if (oldValue && oldValue !== 'nothing_selected') {
+            return;
+        }
         return vis.binds.hqwidgets.changedId(widgetID, view, newId, {
             'oid-battery': 'indicator.battery',
             'oid-working': 'indicator.working',
@@ -2666,7 +2441,9 @@ if (vis.editMode) {
     };
 
     vis.binds.hqwidgets.changedLockId = function (widgetID, view, newId, attr, isCss, oldValue) {
-        if (oldValue && oldValue !== 'nothing_selected') return;
+        if (oldValue && oldValue !== 'nothing_selected') {
+            return;
+        }
         return vis.binds.hqwidgets.changedId(widgetID, view, newId, {
             'oid-battery': 'indicator.battery',
             'oid-working': 'indicator.working',
@@ -2675,7 +2452,9 @@ if (vis.editMode) {
     };
 
     vis.binds.hqwidgets.changedTemperatureId = function (widgetID, view, newId, attr, isCss, oldValue) {
-        if (oldValue && oldValue !== 'nothing_selected') return;
+        if (oldValue && oldValue !== 'nothing_selected') {
+            return;
+        }
         return vis.binds.hqwidgets.changedId(widgetID, view, newId, {
             'oid-humidity': 'value.humidity',
         });

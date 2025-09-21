@@ -14,11 +14,11 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 
 <!--
 	Placeholder for the next version (at the beginning of the line):
-	
+	### **WORK IN PROGRESS**
 -->
 
 ## Changelog
-### 1.5.4 (2025-09-19)
+### **WORK IN PROGRESS**
 * (bluefox) Optimization of button de-bouncing
 
 ### 1.5.1 (2024-03-07)

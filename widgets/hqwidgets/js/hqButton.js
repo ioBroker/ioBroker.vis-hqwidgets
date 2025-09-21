@@ -332,6 +332,10 @@ vis.binds.hqwidgets.button = {
             }, 100);
             return;
         }
+        if (vis.binds.hqwidgets.contextEnabled) {
+            vis.binds.hqwidgets.contextEnabled = false;
+            document.addEventListener('contextmenu', e => e.preventDefault(), true);
+        }
 
         const data = $div.data('data');
         data.state = data.state || 'normal';
@@ -353,7 +357,7 @@ vis.binds.hqwidgets.button = {
                     data.infoLeftPaddingRight = `${data.infoLeftPaddingRight}px`;
                 }
 
-                text += `<div class="vis-hq-leftinfo" style="padding-left: ${data.infoLeftPaddingLeft}; padding-right: ${data.infoLeftPaddingRight}; font-size: ${data.infoLeftFontSize || 12}px${data.infoColor ? ';color: ' + data.infoColor : ''}${data.infoBackground ? ';background: ' + data.infoBackground : ''}"><span class="vis-hq-leftinfo-text">${(data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>')}</span></div>\n`;
+                text += `<div class="vis-hq-leftinfo" style="user-select: none; padding-left: ${data.infoLeftPaddingLeft}; padding-right: ${data.infoLeftPaddingRight}; font-size: ${data.infoLeftFontSize || 12}px${data.infoColor ? `;color: ${data.infoColor}` : ''}${data.infoBackground ? `;background: ${data.infoBackground}` : ''}"><span class="vis-hq-leftinfo-text">${(data.descriptionLeft || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>')}</span></div>\n`;
             }
             if (data.infoRight || data.wType === 'number' || data.hoursLastAction) {
                 if (data.infoRightPaddingLeft === undefined || data.infoRightPaddingLeft === null) {
@@ -366,7 +370,7 @@ vis.binds.hqwidgets.button = {
                     data.infoRightPaddingRight = `${data.infoRightPaddingRight}px`;
                 }
 
-                text += `<div class="vis-hq-rightinfo" style="padding-right: ${data.infoRightPaddingRight}; font-size: ${data.infoFontRightSize || 12}px${data.infoColor ? ';color: ' + data.infoColor : ''}${data.infoBackground ? ';background: ' + data.infoBackground : ''}"><span class="vis-hq-rightinfo-text">${(data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>')}</span>`;
+                text += `<div class="vis-hq-rightinfo" style="user-select: none; padding-right: ${data.infoRightPaddingRight}; font-size: ${data.infoFontRightSize || 12}px${data.infoColor ? ';color: ' + data.infoColor : ''}${data.infoBackground ? ';background: ' + data.infoBackground : ''}"><span class="vis-hq-rightinfo-text">${(data.infoRight || '').replace(/\s/g, '&nbsp;').replace(/\\n/g, '<br>')}</span>`;
 
                 if (data.hoursLastAction) {
                     if (data.infoRight || data.wType === 'number') {
@@ -377,20 +381,20 @@ vis.binds.hqwidgets.button = {
 
                 text += '</div>\n';
             }
-            text += '<div class="vis-hq-main" style="z-index: 1"><div class="vis-hq-middle">\n';
+            text += '<div class="vis-hq-main" style="user-select: none; z-index: 1"><div class="vis-hq-middle" style="user-select: none">\n';
 
             if (data.offsetAuto) {
                 text +=
-                    '<table class="vis-hq-table vis-hq-no-space" style="position: absolute"><tr class="vis-hq-no-space"><td class="vis-hq-no-space"><div class="vis-hq-icon" style="text-align: center;"></div></td>\n';
+                    '<table class="vis-hq-table vis-hq-no-space" style="user-select: none; position: absolute"><tr class="vis-hq-no-space"><td class="vis-hq-no-space"><div class="vis-hq-icon" style="user-select: none; text-align: center;"></div></td>\n';
             } else {
-                text += `<table class="vis-hq-table vis-hq-no-space" style="position: absolute;top:${data.topOffset}%;left:${data.leftOffset}%"><tr class="vis-hq-no-space"><td class="vis-hq-no-space"><div class="vis-hq-icon" style="text-align: center;"></div></td>
+                text += `<table class="vis-hq-table vis-hq-no-space" style="user-select: none; position: absolute;top:${data.topOffset}%;left:${data.leftOffset}%"><tr class="vis-hq-no-space"><td class="vis-hq-no-space"><div class="vis-hq-icon" style="user-select: none; text-align: center;"></div></td>
 `;
             }
 
             if (data.caption || data.captionOn) {
                 if ($div.height() > $div.width()) text += '</tr><tr class="vis-hq-no-space">';
                 text +=
-                    '<td class="vis-hq-no-space"><div class="vis-hq-text-caption" style="text-align: center;"></div></td>';
+                    '<td class="vis-hq-no-space"><div class="vis-hq-text-caption" style="user-select: none; text-align: center;"></div></td>';
             }
 
             text += '</tr></table></div></div></div>';
@@ -418,7 +422,7 @@ vis.binds.hqwidgets.button = {
             img = data.state === 'normal' ? data.iconName || '' : data.iconOn || '';
             $div.find('.vis-hq-icon')
                 .html(
-                    `<img class="vis-hq-icon-img" style="height: ${data.btIconWidth}px; width: auto;" src="${img || ''}"/>`,
+                    `<img class="vis-hq-icon-img" style="user-select: none; height: ${data.btIconWidth}px; width: auto;" src="${img || ''}"/>`,
                 )
                 .css('opacity', img ? 1 : 0);
         } else {
@@ -731,7 +735,8 @@ vis.binds.hqwidgets.button = {
                 (data.oid || data.urlFalse || data.urlTrue || data.oidFalse || data.oidTrue)
             ) {
                 if (!data.pushButton) {
-                    $main.on('click touchstart', function () {
+                    $main.on('click touchstart', function (e) {
+                        e.preventDefault();
                         // Protect against two events
                         if (vis.detectBounce(this)) {
                             return;
@@ -764,7 +769,8 @@ vis.binds.hqwidgets.button = {
                         }
                     });
                 } else {
-                    $main.on('mousedown touchstart', function () {
+                    $main.on('mousedown touchstart', function (e) {
+                        e.preventDefault();
                         // Reset bounce detector for mouseup event
                         if (this.__vis_lcu !== undefined) {
                             this.__vis_lcu = 0;
@@ -773,8 +779,6 @@ vis.binds.hqwidgets.button = {
                         if (vis.detectBounce(this)) {
                             return;
                         }
-
-                        vis.binds.hqwidgets.contextMenu(false);
 
                         data.value = data.max;
                         data.ack = false;
@@ -789,13 +793,10 @@ vis.binds.hqwidgets.button = {
                         if (data.oid && data.oid !== 'nothing_selected') {
                             vis.setValue(data.oid, data.value);
                         }
-                        // Install mouseup handler on document to be sure to catch it
-                        $(document).one('mouseup touchend', function () {
-                            // Protect against two events
-                            if (vis.detectBounce(this, true)) {
-                                return;
-                            }
 
+                        // Install mouseup handler on document to be sure to catch it
+                        $(document).one('mouseup touchend', function (e) {
+                            e.preventDefault();
                             data.value = data.min;
                             data.ack = false;
                             vis.binds.hqwidgets.button.changeState($div, false, false, true);
@@ -809,8 +810,6 @@ vis.binds.hqwidgets.button = {
                             if (data.oid && data.oid !== 'nothing_selected') {
                                 vis.setValue(data.oid, data.value);
                             }
-
-                            vis.binds.hqwidgets.contextMenu(true);
                         });
                     });
                 }

@@ -1028,7 +1028,7 @@ $.extend(true, systemDictionary, {
 // </div>
 
 vis.binds.hqwidgets = {
-    version: '1.5.4',
+    version: '1.6.0',
     contextEnabled: true,
     zindex: [],
     showVersion: function () {

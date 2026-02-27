@@ -18,6 +18,9 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
+### **WORK IN PROGRESS**
+* (oweitman) Repair decimal places in odometer when leadingzeros=false
+
 ### 1.6.0 (2025-09-21)
 * (bluefox) Optimization of button de-bouncing
 

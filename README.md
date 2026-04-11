@@ -18,7 +18,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 -->
 
 ## Changelog
-### **WORK IN PROGRESS**
+### 1.6.1 (2026-04-11)
 * (oweitman) Repair decimal places in odometer when leadingzeros=false
 
 ### 1.6.0 (2025-09-21)

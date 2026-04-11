@@ -1,7 +1,5 @@
 /node_modules
 /.idea
-/package-lock.json
-
 
 # ioBroker dev-server
 .dev-server/

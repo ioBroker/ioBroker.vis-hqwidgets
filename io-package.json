@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "vis-hqwidgets",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "news": {
+      "1.6.1": {
+        "en": "Repair decimal places in odometer when leadingzeros=false",
+        "de": "Reparatur von Dezimalstellen im Odometer, wenn führendenzeros=false",
+        "ru": "Восстановление десятичных знаков в одометре при дидингзеросе = ложном",
+        "pt": "Reparar casas decimais em odómetro quando leadzeros=false",
+        "nl": "Repareer decimalen in odometer bij leadingzeros=false",
+        "fr": "Réparer les décimales dans l'odomètre quand leadzeros=false",
+        "it": "Riparazione decimali posti in contachilometri quando leadzeros=false",
+        "es": "Reparación de lugares decimales en odómetro cuando leadingzeros=false",
+        "pl": "Naprawa miejsc dziesiętnych w liczniku przy leadingzeros = false",
+        "uk": "Ремонт десяткових місць в одометрі при провідномузері=false",
+        "zh-cn": "在气温计中修复小数位数, 当引导零=假"
+      },
       "1.6.0": {
         "en": "Optimization of button de-bouncing",
         "de": "Optimierung des Tasten-Entprellens",
@@ -79,18 +92,6 @@
         "es": "Lo hizo compatible con ioBroker.vis v2",
         "pl": "Jest kompatybilny z ioBroker.vis v2",
         "zh-cn": "马约恩与奥布罗克相容。"
-      },
-      "1.2.0": {
-        "en": "Removed deprecated method `load`",
-        "de": "Veraltete Methode „load“ entfernt",
-        "ru": "Удален устаревший метод load",
-        "pt": "Remoção do método obsoleto `load`",
-        "nl": "Verouderde methode `load` . verwijderd",
-        "fr": "Suppression de la méthode obsolète `load`",
-        "it": "Rimosso il deprecato metodo `load`",
-        "es": "Se eliminó el método obsoleto `load`",
-        "pl": "Usunięto przestarzałą metodę `load`",
-        "zh-cn": "删除了不推荐使用的方法 `load`"
       }
     },
     "titleLang": {

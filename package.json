@@ -1,56 +1,57 @@
 {
-  "name": "iobroker.vis-hqwidgets",
-  "description": "hqwidgets Widgets for ioBroker.vis",
-  "version": "1.6.0",
-  "author": {
-    "name": "bluefox",
-    "email": "dogafox@gmail.com"
-  },
-  "contributors": [
-    "bluefox <dogafox@gmail.com>"
-  ],
-  "homepage": "https://github.com/ioBroker/ioBroker.vis-hqwidgets",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ioBroker/ioBroker.vis-hqwidgets"
-  },
-  "keywords": [
-    "ioBroker",
-    "GUI",
-    "DashUI",
-    "web interface",
-    "home automation",
-    "SCADA",
-    "hqwidgets GUI"
-  ],
-  "devDependencies": {
-    "@alcalzone/release-script": "^3.8.0",
-    "@alcalzone/release-script-plugin-iobroker": "^3.7.2",
-    "@alcalzone/release-script-plugin-license": "^3.7.0",
-    "@iobroker/eslint-config": "^2.1.0",
-    "@iobroker/testing": "^5.1.1",
-    "mocha": "^11.7.2",
-    "chai": "^4.5.0"
-  },
-  "bugs": {
-    "url": "https://github.com/ioBroker/ioBroker.vis-hqwidgets/issues"
-  },
-  "main": "widgets/hqwidgets.html",
-  "files": [
-    "admin/",
-    "img/",
-    "widgets/",
-    "io-package.json",
-    "LICENSE"
-  ],
-  "scripts": {
-    "prepublishOnly": "npm run build",
-    "test": "node node_modules/mocha/bin/mocha --exit",
-    "build": "node build",
-    "release": "release-script",
-    "release-patch": "release-script patch --yes --no-update-lockfile",
-    "release-minor": "release-script minor --yes --no-update-lockfile",
-    "release-major": "release-script major --yes --no-update-lockfile"
-  },
-  "license": "MIT"
+    "name": "iobroker.vis-hqwidgets",
+    "description": "hqwidgets Widgets for ioBroker.vis",
+    "version": "1.6.0",
+    "author": {
+        "name": "bluefox",
+        "email": "dogafox@gmail.com"
+    },
+    "contributors": [
+        "bluefox <dogafox@gmail.com>"
+    ],
+    "homepage": "https://github.com/ioBroker/ioBroker.vis-hqwidgets",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ioBroker/ioBroker.vis-hqwidgets"
+    },
+    "keywords": [
+        "ioBroker",
+        "GUI",
+        "DashUI",
+        "web interface",
+        "home automation",
+        "SCADA",
+        "hqwidgets GUI"
+    ],
+    "devDependencies": {
+        "@alcalzone/release-script": "^5.1.1",
+        "@alcalzone/release-script-plugin-iobroker": "^5.1.2",
+        "@alcalzone/release-script-plugin-license": "^5.1.1",
+        "@iobroker/eslint-config": "^2.2.0",
+        "@iobroker/testing": "^5.2.2"
+    },
+    "bugs": {
+        "url": "https://github.com/ioBroker/ioBroker.vis-hqwidgets/issues"
+    },
+    "main": "widgets/hqwidgets.html",
+    "files": [
+        "admin/",
+        "img/",
+        "widgets/",
+        "io-package.json",
+        "LICENSE"
+    ],
+    "scripts": {
+        "prepublishOnly": "npm run build",
+        "test": "mocha --exit",
+        "lint": "eslint -c eslint.config.mjs",
+        "test:integration": "mocha --exit",
+        "test:package": "mocha test/testPackageFiles --exit",
+        "build": "node build",
+        "release": "release-script",
+        "release-patch": "release-script patch --yes --no-update-lockfile",
+        "release-minor": "release-script minor --yes --no-update-lockfile",
+        "release-major": "release-script major --yes --no-update-lockfile"
+    },
+    "license": "MIT"
 }

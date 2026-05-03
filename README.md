@@ -158,6 +158,8 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 ### 0.1.0 (2015-07-09)
 - (bluefox) initial checkin
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
  Copyright (c) 2013-2026 bluefox <dogafox@gmail.com>
  MIT

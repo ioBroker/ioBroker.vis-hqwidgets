@@ -1,5 +1,13 @@
 /node_modules
+/src-widgets/node_modules
+/src-widgets/build
+/src-widgets/preview/dist
+/src-widgets/preview/.vite
+/src-widgets/.__mf__temp
+/widgets/vis-2-widgets-hqwidgets
 /.idea
+/tmp
+*.tgz
 
 #ignore .commitinfo created by ioBroker release script
 .commitinfo

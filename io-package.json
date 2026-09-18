@@ -190,8 +190,66 @@
           "ok",
           "cancel"
         ]
+      },
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "vis-2<2.12.8"
+          ]
+        },
+        "title": {
+          "en": "vis-2 is too old",
+          "de": "vis-2 ist zu alt",
+          "ru": "vis-2 слишком старый",
+          "pt": "vis-2 é demasiado antigo",
+          "nl": "vis-2 is te oud",
+          "fr": "vis-2 est trop ancien",
+          "it": "vis-2 è troppo vecchio",
+          "es": "vis-2 es demasiado antiguo",
+          "pl": "vis-2 jest zbyt stary",
+          "uk": "vis-2 застарий",
+          "zh-cn": "vis-2 版本过旧"
+        },
+        "text": {
+          "en": "The React widgets require vis-2 2.12.8 or newer. With an older vis-2 the widgets of vis-1 are used.",
+          "de": "Die React-Widgets benötigen vis-2 2.12.8 oder neuer. Mit einem älteren vis-2 werden die Widgets von vis-1 verwendet.",
+          "ru": "React-виджеты требуют vis-2 2.12.8 или новее. Со старым vis-2 используются виджеты vis-1.",
+          "pt": "Os widgets React requerem vis-2 2.12.8 ou mais recente. Com um vis-2 mais antigo são usados os widgets do vis-1.",
+          "nl": "De React-widgets vereisen vis-2 2.12.8 of nieuwer. Met een oudere vis-2 worden de vis-1-widgets gebruikt.",
+          "fr": "Les widgets React nécessitent vis-2 2.12.8 ou plus récent. Avec un vis-2 plus ancien, les widgets de vis-1 sont utilisés.",
+          "it": "I widget React richiedono vis-2 2.12.8 o successivo. Con un vis-2 più vecchio vengono usati i widget di vis-1.",
+          "es": "Los widgets de React requieren vis-2 2.12.8 o superior. Con un vis-2 más antiguo se usan los widgets de vis-1.",
+          "pl": "Widgety React wymagają vis-2 2.12.8 lub nowszego. Ze starszym vis-2 używane są widgety vis-1.",
+          "uk": "React-віджети потребують vis-2 2.12.8 або новіше. Зі старішим vis-2 використовуються віджети vis-1.",
+          "zh-cn": "React 小部件需要 vis-2 2.12.8 或更高版本。使用较旧的 vis-2 时将使用 vis-1 的小部件。"
+        },
+        "level": "warn",
+        "buttons": [
+          "ok"
+        ]
       }
-    ]
+    ],
+    "visWidgets": {
+      "visHqWidgets": {
+        "i18n": "component",
+        "name": "visHqWidgets",
+        "url": "vis-2-widgets-hqwidgets/customWidgets.js",
+        "bundlerType": "module",
+        "components": [
+          "HqButton",
+          "HqDimmer",
+          "HqInTemp",
+          "HqOutTemp",
+          "HqShutter",
+          "HqDoor",
+          "HqLock",
+          "HqCheckbox",
+          "HqCircle",
+          "HqOdometer"
+        ]
+      }
+    }
   },
   "native": {},
   "instanceObjects": []

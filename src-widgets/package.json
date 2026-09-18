@@ -1,0 +1,37 @@
+{
+    "name": "iobroker.vis-hqwidgets",
+    "private": true,
+    "version": "1.6.1",
+    "type": "module",
+    "dependencies": {
+        "@iobroker/types-vis-2": "~2.20.1",
+        "@module-federation/vite": "^1.21.3",
+        "@vitejs/plugin-react": "^6.1.1"
+    },
+    "devDependencies": {
+        "@types/node": "^26.4.1",
+        "@types/react": "^19.2.18",
+        "@types/react-dom": "^19.2.7",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+        "rollup": "^4.63.1",
+        "typescript": "^6.0.3",
+        "vite": "^8.2.2",
+        "vite-plugin-top-level-await": "^1.6.0"
+    },
+    "scripts": {
+        "start": "vite --port 4173",
+        "build": "tsc && vite build",
+        "preview": "vite --config preview/vite.config.mts"
+    },
+    "homepage": ".",
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ],
+    "overrides": {
+        "@swc/core": "1.15.30"
+    }
+}

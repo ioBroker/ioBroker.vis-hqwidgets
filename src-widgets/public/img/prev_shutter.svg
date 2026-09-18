@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b6dffd"/><stop offset="100%" stop-color="#e0f3fa"/>
+    </linearGradient>
+    <pattern id="slats" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="3" fill="#8d8d8d"/><rect y="3" width="6" height="3" fill="#b5b5b5"/>
+    </pattern>
+  </defs>
+  <rect x="8" y="10" width="104" height="60" fill="#a9a7a8" rx="2"/>
+  <g>
+    <rect x="13" y="15" width="44" height="50" fill="url(#glass)" stroke="#fff" stroke-width="3"/>
+    <rect x="13" y="15" width="44" height="16" fill="url(#slats)"/>
+    <rect x="52" y="36" width="3" height="9" fill="#6f7376"/>
+  </g>
+  <g>
+    <rect x="63" y="15" width="44" height="50" fill="url(#glass)" stroke="#fff" stroke-width="3"/>
+    <rect x="63" y="15" width="44" height="16" fill="url(#slats)"/>
+    <rect x="65" y="36" width="3" height="9" fill="#6f7376"/>
+  </g>
+</svg>

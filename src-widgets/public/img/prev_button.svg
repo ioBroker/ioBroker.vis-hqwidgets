@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80">
+  <defs>
+    <linearGradient id="on" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd65e"/><stop offset="100%" stop-color="#febf04"/>
+    </linearGradient>
+    <linearGradient id="off" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#adadad"/><stop offset="100%" stop-color="#333333"/>
+    </linearGradient>
+    <!-- the lamp on a 48 grid: slim globe, neck and screw base; fill and stroke come from the <use> -->
+    <symbol id="bulb" viewBox="0 0 48 48" overflow="visible">
+      <path d="M19.5 29C19.5 26 15 24 15 18.5a9 9 0 0 1 18 0C33 24 28.5 26 28.5 29Z"/>
+      <rect x="19.5" y="30.5" width="9" height="6" rx="1.5"/>
+      <rect x="21.5" y="37.5" width="5" height="2.5" rx="1.2"/>
+      <path d="M19 18.5a5 5 0 0 1 5-5M19.5 33.5h9" fill="none"/>
+    </symbol>
+    <!-- the rays of the lit lamp -->
+    <symbol id="rays" viewBox="0 0 48 48" overflow="visible">
+      <path d="M24 5.5v-4M33.2 9.3l2.8-2.8M14.8 9.3l-2.8-2.8M37 18.5h4M11 18.5H7M33.2 27.7l2.1 2.1M14.8 27.7l-2.1 2.1" fill="none"/>
+    </symbol>
+  </defs>
+  <circle cx="32" cy="40" r="26" fill="url(#off)" stroke="rgba(0,0,0,.6)"/>
+  <circle cx="88" cy="40" r="26" fill="url(#on)" stroke="rgba(0,0,0,.4)"/>
+  <!-- off: the bare lamp -->
+  <use href="#bulb" x="10.4" y="21.1" width="43.2" height="43.2"
+       fill="#f5f5f5" fill-opacity=".9" stroke="rgba(0,0,0,.45)" stroke-width="1.6"
+       stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- on: the lit lamp with its rays -->
+  <use href="#bulb" x="66.4" y="21.1" width="43.2" height="43.2"
+       fill="#fff3c4" stroke="#7a5a00" stroke-width="1.6"
+       stroke-linecap="round" stroke-linejoin="round"/>
+  <use href="#rays" x="66.4" y="21.1" width="43.2" height="43.2"
+       stroke="#7a5a00" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

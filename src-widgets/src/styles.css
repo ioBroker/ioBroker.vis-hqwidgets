@@ -1,0 +1,1195 @@
+/*
+ * hqWidgets for vis-2.
+ *
+ * The class names are the ones the vis-1 widget set used, because they are stored in the projects of the users
+ * (`styleNormal` / `styleActive` hold a class name). The rules themselves are rewritten: only standard
+ * `linear-gradient`, no vendor prefixes, no IE filters, no jQuery-UI.
+ *
+ * Everything is scoped under `.hq-rx` so a project that still has the vis-1 widget set loaded keeps both
+ * stylesheets side by side without them fighting over the same selectors.
+ */
+
+.hq-rx {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    /*
+     * Everything that sits ON the view and therefore has to follow the vis-2 theme. What sits on a widget of its
+     * own - the button skins, the window, the door, the switch - keeps its colours in both themes, because those
+     * are the surfaces of the object itself and do not change with the theme.
+     */
+    --hq-info-bg: rgba(182, 182, 182, 0.6);
+    --hq-info-color: inherit;
+    --hq-arc-track: #eeeeee;
+    --hq-signal-color: inherit;
+
+    /* The popups of the shutter and the lock: they float over the view, so they follow it */
+    --hq-popup-surface: linear-gradient(
+        45deg,
+        rgba(221, 231, 243, 0.9) 0%,
+        rgba(120, 132, 146, 0.9) 52%,
+        rgba(166, 178, 190, 0.9) 68%,
+        rgba(201, 206, 210, 0.9) 100%
+    );
+    --hq-popup-border: #a5aaad;
+    --hq-popup-shadow: rgba(0, 0, 0, 0.22);
+    --hq-popup-accent: #3d8bfd;
+    --hq-popup-accent-hover: #2f7ae8;
+    --hq-popup-accent-active: #2569cc;
+    --hq-slider-border: rgba(0, 0, 0, 0.18);
+    --hq-slider-handle: #ffffff;
+}
+
+/* Set by the widgets when `context.themeType` is `dark` */
+.hq-rx.hq-rx-dark {
+    --hq-info-bg: rgba(56, 60, 66, 0.75);
+    --hq-info-color: #e6e8ea;
+    /* As unobtrusive as `#eeeeee` on a light view - the track only hints at the rest of the scale */
+    --hq-arc-track: rgba(255, 255, 255, 0.08);
+    --hq-signal-color: #e6e8ea;
+
+    --hq-popup-surface: linear-gradient(
+        45deg,
+        rgba(84, 91, 100, 0.95) 0%,
+        rgba(44, 48, 54, 0.95) 52%,
+        rgba(60, 65, 72, 0.95) 68%,
+        rgba(78, 84, 92, 0.95) 100%
+    );
+    --hq-popup-border: #5a6067;
+    --hq-popup-shadow: rgba(0, 0, 0, 0.55);
+    --hq-popup-accent: #4c94ff;
+    --hq-popup-accent-hover: #3d8bfd;
+    --hq-popup-accent-active: #2f7ae8;
+    --hq-slider-border: rgba(255, 255, 255, 0.18);
+    --hq-slider-handle: #dfe3e8;
+}
+
+/* ------------------------------------------------ button base ------------------------------------------- */
+
+.hq-rx .hq-main {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    box-sizing: border-box;
+    overflow: visible;
+    cursor: pointer;
+    transition:
+        background 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out;
+}
+
+.hq-rx .hq-main-readonly,
+.hq-rx .hq-main-none {
+    cursor: default;
+}
+
+/* The icon and the caption sit in the middle of the button */
+.hq-rx .hq-center {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    pointer-events: none;
+    text-align: center;
+    line-height: 1.1;
+}
+
+.hq-rx .hq-center-vertical {
+    flex-direction: column;
+}
+
+.hq-rx .hq-center-img {
+    display: block;
+    width: auto;
+    pointer-events: none;
+}
+
+/* The value/humidity block that fades in while the arc is hidden */
+/*
+ * Measured value and humidity in the middle of the button. The vis-1 widget did not size this text at all, it
+ * simply inherited - which lands at about 12px and is what has to fit into a 64px button.
+ */
+.hq-rx .hq-centerinfo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 1.2;
+    color: #222222;
+}
+
+.hq-rx .hq-actual {
+    font-weight: bold;
+}
+
+.hq-rx .hq-humidity {
+    opacity: 0.9;
+}
+
+/* ------------------------------------------------ left/right info --------------------------------------- */
+
+/*
+ * Both description pills sit in the upper part of the widget, not vertically centered - that is where the vis-1
+ * widget put them (static top position plus a 5px margin) and what the users' views look like.
+ */
+.hq-rx .hq-leftinfo,
+.hq-rx .hq-rightinfo {
+    position: absolute;
+    top: 5px;
+    z-index: 0;
+    box-sizing: border-box;
+    white-space: pre;
+    border-radius: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    pointer-events: none;
+    font-family: 'Tahoma', sans-serif;
+    background: var(--hq-info-bg);
+    color: var(--hq-info-color);
+}
+
+.hq-rx .hq-leftinfo {
+    text-align: right;
+}
+
+.hq-rx .hq-rightinfo {
+    left: 50%;
+    text-align: left;
+}
+
+/* ------------------------------------------------ indicators -------------------------------------------- */
+
+.hq-rx .hq-battery {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    z-index: 3;
+    pointer-events: none;
+    line-height: 0;
+}
+
+.hq-rx .hq-working {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    z-index: 3;
+    pointer-events: none;
+    display: flex;
+    animation: hq-spin 2s linear infinite;
+}
+
+.hq-rx .hq-nodata {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    z-index: 4;
+    transform: scale(2);
+    pointer-events: none;
+    color: #d32f2f;
+}
+
+.hq-rx .hq-signal {
+    position: absolute;
+    bottom: 0;
+    right: 2px;
+    z-index: 3;
+    font-size: 10px;
+    pointer-events: none;
+    color: var(--hq-signal-color);
+}
+
+@keyframes hq-spin {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ------------------------------------------------ change effects ---------------------------------------- */
+
+.hq-rx .hq-wave {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    box-sizing: border-box;
+}
+
+.hq-rx .hq-wave1 {
+    animation: hq-zoom-in 2s ease-out;
+}
+
+.hq-rx .hq-wave2 {
+    animation: hq-zoom-in 2s ease-out 0.6s;
+}
+
+@keyframes hq-zoom-in {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2.2);
+    }
+}
+
+.hq-rx .hq-effect-wobble {
+    animation: hq-wobble 1s both;
+}
+.hq-rx .hq-effect-tada {
+    animation: hq-tada 1s both;
+}
+.hq-rx .hq-effect-swing {
+    animation: hq-swing 1s both;
+    transform-origin: top center;
+}
+.hq-rx .hq-effect-shake {
+    animation: hq-shake 1s both;
+}
+.hq-rx .hq-effect-rubberBand {
+    animation: hq-rubber-band 1s both;
+}
+.hq-rx .hq-effect-pulse {
+    animation: hq-pulse 1s both;
+}
+.hq-rx .hq-effect-flash {
+    animation: hq-flash 1s both;
+}
+.hq-rx .hq-effect-bounce {
+    animation: hq-bounce 1s both;
+    transform-origin: center bottom;
+}
+
+@keyframes hq-wobble {
+    0%,
+    100% {
+        transform: none;
+    }
+    15% {
+        transform: translateX(-25%) rotate(-5deg);
+    }
+    30% {
+        transform: translateX(20%) rotate(3deg);
+    }
+    45% {
+        transform: translateX(-15%) rotate(-3deg);
+    }
+    60% {
+        transform: translateX(10%) rotate(2deg);
+    }
+    75% {
+        transform: translateX(-5%) rotate(-1deg);
+    }
+}
+
+@keyframes hq-tada {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    10%,
+    20% {
+        transform: scale(0.9) rotate(-3deg);
+    }
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: scale(1.1) rotate(3deg);
+    }
+    40%,
+    60%,
+    80% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+}
+
+@keyframes hq-swing {
+    20% {
+        transform: rotate(15deg);
+    }
+    40% {
+        transform: rotate(-10deg);
+    }
+    60% {
+        transform: rotate(5deg);
+    }
+    80% {
+        transform: rotate(-5deg);
+    }
+    100% {
+        transform: rotate(0);
+    }
+}
+
+@keyframes hq-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-10px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes hq-rubber-band {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(1.25, 0.75);
+    }
+    40% {
+        transform: scale(0.75, 1.25);
+    }
+    50% {
+        transform: scale(1.15, 0.85);
+    }
+    65% {
+        transform: scale(0.95, 1.05);
+    }
+    75% {
+        transform: scale(1.05, 0.95);
+    }
+}
+
+@keyframes hq-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes hq-flash {
+    0%,
+    50%,
+    100% {
+        opacity: 1;
+    }
+    25%,
+    75% {
+        opacity: 0;
+    }
+}
+
+@keyframes hq-bounce {
+    0%,
+    20%,
+    53%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+    40%,
+    43% {
+        transform: translateY(-30px);
+    }
+    70% {
+        transform: translateY(-15px);
+    }
+    90% {
+        transform: translateY(-4px);
+    }
+}
+
+/* ------------------------------------------------ skins ------------------------------------------------- */
+/* The names below are stored in existing projects - keep them. */
+
+.hq-rx .hq-button-no-background {
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+.hq-rx .hq-button-base-normal,
+.hq-rx .vis-hq-button-base-normal {
+    background-image: linear-gradient(to bottom, #adadad 0%, #333333 100%);
+    border: 1px solid rgba(0, 0, 0, 0.9);
+    box-shadow:
+        inset 0 1px 0 0 rgba(128, 128, 128, 0.5),
+        0 0 1px 1px rgba(128, 128, 128, 0.8),
+        0 0 0 6px rgba(0, 0, 0, 0.06),
+        0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.hq-rx .hq-button-base-normal:hover,
+.hq-rx .vis-hq-button-base-normal:hover {
+    background-image: linear-gradient(to bottom, #e0e0e0 0%, #8f8f8f 100%);
+    border-color: rgba(0, 0, 0, 0.4);
+}
+
+.hq-rx .hq-button-base-on,
+.hq-rx .vis-hq-button-base-on {
+    background-image: linear-gradient(to bottom, #ffd65e 0%, #febf04 100%);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
+        0 0 1px 1px rgba(255, 255, 255, 0.8),
+        0 0 0 6px rgba(0, 0, 0, 0.06),
+        0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.hq-rx .hq-button-base-on:hover,
+.hq-rx .vis-hq-button-base-on:hover {
+    background-image: linear-gradient(to bottom, #fdcb28 0%, #e08600 100%);
+}
+
+.hq-rx .hq-button-base-outtemp {
+    background-image: linear-gradient(to bottom, #e0f3fa 0%, #b6dffd 100%);
+    border: 1px solid rgba(182, 223, 253, 0.9);
+    box-shadow:
+        inset 0 1px 0 0 rgba(182, 223, 253, 0.5),
+        0 0 1px 1px rgba(182, 223, 253, 0.8),
+        0 0 0 6px rgba(182, 223, 253, 0.06),
+        0 0 0 3px rgba(182, 223, 253, 0.1);
+}
+
+.hq-rx .hq-button-base-outtemp:hover {
+    background-image: linear-gradient(to bottom, #bbe9f9 0%, #94d1fc 100%);
+}
+
+.hq-rx .hq-button-base-intemp {
+    background-image: linear-gradient(to bottom, #f6e6b4 0%, #eaac60 100%);
+    border: 1px solid rgba(234, 172, 96, 0.9);
+    box-shadow:
+        inset 0 1px 0 0 rgba(246, 230, 180, 0.5),
+        0 0 1px 1px rgba(246, 230, 180, 0.8),
+        0 0 0 6px rgba(0, 0, 0, 0.06),
+        0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.hq-rx .hq-button-base-intemp:hover {
+    background-image: linear-gradient(to bottom, #f4d169 0%, #e89e45 100%);
+}
+
+.hq-rx .hq-button-red-normal {
+    background-image: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+    border: 1px solid #dcdcdc;
+    color: #777777;
+    text-shadow: 0 1px 0 #ffffff;
+}
+.hq-rx .hq-button-red-normal:hover {
+    background-image: linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+}
+.hq-rx .hq-button-red-active {
+    background-image: linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
+    border: 1px solid #d83526;
+    color: #ffffff;
+    text-shadow: 0 1px 0 #b23e35;
+}
+.hq-rx .hq-button-red-active:hover {
+    background-image: linear-gradient(to bottom, #ce0100 5%, #fe1a00 100%);
+}
+
+.hq-rx .hq-button-green-normal,
+.hq-rx .hq-button-green-active {
+    background-image: linear-gradient(to bottom, #b8e356 5%, #a5cc52 100%);
+    background-color: #b8e356;
+    border: 1px solid #83c41a;
+    color: #ffffff;
+    text-shadow: 0 1px 0 #86ae47;
+}
+.hq-rx .hq-button-green-normal:hover,
+.hq-rx .hq-button-green-active:hover {
+    background-image: linear-gradient(to bottom, #a5cc52 5%, #b8e356 100%);
+    background-color: #a5cc52;
+}
+
+.hq-rx .hq-button-metall-normal,
+.hq-rx .hq-button-metall-active {
+    background-color: #434343;
+    background-image: linear-gradient(160deg, #7a7a7a, #515151);
+    border: none;
+    color: #242424;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.hq-rx .hq-button-metall-normal:hover,
+.hq-rx .hq-button-metall-active:hover {
+    color: #00aeff;
+    text-shadow: -1px -2px 1px #000;
+}
+
+.hq-rx .hq-button-nice-blue,
+.hq-rx .hq-button-nice-red,
+.hq-rx .hq-button-nice-green,
+.hq-rx .hq-button-nice-yellow,
+.hq-rx .hq-button-nice-grey {
+    border: 3px solid #fff;
+    color: #fff;
+    transition: background 0.3s ease-in-out;
+}
+.hq-rx .hq-button-nice-blue {
+    background: #108fe8;
+}
+.hq-rx .hq-button-nice-red {
+    background: #e53030;
+}
+.hq-rx .hq-button-nice-green {
+    background: #0ec518;
+}
+.hq-rx .hq-button-nice-yellow {
+    background: #ffc334;
+}
+.hq-rx .hq-button-nice-grey {
+    background: #555555;
+}
+.hq-rx .hq-button-nice-blue:hover,
+.hq-rx .hq-button-nice-red:hover,
+.hq-rx .hq-button-nice-green:hover,
+.hq-rx .hq-button-nice-yellow:hover,
+.hq-rx .hq-button-nice-grey:hover {
+    background: #333;
+}
+
+.hq-rx .hq-button-glossy-blue {
+    background-image: linear-gradient(to bottom, #94c4fe 31%, #d3f6fe 100%);
+    border: 1px solid #7ea8d6;
+}
+.hq-rx .hq-button-glossy-green {
+    background-image: linear-gradient(to bottom, #54bc3e 0%, #aee850 100%);
+    border: 1px solid #4a9e37;
+}
+
+.hq-rx .hq-button-push-red {
+    background-image: linear-gradient(to bottom, #f66c7b, #d25068);
+    border: none;
+    color: #fff;
+}
+.hq-rx .hq-button-push-red:hover {
+    background-image: linear-gradient(to bottom, #d25068, #f66c7b);
+}
+.hq-rx .hq-button-push-green {
+    background-image: linear-gradient(to bottom, #48c6d4, #3eacba);
+    border: none;
+    color: #fff;
+}
+.hq-rx .hq-button-push-green:hover {
+    background-image: linear-gradient(to bottom, #3eacba, #48c6d4);
+}
+
+/* --- glossy set (glossy.css) --- */
+
+.hq-rx [class^='glossy-button-'],
+.hq-rx [class*=' glossy-button-'] {
+    background-color: #777777;
+    background-image: radial-gradient(ellipse at top, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: none;
+    border-right: none;
+    font-weight: bold;
+    text-shadow: rgba(255, 255, 255, 0.5) 0 1px 0;
+    transition: background 0.2s ease-in-out;
+}
+
+.hq-rx .glossy-button-grey,
+.hq-rx .glossy-button-grey-active {
+    color: hsl(0, 0%, 40%);
+    background-color: hsl(0, 0%, 75%);
+    box-shadow:
+        inset rgba(255, 254, 255, 0.6) 0 0.3em 0.3em,
+        inset rgba(0, 0, 0, 0.15) 0 -0.1em 0.3em,
+        hsl(0, 0%, 60%) 0 0.1em 3px,
+        hsl(0, 0%, 45%) 0 0.3em 1px,
+        rgba(0, 0, 0, 0.2) 0 0.5em 5px;
+}
+.hq-rx .glossy-button-grey:hover,
+.hq-rx .glossy-button-grey-active:hover {
+    background-color: hsl(0, 0%, 83%);
+}
+
+.hq-rx .glossy-button-orange,
+.hq-rx .glossy-button-orange-active {
+    color: hsl(39, 100%, 30%);
+    background-color: hsl(39, 100%, 50%);
+    box-shadow:
+        inset rgba(255, 254, 255, 0.6) 0 0.3em 0.3em,
+        inset rgba(0, 0, 0, 0.15) 0 -0.1em 0.3em,
+        hsl(39, 100%, 40%) 0 0.1em 3px,
+        hsl(39, 100%, 30%) 0 0.3em 1px,
+        rgba(0, 0, 0, 0.2) 0 0.5em 5px;
+}
+.hq-rx .glossy-button-orange:hover,
+.hq-rx .glossy-button-orange-active:hover {
+    background-color: hsl(39, 100%, 65%);
+}
+
+.hq-rx .glossy-button-blue,
+.hq-rx .glossy-button-blue-active {
+    color: hsl(208, 50%, 40%);
+    background-color: hsl(208, 100%, 75%);
+    box-shadow:
+        inset rgba(255, 254, 255, 0.6) 0 0.3em 0.3em,
+        inset rgba(0, 0, 0, 0.15) 0 -0.1em 0.3em,
+        hsl(208, 50%, 55%) 0 0.1em 3px,
+        hsl(208, 50%, 40%) 0 0.3em 1px,
+        rgba(0, 0, 0, 0.2) 0 0.5em 5px;
+}
+.hq-rx .glossy-button-blue:hover,
+.hq-rx .glossy-button-blue-active:hover {
+    background-color: hsl(208, 100%, 83%);
+}
+
+.hq-rx .glossy-button-green,
+.hq-rx .glossy-button-green-active {
+    color: hsl(88, 70%, 30%);
+    background-color: hsl(88, 70%, 60%);
+    box-shadow:
+        inset rgba(255, 254, 255, 0.6) 0 0.3em 0.3em,
+        inset rgba(0, 0, 0, 0.15) 0 -0.1em 0.3em,
+        hsl(88, 70%, 40%) 0 0.1em 3px,
+        hsl(88, 70%, 30%) 0 0.3em 1px,
+        rgba(0, 0, 0, 0.2) 0 0.5em 5px;
+}
+.hq-rx .glossy-button-green:hover,
+.hq-rx .glossy-button-green-active:hover {
+    background-color: hsl(88, 70%, 75%);
+}
+
+.hq-rx .glossy-button-pink,
+.hq-rx .glossy-button-pink-active {
+    color: hsl(340, 100%, 30%);
+    background-color: hsl(340, 100%, 75%);
+    box-shadow:
+        inset rgba(255, 254, 255, 0.6) 0 0.3em 0.3em,
+        inset rgba(0, 0, 0, 0.15) 0 -0.1em 0.3em,
+        hsl(340, 70%, 50%) 0 0.1em 3px,
+        hsl(340, 80%, 40%) 0 0.3em 1px,
+        rgba(0, 0, 0, 0.2) 0 0.5em 5px;
+}
+.hq-rx .glossy-button-pink:hover,
+.hq-rx .glossy-button-pink-active:hover {
+    background-color: hsl(340, 100%, 83%);
+}
+
+/* The "-active" variants are the pressed-in look of the same colour */
+.hq-rx .glossy-button-grey-active,
+.hq-rx .glossy-button-blue-active,
+.hq-rx .glossy-button-green-active,
+.hq-rx .glossy-button-pink-active,
+.hq-rx .glossy-button-orange-active {
+    background-image: none;
+    box-shadow:
+        inset rgba(255, 255, 255, 0.6) 0 0.3em 0.3em,
+        inset rgba(0, 0, 0, 0.2) 0 -0.1em 0.3em,
+        rgba(0, 0, 0, 0.4) 0 0.1em 1px,
+        rgba(0, 0, 0, 0.2) 0 0.2em 6px;
+    transform: translateY(0.2em);
+}
+
+/* ------------------------------------------------ blinds / window --------------------------------------- */
+
+/* The silver body the shutter and the door are drawn on (vis-1: `hq-blind-base`) */
+.hq-rx .hq-frame-base {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, #fffeff 0%, #8e8e90 100%);
+    box-shadow:
+        inset 0 1px 0 0 rgba(128, 128, 128, 0.5),
+        0 0 1px 1px rgba(128, 128, 128, 0.8),
+        0 0 0 6px rgba(0, 0, 0, 0.06),
+        0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.hq-rx .hq-blinds {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* outer frame of one sash */
+.hq-rx .hq-sash {
+    position: relative;
+    flex: 1 1 0;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: #a9a7a8;
+    background: linear-gradient(45deg, #adaeb2 0%, #fbfbfb 100%);
+}
+
+/* transparent inner border - carries the battery marker of the sash sensor */
+.hq-rx .hq-sash-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: transparent;
+}
+
+/*
+ * The window opening itself, looking into a dark room. It does NOT clip: an opened sash is skewed and reaches
+ * a little beyond the frame, which is how the vis-1 widget drew it.
+ */
+.hq-rx .hq-sash-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 51, 135, 0.83) 100%);
+}
+
+/* the rolled down part of the shutter */
+.hq-rx .hq-shutter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Soft slats: at the size of a normal window this reads as the light grey band of the vis-1 blind image,
+       and only on a big widget do the single slats become visible. */
+    background: repeating-linear-gradient(
+        to bottom,
+        #e2e2e2 0,
+        #e2e2e2 5px,
+        #cdcdcd 5px,
+        #cdcdcd 6px
+    );
+    /* the slats are anchored at the lower edge, so a partial slat ends up at the top - as in the vis-1 image */
+    background-position: 0 100%;
+    transition: height 0.5s ease;
+}
+
+.hq-rx .hq-shutter-no-animation {
+    transition: none;
+}
+
+/* The openable sash on top of the frame. The states are skewed, not rotated in 3D - a 3D rotation would open
+   a gap onto the dark window opening, which is not how the vis-1 widget looked. */
+.hq-rx .hq-sash-wing {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: #a5aaad;
+    background: linear-gradient(
+        45deg,
+        rgba(221, 231, 243, 0.7) 0%,
+        rgba(120, 132, 146, 0.7) 52%,
+        rgba(166, 178, 190, 0.7) 68%,
+        rgba(201, 206, 210, 0.7) 100%
+    );
+    transition: transform 0.5s ease;
+}
+
+.hq-rx .hq-sash-wing-opened-left {
+    transform: skew(0deg, 10deg) scale(0.9, 1);
+    transform-origin: 0 0;
+}
+.hq-rx .hq-sash-wing-opened-right {
+    transform: skew(0deg, -10deg) scale(0.9, 1);
+    transform-origin: 100% 0;
+}
+/* tilted looks the same as opened to the top - it is a top-hung sash in both cases */
+.hq-rx .hq-sash-wing-opened-top,
+.hq-rx .hq-sash-wing-tilted {
+    transform: skew(-10deg, 0deg) scale(1, 0.9);
+    transform-origin: 0 100%;
+}
+.hq-rx .hq-sash-wing-opened-bottom {
+    transform: skew(10deg, 0deg) scale(1, 0.9);
+    transform-origin: 0 0;
+}
+
+.hq-rx .hq-handle {
+    position: absolute;
+    box-sizing: border-box;
+    border-color: #a5aaad;
+    border-style: solid;
+    background: linear-gradient(to bottom, #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%);
+    transition: transform 0.5s ease;
+}
+
+/* A tilted window is marked by the yellow handle */
+.hq-rx .hq-handle-tilted {
+    background: linear-gradient(to bottom, #f1e767 0%, #feb645 100%);
+}
+
+/* ------------------------------------------------ door -------------------------------------------------- */
+
+/* The frame is the `hq-frame-base` behind it, the door itself only holds the leaf and the doorway */
+.hq-rx .hq-door {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    box-sizing: border-box;
+    border-radius: 1px;
+    overflow: hidden;
+}
+
+/*
+ * Deliberately not positioned: the handle inside it is placed in percent of the WHOLE door, not of the leaf.
+ * That is how the vis-1 widget worked - `.vis-hq-door-sheet` carried no `position` either, so `left: 60%` of an
+ * opened door meant 60% of the door and not 60% of the 80% wide leaf.
+ */
+.hq-rx .hq-door-sheet {
+    height: 100%;
+    background: linear-gradient(to bottom, #fffeff 0%, #8e8e90 100%);
+    transition: width 0.5s ease;
+}
+
+/* The opening behind the leaf - the colour comes from `emptyColor` */
+.hq-rx .hq-door-gap {
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+/* A small round knob, not a bar */
+.hq-rx .hq-door-handle {
+    position: absolute;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to bottom, #fffeff 0%, #8e8e90 100%);
+    box-shadow:
+        inset 0 1px 0 0 rgba(128, 128, 128, 0.5),
+        0 0 1px 1px rgba(128, 128, 128, 0.8),
+        0 0 0 3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-50%);
+    transition: left 0.5s ease;
+}
+
+.hq-rx .hq-door-no-animation .hq-door-sheet,
+.hq-rx .hq-door-no-animation .hq-door-gap,
+.hq-rx .hq-door-no-animation .hq-door-handle {
+    transition: none;
+}
+
+/* ------------------------------------------------ lock popup -------------------------------------------- */
+
+.hq-rx .hq-biglock {
+    position: absolute;
+    z-index: 1001;
+    box-sizing: border-box;
+    background: var(--hq-popup-surface);
+    border-width: 3px 2px 2px 2px;
+    border-color: var(--hq-popup-border);
+    border-style: solid;
+    box-shadow: 0 4px 16px var(--hq-popup-shadow);
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+.hq-rx .hq-biglock-no-animation {
+    transition: none;
+}
+
+.hq-rx .hq-biglock-hidden {
+    opacity: 0;
+    transform: scale(0.1);
+    pointer-events: none;
+}
+
+.hq-rx .hq-biglock-button {
+    position: absolute;
+    width: 28%;
+    height: 28%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: transform 0.15s ease;
+}
+
+.hq-rx .hq-biglock-button:hover {
+    transform: scale(1.2);
+}
+
+.hq-rx .hq-biglock-close {
+    left: 36%;
+    top: 12%;
+}
+
+.hq-rx .hq-biglock-open {
+    left: 16%;
+    bottom: 18%;
+}
+
+.hq-rx .hq-biglock-openDoor {
+    right: 16%;
+    bottom: 18%;
+}
+
+.hq-rx .hq-biglock-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ------------------------------------------------ shutter popup ----------------------------------------- */
+
+.hq-rx .hq-blind-popup {
+    position: absolute;
+    z-index: 901;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: border-box;
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
+}
+
+.hq-rx .hq-blind-popup-hidden {
+    opacity: 0;
+    transform: scale(0.1);
+    pointer-events: none;
+}
+
+/* Open / close buttons: flat surface, soft corners, chevron - no bevelled gradient pill any more */
+.hq-rx .hq-blind-popup-button {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 12px;
+    color: #ffffff;
+    background: var(--hq-popup-accent);
+    box-shadow: 0 1px 3px var(--hq-popup-shadow);
+    transition:
+        background 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+}
+
+.hq-rx .hq-blind-popup-button:hover {
+    background: var(--hq-popup-accent-hover);
+}
+
+.hq-rx .hq-blind-popup-button:active {
+    background: var(--hq-popup-accent-active);
+    transform: translateY(1px);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+/* The slider body carries the same brushed look as the window frame */
+.hq-rx .hq-blind-popup-slider {
+    flex: 1 1 auto;
+    margin: 6px 0;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 1px solid var(--hq-slider-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px var(--hq-popup-shadow);
+    background: var(--hq-popup-surface);
+    touch-action: none;
+}
+
+/* The closed part of the window, drawn from the top down - the same slats as on the widget itself */
+.hq-rx .hq-blind-popup-slider-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        #e2e2e2 0,
+        #e2e2e2 5px,
+        #cdcdcd 5px,
+        #cdcdcd 6px
+    );
+}
+
+/* Grip at the lower edge of the slats, so it is visible where to drag */
+.hq-rx .hq-blind-popup-slider-handle {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    height: 8px;
+    margin-top: -4px;
+    border-radius: 4px;
+    background: var(--hq-slider-handle);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+/* ------------------------------------------------ shine checkbox ---------------------------------------- */
+
+.hq-rx .hq-switch {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.hq-rx .hq-switch-readonly {
+    cursor: default;
+}
+
+.hq-rx .hq-switch-knob {
+    position: absolute;
+    top: 50%;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: linear-gradient(to bottom, #efeeee 0%, #bcb9b8 100%);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transform: translateY(-50%);
+    transition: left 0.3s ease;
+}
+
+/* ------------------------------------------------ odometer ---------------------------------------------- */
+
+.hq-rx .hq-odometer {
+    display: inline-flex;
+    align-items: stretch;
+    font-family: 'Helvetica Neue', sans-serif;
+    line-height: 1.1em;
+}
+
+.hq-rx .hq-odometer-digit {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    text-align: center;
+}
+
+.hq-rx .hq-odometer-ribbon {
+    display: flex;
+    flex-direction: column;
+    transition: transform 2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.hq-rx .hq-odometer-separator {
+    display: inline-block;
+}
+
+/* theme: car - the digits sit on a dark body, like the counter of a car */
+.hq-rx .hq-odometer-car {
+    background: #111111;
+    color: #ffffff;
+    padding: 0.08em 0.15em;
+    border-radius: 3px;
+}
+.hq-rx .hq-odometer-car .hq-odometer-digit {
+    background: linear-gradient(to bottom, #3b3b3b 0%, #1a1a1a 50%, #3b3b3b 100%);
+    color: #ffffff;
+    border: 1px solid #000;
+    margin: 0 1px;
+    border-radius: 2px;
+    padding: 0 0.1em;
+}
+.hq-rx .hq-odometer-car .hq-odometer-separator {
+    color: #ffffff;
+    padding: 0 0.05em;
+}
+
+/* theme: default */
+.hq-rx .hq-odometer-default .hq-odometer-digit {
+    padding: 0 0.05em;
+}
+
+/* theme: digital */
+.hq-rx .hq-odometer-digital {
+    font-family: 'Courier New', monospace;
+    color: #21ff21;
+    background: #101010;
+    padding: 0 0.15em;
+    border-radius: 3px;
+}
+
+/* theme: minimal */
+.hq-rx .hq-odometer-minimal {
+    font-family: 'Helvetica Neue', sans-serif;
+}
+.hq-rx .hq-odometer-minimal .hq-odometer-digit {
+    padding: 0 0.03em;
+}
+
+/* theme: plaza */
+.hq-rx .hq-odometer-plaza .hq-odometer-digit {
+    background: #ffffff;
+    color: #000000;
+    border-radius: 2px;
+    margin: 0 1px;
+    padding: 0 0.1em;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* theme: slot-machine */
+.hq-rx .hq-odometer-slot-machine .hq-odometer-digit {
+    background: linear-gradient(to bottom, #ffffff 0%, #d0d0d0 45%, #a0a0a0 55%, #ffffff 100%);
+    color: #222222;
+    border: 1px solid #888;
+    margin: 0 1px;
+    padding: 0 0.1em;
+}
+
+/* theme: train-station */
+.hq-rx .hq-odometer-train-station .hq-odometer-digit {
+    background: #1c1c1c;
+    color: #f5f5f5;
+    border-radius: 2px;
+    margin: 0 1px;
+    padding: 0 0.1em;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ------------------------------------------------ circular slider --------------------------------------- */
+
+.hq-rx .hq-arc {
+    position: absolute;
+    z-index: 2;
+    cursor: pointer;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+    touch-action: none;
+}
+
+.hq-rx .hq-arc-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hq-rx .hq-arc-readonly {
+    cursor: default;
+}
+
+.hq-rx .hq-arc-value {
+    dominant-baseline: middle;
+    text-anchor: middle;
+    user-select: none;
+}

@@ -1,4 +1,4 @@
-![Logo](admin/hqwidgets.png)
+![Logo](admin/hqwidgets.svg)
 # ioBroker.vis-hqWidgets
 
 ![Number of Installations](http://iobroker.live/badges/vis-hqwidgets-installed.svg) ![Number of Installations](http://iobroker.live/badges/vis-hqwidgets-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.vis-hqwidgets.svg)](https://www.npmjs.com/package/iobroker.vis-hqwidgets)
@@ -49,6 +49,7 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 * (bluefox) The widgets follow the dark theme of vis-2: descriptions, the arc track, the signal and both popups
   adapt, the surfaces of the widgets themselves keep their colours
 * (bluefox) The popups of the shutter and the lock close when clicking somewhere else in the view
+* (bluefox) The adapter icon is an SVG now
 
 ### 1.6.1 (2026-04-11)
 * (oweitman) Repair decimal places in odometer when leadingzeros=false

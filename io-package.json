@@ -119,10 +119,10 @@
     },
     "platform": "Javascript/Node.js",
     "loglevel": "info",
-    "icon": "hqwidgets.png",
+    "icon": "hqwidgets.svg",
     "enabled": true,
     "mode": "none",
-    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.vis-hqwidgets/master/admin/hqwidgets.png",
+    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.vis-hqwidgets/master/admin/hqwidgets.svg",
     "keywords": [
       "hqwidgets",
       "vis",

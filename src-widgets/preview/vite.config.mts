@@ -8,9 +8,50 @@
 import react from '@vitejs/plugin-react';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import { fileURLToPath } from 'node:url';
+import fs from 'node:fs';
 import path from 'node:path';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
+
+const IMAGE_TYPES: Record<string, string> = {
+    '.png': 'image/png',
+    '.svg': 'image/svg+xml',
+    '.jpg': 'image/jpeg',
+    '.gif': 'image/gif',
+};
+
+/**
+ * The widgets reference their images relative to the vis root, and the screenshot page (`shots.html`) uses the
+ * real defaults. This serves them: `widgets/...` from this repository (the lock images of the vis-1 set), `img/...`
+ * (lamp, thermometer) from the `www/img` folder of vis-2 if `VIS2_IMG` points to one.
+ */
+function visImages(): any {
+    const roots: [string, string | undefined][] = [
+        ['/widgets/', path.join(here, '..', '..', 'widgets')],
+        ['/img/', process.env.VIS2_IMG],
+    ];
+    return {
+        name: 'vis-images',
+        configureServer(server: any): void {
+            server.middlewares.use((req: any, res: any, next: () => void): void => {
+                const url = decodeURIComponent((req.url || '').split('?')[0]);
+                for (const [prefix, dir] of roots) {
+                    if (!dir || !url.startsWith(prefix)) {
+                        continue;
+                    }
+                    const file = path.join(dir, url.substring(prefix.length));
+                    const type = IMAGE_TYPES[path.extname(file).toLowerCase()];
+                    if (type && file.startsWith(path.join(dir, path.sep)) && fs.existsSync(file)) {
+                        res.setHeader('Content-Type', type);
+                        fs.createReadStream(file).pipe(res);
+                        return;
+                    }
+                }
+                next();
+            });
+        },
+    };
+}
 
 export default {
     root: here,
@@ -19,6 +60,7 @@ export default {
         // the preview imports the widgets with a top-level await, after the stub is on `window`
         topLevelAwait({ promiseExportName: '__tla', promiseImportName: (i: number) => `__tla_${i}` }),
         react(),
+        visImages(),
     ],
     build: { outDir: path.join(here, 'dist'), emptyOutDir: true, target: 'chrome100' },
     /*

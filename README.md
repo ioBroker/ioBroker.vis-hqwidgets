@@ -26,6 +26,10 @@ The React widgets need vis-2 2.12.8 or newer. With an older vis-2 the EJS widget
 For one widget of the **vis-1** set the `jQuery.knob` plugin (MIT) from Anthony Terrien is used.
 http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 
+## Documentation
+
+Every widget with its settings and screenshots: [English](docs/en/README.md) | [Deutsch](docs/de/README.md)
+
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
@@ -34,6 +38,8 @@ http://anthonyterrien.com/knob/ or https://github.com/aterrien/jQuery-Knob
 ## Changelog
 ### **WORK IN PROGRESS**
 * (bluefox) All widgets were ported to vis-2 as React widgets, without any jQuery based library
+* (bluefox) Added documentation for every vis-2 widget with screenshots (English and German)
+* (bluefox) Corrected spelling mistakes in the German labels of the widget settings
 * (bluefox) The dimmer, the inner temperature and the circle knob now offer "Read only"
 * (bluefox) The door widget now offers the signal object ID and the colour of the doorway
 * (bluefox) The circle knob now shows the working, battery and signal indicators

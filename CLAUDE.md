@@ -35,6 +35,7 @@ npm run build          # sync version into the vis-1 set, then npm i + tsc + vit
 npm run tsc            # type-check src-widgets only
 npm run check-widgets  # validate the widget declarations against the vis-1 templates (see below)
 npm run preview        # vite dev server with a stub of vis-2 - shows all widgets without an ioBroker
+npm run screenshots    # render the images of docs/img/ with a headless Chrome (see below)
 npm run lint           # eslint with @iobroker/eslint-config
 npm test               # mocha --exit -> test/testPackageFiles.js (package/io-package validation)
 npm run npm            # install in root and src-widgets
@@ -128,6 +129,16 @@ runtime, and declares `getI18nPrefix() === 'vis_hqwidgets_'`. `Generic.t('key')`
 - Toggles for dark background, edit mode and "arc always on" cover the cases that are easy to get wrong.
 
 Not part of the widget set, excluded from lint, `dist/` is git-ignored.
+
+`preview/stub.tsx` (the `VisRxWidget` stub) and `preview/icons.ts` are shared by two pages: `index.html`, the
+interactive page above, and `shots.html`, fixed scenes for the documentation. Every `<section data-shot="name">` of
+`shots.tsx` becomes `docs/img/name.png`. `npm run screenshots` (`preview/screenshots.mjs`) starts its own vite on
+port 4175 with its own cache dir, drives a local Chrome over the DevTools protocol (node 22 `WebSocket`, no
+puppeteer) and saves the sections at 2x. `npm run screenshots -- door lock` renders only those. Set `VIS2_IMG` to
+the `www/img` folder of a vis-2 checkout so the lamp and thermometer are the real vis-2 images; the vite config
+serves `/img/` from there and `/widgets/` from this repository. After changing how a widget looks, re-render the
+images and check the user documentation in `docs/en/README.md` and `docs/de/README.md`. Both describe every
+setting of every vis-2 widget.
 
 To compare a widget against the vis-1 original, serve the repository root and load
 `widgets/hqwidgets/css/hqwidgets.css` next to the built `widgets/vis-2-widgets-hqwidgets/assets/styles-*.css` —

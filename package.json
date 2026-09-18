@@ -49,6 +49,7 @@
     "tsc": "cd src-widgets && npx tsc",
     "check-widgets": "cd src-widgets && node checkWidgets.mjs",
     "preview": "cd src-widgets && npm run preview",
+    "screenshots": "cd src-widgets && node preview/screenshots.mjs",
     "lint": "eslint -c eslint.config.mjs",
     "test": "mocha --exit",
     "test:integration": "mocha --exit",

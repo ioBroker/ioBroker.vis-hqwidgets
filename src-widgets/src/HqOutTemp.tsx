@@ -33,6 +33,8 @@ export default class HqOutTemp extends HqButtonBase<HqButtonBaseRxData, HqButton
             visSetLabel: 'set_label',
             visName: 'Outdoor temperature',
             visWidgetLabel: 'outdoor_temperature',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_outdoor_temperature',
             visAttrs: [
                 {
                     name: 'common',
@@ -82,7 +84,7 @@ export default class HqOutTemp extends HqButtonBase<HqButtonBaseRxData, HqButton
                 'border-radius': '64px',
                 position: 'absolute',
             },
-            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_outtemp.png',
+            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_outtemp.svg',
         };
     }
 

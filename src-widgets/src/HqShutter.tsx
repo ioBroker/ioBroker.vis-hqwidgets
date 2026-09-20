@@ -103,6 +103,8 @@ export default class HqShutter extends Generic<HqShutterRxData, HqShutterState> 
             visSetLabel: 'set_label',
             visName: 'Window and Shutter',
             visWidgetLabel: 'window_and_shutter',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_window_and_shutter',
             visAttrs: [
                 {
                     name: 'common',

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80">
+  <defs>
+    <linearGradient id="on" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd65e"/><stop offset="100%" stop-color="#febf04"/>
+    </linearGradient>
+    <!-- the same lamp as in prev_button.svg, on a 48 grid; fill and stroke come from the <use> -->
+    <symbol id="bulb" viewBox="0 0 48 48" overflow="visible">
+      <path d="M19.5 29C19.5 26 15 24 15 18.5a9 9 0 0 1 18 0C33 24 28.5 26 28.5 29Z"/>
+      <rect x="19.5" y="30.5" width="9" height="6" rx="1.5"/>
+      <rect x="21.5" y="37.5" width="5" height="2.5" rx="1.2"/>
+      <path d="M19 18.5a5 5 0 0 1 5-5M19.5 33.5h9" fill="none"/>
+    </symbol>
+  </defs>
+  <!-- the description pill lies behind the button, only its right half is visible -->
+  <rect x="40" y="30" width="74" height="20" rx="10" fill="#c6c6c6"/>
+  <text x="96" y="40" text-anchor="middle" dominant-baseline="central"
+        font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#3a3a3a">42%</text>
+  <circle cx="44" cy="40" r="21" fill="url(#on)" stroke="rgba(0,0,0,.4)"/>
+  <use href="#bulb" x="26.5" y="24.7" width="35" height="35"
+       fill="#fff3c4" stroke="#7a5a00" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- the value ring around the button: track and value, from the top, clockwise -->
+  <g fill="none" stroke-width="10">
+    <circle cx="44" cy="40" r="28" stroke="#eeeeee"/>
+    <path d="M44 12A28 28 0 0 1 57.5 64.5" stroke="#ffcc00"/>
+  </g>
+</svg>

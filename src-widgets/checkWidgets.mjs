@@ -9,13 +9,16 @@
  * Run with `npm run check-widgets` in the root, or `node checkWidgets.mjs` in this folder.
  */
 import { build } from 'vite';
-import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.join(HERE, 'src');
 const TMP = path.join(HERE, '.check');
+/** `visPrev` is written the way vis-2 requests it; the file itself lives here */
+const PREV_PREFIX = 'widgets/vis-2-widgets-hqwidgets/';
+const PUBLIC = path.join(HERE, 'public');
 const LEGACY_HTML = path.join(HERE, '..', 'widgets', 'hqwidgets.html');
 
 const WIDGETS = [
@@ -137,6 +140,17 @@ for (const name of WIDGETS) {
 
     checkLabel(info.visWidgetLabel);
     checkLabel(info.visSetLabel);
+    checkLabel(info.visHelp);
+
+    // the preview of the palette, so a renamed or forgotten image does not leave a broken tooltip
+    if (!info.visPrev?.startsWith(PREV_PREFIX)) {
+        console.log(`ERROR ${prefix}: visPrev does not point into ${PREV_PREFIX}: ${info.visPrev}`);
+        problems++;
+    } else if (!existsSync(path.join(PUBLIC, info.visPrev.substring(PREV_PREFIX.length)))) {
+        console.log(`ERROR ${prefix}: the preview ${info.visPrev} is not in public/`);
+        problems++;
+    }
+
     for (const group of info.visAttrs) {
         checkLabel(group.label);
         for (const field of group.fields) {

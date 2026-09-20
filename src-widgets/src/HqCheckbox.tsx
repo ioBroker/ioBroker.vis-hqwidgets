@@ -32,6 +32,8 @@ export default class HqCheckbox extends Generic<HqCheckboxRxData, VisRxWidgetSta
             visSetLabel: 'set_label',
             visName: 'Checkbox',
             visWidgetLabel: 'checkbox',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_checkbox',
             visAttrs: [
                 {
                     name: 'common',

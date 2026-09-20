@@ -38,6 +38,7 @@ Every widget with its settings and screenshots: [English](docs/en/README.md) | [
 ## Changelog
 ### **WORK IN PROGRESS**
 * (bluefox) All widgets were ported to vis-2 as React widgets, without any jQuery based library
+* (bluefox) The vis-2 palette shows a sharp preview and a short description for every widget
 * (bluefox) Added documentation for every vis-2 widget with screenshots (English and German)
 * (bluefox) Corrected spelling mistakes in the German labels of the widget settings
 * (bluefox) The dimmer, the inner temperature and the circle knob now offer "Read only"

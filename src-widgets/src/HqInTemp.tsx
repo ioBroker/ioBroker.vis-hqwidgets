@@ -51,6 +51,8 @@ export default class HqInTemp extends HqButtonBase<HqButtonBaseRxData, HqButtonB
             visSetLabel: 'set_label',
             visName: 'Inner temperature',
             visWidgetLabel: 'inner_temperature',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_inner_temperature',
             visAttrs: [
                 {
                     name: 'common',
@@ -119,7 +121,7 @@ export default class HqInTemp extends HqButtonBase<HqButtonBaseRxData, HqButtonB
                 'border-radius': '64px',
                 position: 'absolute',
             },
-            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_intemp.png',
+            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_intemp.svg',
         };
     }
 

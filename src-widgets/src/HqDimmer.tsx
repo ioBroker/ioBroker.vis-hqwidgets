@@ -21,6 +21,8 @@ export default class HqDimmer extends HqButtonBase<HqButtonBaseRxData, HqButtonB
             visSetLabel: 'set_label',
             visName: 'Dimmer',
             visWidgetLabel: 'dimmer',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_dimmer',
             visAttrs: [
                 {
                     name: 'common',
@@ -53,7 +55,7 @@ export default class HqDimmer extends HqButtonBase<HqButtonBaseRxData, HqButtonB
                 'border-radius': '64px',
                 position: 'absolute',
             },
-            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_dimmer.png',
+            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_dimmer.svg',
         };
     }
 

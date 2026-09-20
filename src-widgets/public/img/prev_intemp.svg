@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80">
+  <defs>
+    <linearGradient id="intemp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f6e6b4"/><stop offset="100%" stop-color="#eaac60"/>
+    </linearGradient>
+    <!-- the thermometer of the button, on a 48 grid -->
+    <symbol id="thermo" viewBox="0 0 48 48" overflow="visible">
+      <path d="M24 5a6 6 0 0 1 6 6v17a9.5 9.5 0 1 1-12 0V11a6 6 0 0 1 6-6Z" fill="none"/>
+    </symbol>
+  </defs>
+  <!-- the ring: track and the valve position, from the top, clockwise -->
+  <g fill="none" stroke-width="11">
+    <circle cx="60" cy="40" r="29" stroke="#eeeeee"/>
+    <path d="M60 11A29 29 0 1 1 42.9 63.5" stroke="#8ec63f"/>
+  </g>
+  <circle cx="60" cy="40" r="22" fill="url(#intemp)" stroke="rgba(234,172,96,.9)"/>
+  <use href="#thermo" x="46" y="24" width="28" height="28" stroke="#ffffff" stroke-width="3" opacity=".55"/>
+  <g text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#3a3a3a">
+    <text x="60" y="38" font-size="13" font-weight="bold">22°C</text>
+    <text x="60" y="51" font-size="11">47%</text>
+  </g>
+</svg>

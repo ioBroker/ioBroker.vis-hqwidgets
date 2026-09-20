@@ -30,6 +30,8 @@ export default class HqOdometer extends Generic<HqOdometerRxData, VisRxWidgetSta
             visSetLabel: 'set_label',
             visName: 'Odometer',
             visWidgetLabel: 'odometer',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_odometer',
             visAttrs: [
                 {
                     name: 'common',
@@ -62,7 +64,7 @@ export default class HqOdometer extends Generic<HqOdometerRxData, VisRxWidgetSta
                 'font-size': '24px',
                 position: 'absolute',
             },
-            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_odometer.png',
+            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_odometer.svg',
         };
     }
 

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80">
+  <!-- the knob: the track carries the whole scale, the value paints over it from the top, clockwise -->
+  <g fill="none" stroke-width="12">
+    <circle cx="60" cy="40" r="28" stroke="#eeeeee"/>
+    <path d="M60 12A28 28 0 1 1 33.4 48.7" stroke="#87ceeb"/>
+  </g>
+  <text x="60" y="40" text-anchor="middle" dominant-baseline="central"
+        font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#87ceeb">70%</text>
+</svg>

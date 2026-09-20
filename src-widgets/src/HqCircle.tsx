@@ -63,6 +63,8 @@ export default class HqCircle extends Generic<HqCircleRxData, HqCircleState> {
             visSetLabel: 'set_label',
             visName: 'CircleKnob',
             visWidgetLabel: 'circle_knob',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_circle_knob',
             visAttrs: [
                 {
                     name: 'common',
@@ -126,7 +128,7 @@ export default class HqCircle extends Generic<HqCircleRxData, HqCircleState> {
                 height: 64,
                 position: 'absolute',
             },
-            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_circle.png',
+            visPrev: 'widgets/vis-2-widgets-hqwidgets/img/prev_circle.svg',
         };
     }
 

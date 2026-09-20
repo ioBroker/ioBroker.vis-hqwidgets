@@ -16,6 +16,8 @@ export default class HqButton extends HqButtonBase<HqButtonBaseRxData, HqButtonB
             visSetLabel: 'set_label',
             visName: 'On/Off',
             visWidgetLabel: 'on_off',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_on_off',
             visAttrs: [
                 {
                     name: 'common',

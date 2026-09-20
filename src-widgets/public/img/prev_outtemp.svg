@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80">
+  <defs>
+    <linearGradient id="outtemp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e0f3fa"/><stop offset="100%" stop-color="#b6dffd"/>
+    </linearGradient>
+    <!-- the thermometer of the button, on a 48 grid -->
+    <symbol id="thermo" viewBox="0 0 48 48" overflow="visible">
+      <path d="M24 5a6 6 0 0 1 6 6v17a9.5 9.5 0 1 1-12 0V11a6 6 0 0 1 6-6Z" fill="none"/>
+    </symbol>
+  </defs>
+  <circle cx="60" cy="40" r="33" fill="url(#outtemp)" stroke="rgba(182,223,253,.9)"/>
+  <use href="#thermo" x="44" y="22" width="32" height="32" stroke="#ffffff" stroke-width="3" opacity=".6"/>
+  <g text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#3a3a3a">
+    <text x="60" y="38" font-size="14" font-weight="bold">-4°C</text>
+    <text x="60" y="52" font-size="12">88%</text>
+  </g>
+</svg>

@@ -88,6 +88,8 @@ export default class HqLock extends Generic<HqLockRxData, HqLockState> {
             visSetLabel: 'set_label',
             visName: 'Lock',
             visWidgetLabel: 'lock',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_lock',
             visAttrs: [
                 {
                     name: 'common',

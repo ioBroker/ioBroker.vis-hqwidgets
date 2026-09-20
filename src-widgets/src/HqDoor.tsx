@@ -53,6 +53,8 @@ export default class HqDoor extends Generic<HqDoorRxData, HqDoorState> {
             visSetLabel: 'set_label',
             visName: 'Door',
             visWidgetLabel: 'door',
+            // what the widget does, in the tooltip of the palette under the preview
+            visHelp: 'help_door',
             visAttrs: [
                 {
                     name: 'common',

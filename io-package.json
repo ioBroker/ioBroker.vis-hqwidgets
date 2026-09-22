@@ -141,7 +141,6 @@
       "vis",
       "vis-2"
     ],
-    "noConfig": true,
     "adminUI": {
       "config": "none"
     },
